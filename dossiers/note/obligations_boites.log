@@ -1,0 +1,9 @@
+boite 0 (g < 0) : g ∈ [-1/2, -1/4], h ∈ [433/500, 9/10]
+  17 feuilles certifiées, 0 échec(s), 33 essais
+  aire couverte = 17/2000 / 17/2000 = 1.000000  COMPLET
+
+boite 1 (g > 0) : g ∈ [1/4, 1/2], h ∈ [433/500, 9/10]
+  17 feuilles certifiées, 0 échec(s), 33 essais
+  aire couverte = 17/2000 / 17/2000 = 1.000000  COMPLET
+
+écrit obligations_boites.json — COUVERTURE COMPLÈTE

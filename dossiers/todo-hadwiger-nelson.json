@@ -1,7 +1,7 @@
 {
   "schema": "hadwiger-nelson/journal",
   "version": 1,
-  "mis_a_jour": "2026-11-02",
+  "mis_a_jour": "2026-11-12",
   "langue": "fr",
   "but": "Journal des étapes déjà exécutées + impasses fermées + règles de contrôle, pour reprendre vite sans refaire le même chemin.",
   "a_lire_en_premier": [
@@ -964,6 +964,21 @@
       "coulson_2004": "J. Austral. Math. Soc. 77(2) 191-196 — ≥ 7 pour tout schéma réseau–sous-réseau ; ≥ 6 pour tuiles polygonales convexes d'aire minorée",
       "manta_2021": "arXiv:1909.02708, Discrete Math 344(7) 112411 — ≥ 7 degré ≥ 4 ; ≥ 7 triangles ; degré ≤ 3 ouvert (= notre cas)",
       "pith": "revue MACHINE de 2502.01958 (5 majeures/5 mineures) ; note : le résultat n'est pas dans la littérature antérieure"
+    },
+    "geste_39_point_bloquant": {
+      "date": "2026-11-12",
+      "question": "au point d'export (g=-3/8, h=219/250), la clique de la boite 0 ne donne que 20/21 paires en conflit alors que omega_exact annonce 7 — soupcon : cellule(...) renverrait une liste dont le premier element est le polygone",
+      "verdict": "hypothese REFUTEE ; 20/21 REPRODUIT ; cause = confusion de deux seuils",
+      "forme_du_retour": "audit_gh.cellule renvoie (sommets, W, rayon2) ; cellule(...)[0] EST la liste des sommets et son usage est correct",
+      "cause_reelle": "omega_exact/graphe_exact testent sigma^2*dmin^2 <= diam^2 <= sigma^2*dmax^2, soit le seuil T = diam/sigma = 1,1824 (sigma=99/100) ; Boites.clique_de_temoins teste le seuil T = 1. 'sigma = 1' n'est pas 'T = 1'",
+      "preuve_numerique": "paire ((-1,-2),(1,0)) : dmin^2 = 1158001/1000000 = 1,158001, entre 1 et diam^2 = 1,370210 -> en conflit des sigma >= 0,9193, separee au seuil 1. D'ou 20/21 au centre, 19/21 a g=-1/2 et a g=1/2 h=9/10",
+      "consequence": "la 7-clique de la boite 0 n'est PAS reparables : au seuil 1, omega = 6 au centre et 5 sur les bords verticaux. dmin^2 > 1 = cellules reellement separees, aucun temoin ne les rapproche",
+      "ce_que_la_boite_fournit": "eps = D/dmax <= 0,606982 sur une grille 5x5 (0 violation de D < dmax) ; sur les 38 boites eps <= 0,9934, 0 violation sur 25 points chacune. C'est l'hypothese du lemme B de Pont.lean, a l'echelle mobile s",
+      "forme_correcte_de_la_donnee": "echelle s par boite + QUATRE temoins par paire (deux a distance^2 <= 1, deux a distance^2 >= 1), et non sept decalages a seuil fige. Pont.pont_coloriage consomme deja cette forme : rien a ajouter cote Lean",
+      "quatrieme_seuil": "l'echelle du lemme B vit dans ]1/dmax, min(1/dmin,1/D)[ : sa non-vacuite exige max dmin^2 < min dmax^2. Ce rapport vaut 1,00 a 1,96 sur les 38 boites : il echoue presque partout. Une 7-clique a echelle UNIFORME par boite n'existe donc pas ; il faut recouvrir chaque boite par des sous-boites a echelle propre (lemme B ponctuel, conclusion ponctuelle). Changement de gabarit, pas contournement",
+      "controle": "note/reconciliation_boite0.py -> exit 0, VERDICT : RECONCILIE ; journal note/reconciliation_boite0.log",
+      "environnement": "elan + leanprover/lean4:v4.36.0-rc2 NON INSTALLABLES ici : raw.githubusercontent.com, release-assets.githubusercontent.com et objects.githubusercontent.com injoignables (SSL_ERROR_SYSCALL 443). Rien n'a ete recompile dans ce geste",
+      "non_fait": "les obligations par boite ne sont pas generees : la reconciliation change leur FORME, generer sur l'ancienne aurait fige l'erreur"
     }
   },
   "acquis": [
