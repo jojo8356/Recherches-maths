@@ -308,3 +308,52 @@ Attendu : 55 puis 15 lignes `depends on axioms`, toutes dans
 `[propext, Classical.choice, Quot.sound]` pour `geom`, dans `[propext, Quot.sound]` pour `lean`.
 C'est le contrôle qui manquait, et il ne dépend plus de la répartition des `#print axioms` dans
 les fichiers de preuve.
+
+---
+
+## « unknown module prefix 'Pont' / 'Queue' » : la règle à retenir
+
+Rencontré deux fois, dans `Boites.lean` puis dans `Axiomes.lean` des deux projets. Une seule
+cause, une seule règle.
+
+**`lake env lean Fichier.lean` ne trouve pas nos propres modules si leurs `.olean` n'ont pas été
+construits.** `lake env` met dans `LEAN_PATH` le `lib/lean` de nos paquets, mais ce dossier est
+**vide** tant qu'on n'a pas construit. Les dépendances (Mathlib…) sont là, nos propres fichiers
+non. D'où le message, qui liste les chemins cherchés — et où l'on voit `.lake/build/lib/lean`
+présent mais inutilisable.
+
+> **Règle : construire la cible avant de la lire.**
+> ```bash
+> lake build Axiomes          # construit les .olean ET les met dans le chemin
+> lake env lean Axiomes.lean  # lit le fichier
+> ```
+
+`verifier.sh` applique désormais cette règle pour **chaque** fichier, sans exception.
+
+### Deuxième défaut, trouvé en même temps
+
+`dossiers/lean/Pont.lean` **n'était déclaré dans aucune `lean_lib`** — `lake build` ne le
+construisait donc jamais, et `Axiomes.lean` échouait sur `unknown module prefix 'Pont'`. Il est
+maintenant déclaré et ajouté aux `defaultTargets`. C'est cohérent avec ce que le dossier
+affirmait déjà (5 théorèmes en noyau pur) : le fichier existait, il était juste invisible de Lake.
+
+Bilan des cibles :
+
+| projet | cibles |
+|---|---|
+| `dossiers/geom` | `Geometrie`, `Pont`, `Queue`, `Boites`, `Boites_data`, `Axiomes` |
+| `dossiers/lean` | `Plafond`, `T8`, `Pont`, `Axiomes` |
+
+### La séquence complète, corrigée
+
+```bash
+cd dossiers/geom
+lake build                     # Geometrie (defaultTargets)
+lake build Queue Pont Boites Boites_data Axiomes
+lake env lean Axiomes.lean     # 55 théorèmes
+
+cd ../lean
+lake build                     # Plafond, T8, Pont
+lake build Axiomes
+lake env lean Axiomes.lean     # 15 théorèmes
+```

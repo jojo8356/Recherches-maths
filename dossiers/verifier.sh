@@ -93,6 +93,17 @@ verifie_fichier() {           # $1 = dossier, $2 = nom sans .lean
   local fichier="$2.lean" journal="/tmp/v_$2.log" note="${3:-}"
   printf '  --- %s.lean%s\n' "$2" "${note:+  ($note)}"
   local statut=0
+  # CONSTRUIRE LA CIBLE D'ABORD. `lake env lean X.lean` ne met pas le lib/lean de notre
+  # propre paquet dans LEAN_PATH tant qu'il est vide : sur un dépôt fraîchement cloné, ou
+  # pour un module jamais construit, cela donne « unknown module prefix '<Module>' ».
+  # `lake build <Module>` construit les .olean ET les met dans le chemin. C'est le remède,
+  # et il vaut pour Boites, Boites_data et Axiomes comme pour les autres.
+  ( cd "$1" && lake build "$2" ) > "/tmp/v_build_$2.log" 2>&1 || statut=$?
+  if [ "$statut" -ne 0 ]; then
+    ko "  $2 : 'lake build $2' a échoué (voir /tmp/v_build_$2.log) :"
+    grep -E "error:" "/tmp/v_build_$2.log" | head -3 | sed 's/^/         /'
+    return
+  fi
   ( cd "$1" && lake env lean "$fichier" ) > "$journal" 2>&1 || statut=$?
 
   # 1a. code de sortie non nul : `lake env lean` a échoué, même sans ligne « error: »
@@ -160,6 +171,8 @@ titre "Audit complet : les 70 théorèmes, un #print axioms chacun"
 # (Queue.lean : 5 sur 28). Axiomes.lean, généré par note/gen_axiomes.py, les interroge TOUS.
 for dossier in geom lean; do
   journal="/tmp/v_axiomes_$dossier.log"
+  # même règle : construire la cible avant de la lire
+  ( cd "$RACINE/$dossier" && lake build Axiomes ) > "/tmp/v_build_axiomes_$dossier.log" 2>&1
   ( cd "$RACINE/$dossier" && lake env lean Axiomes.lean ) > "$journal" 2>&1
   nb=$(grep -c "depends on axioms" "$journal" || true)
   mauvais=$(grep "depends on axioms" "$journal" | grep -vE "\[(propext, )?(Classical.choice, )?(Quot.sound)\]" | wc -l)

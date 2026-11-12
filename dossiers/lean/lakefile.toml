@@ -1,6 +1,6 @@
 name = "plafond"
 version = "0.1.0"
-defaultTargets = ["Plafond", "T8"]
+defaultTargets = ["Plafond", "T8", "Pont"]
 
 [[lean_lib]]
 name = "Plafond"
@@ -11,5 +11,11 @@ name = "T8"
 # Axiomes : fichier d'AUDIT généré par note/gen_axiomes.py (Plafond, T8, Pont → 15 théorèmes).
 # Il comble deux trous : Plafond.lean n'interroge que 4 de ses 6 théorèmes, T8.lean 3 de ses 4,
 # et Pont.lean n'était pas une cible de build du tout.
+# Pont.lean n'était déclaré NULLE PART : `lake build` ne le construisait donc jamais, et
+# Axiomes.lean échouait sur « unknown module prefix 'Pont' ». Il n'a pas de dépendance
+# (noyau pur), il suffisait de le déclarer.
+[[lean_lib]]
+name = "Pont"
+
 [[lean_lib]]
 name = "Axiomes"
