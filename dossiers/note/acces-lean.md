@@ -1,7 +1,33 @@
-# Accès au toolchain Lean : diagnostic et demande d'ouverture
+# Accès au toolchain Lean : bloqué par liste d'autorisation, pas « en attente »
 
 **Date** : 2026-11-12 · **Geste** 41 · **Script** `diag_lean_acces.py` (exit 1) · **Journal**
 `diag_lean_acces.log`
+
+## Pourquoi ce n'est pas « en attente »
+
+Le mot était mal choisi dans la séance du 12/11 : il suggérait un état transitoire, une file
+d'attente ou une action en cours de mon côté. **Rien n'est en cours, et rien ne se débloquera avec
+le temps.** Le bac à sable applique une *liste d'autorisation de sortie* fixe, décidée hors de la
+machine : seuls `github.com`, `codeload.github.com`, `api.github.com`, `registry.npmjs.org`,
+`pypi.org` et `files.pythonhosted.org` sont joignables. Lean se sert ailleurs. C'est une décision
+de politique, pas une panne ni un délai.
+
+Trois constats qui établissent que c'est bien une politique et non un incident réseau :
+
+- **Le DNS fonctionne** : `releases.lean-lang.org` → 195.201.80.226,
+  `objects.githubusercontent.com` → 185.199.109.133. Les noms se résolvent.
+- **La connexion TCP s'ouvre**, puis le TLS est coupé au `ClientHello` : c'est la signature d'un
+  proxy filtrant, pas d'un hôte en panne.
+- **Une variable `GH_TOKEN=arena-egress-dummy-token`** est présente : le jeton est factice et
+  s'appelle littéralement « egress ». La machine est préparée pour un filtrage de sortie.
+
+Aucun réglage local ne peut y changer quoi que ce soit : pas d'`iptables`, pas de configuration de
+proxy, pas d'accès administrateur, et le filtrage est appliqué en amont du conteneur. Je ne cherche
+pas à le contourner — c'est une barrière de sécurité, pas un obstacle technique.
+
+**Conséquence pratique** : une nouvelle session repart d'un bac à sable neuf avec la **même**
+politique. Re-testé le 12/11 après recréation : mêmes six hôtes bloqués. Il n'y a donc rien à
+attendre ; il faut soit modifier la politique, soit compiler ailleurs.
 
 ## En une ligne
 

@@ -873,3 +873,14 @@ est autonome et épinglé, quatre commandes suffisent).
 03/11 ; rien n'a été recompilé depuis. `Boites_data.lean`, réécrit au geste 40 en forme corrigée,
 **n'a jamais vu `lake build`** : ni la `structure Boite`, ni la syntaxe des rationnels ne sont
 vérifiées par un compilateur. Le certificat par boîte est prouvé en Python exact, pas en Lean.
+
+### Correctif de vocabulaire (même jour)
+
+« L'accès est en attente » était faux et je le retire. Rien n'est en file, rien ne se débloquera
+avec le temps : le bac à sable applique une **liste d'autorisation de sortie fixe**, décidée hors
+de la machine. Lean se sert sur `releases.lean-lang.org` et `leanprover-community.github.io`, qui
+n'en font pas partie — c'est une politique, pas une panne ni un délai. Preuves : le DNS résout
+(195.201.80.226, 185.199.109.133), le TCP s'ouvre puis le TLS est coupé au `ClientHello` (proxy
+filtrant), et l'environnement contient `GH_TOKEN=arena-egress-dummy-token`. Re-testé après
+recréation du bac à sable : mêmes six hôtes bloqués. Rien à attendre ; il faut modifier la
+politique ou compiler ailleurs. `acces-lean.md` porte désormais ce titre et cette section.
