@@ -187,7 +187,7 @@ cette version-là du fichier : récupérez la version corrigée.
 ## 6. Renvoyer le résultat
 
 Le plus utile est la sortie complète des cinq `lake env lean` du §2. Elle permet de confirmer
-trois choses d'un coup : les 66 théorèmes compilent toujours, aucun `sorry` n'a été introduit,
+trois choses d'un coup : les 70 théorèmes compilent toujours, aucun `sorry` n'a été introduit,
 et `Boites_data.lean` — réécrit au geste 40, **jamais compilé à ce jour** — est syntaxiquement
 valide (`structure Boite`, rationnels `ℚ`, listes de décalages).
 

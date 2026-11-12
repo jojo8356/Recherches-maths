@@ -68,7 +68,7 @@
   témoin fini. Le seuil se traite par <em>encadrement exact</em> (une paire à distance ≤ 1, une paire
   à distance ≥ 1), jamais par évaluation flottante. Et tout ce qui peut être compilé l'est.
   <br><br>
-  <strong>Statut machine.</strong> 66 théorèmes, 0 <code>sorry</code>, deux projets Lean ; les seuls
+  <strong>Statut machine.</strong> 70 théorèmes, 0 <code>sorry</code>, deux projets Lean ; les seuls
   axiomes employés sont <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code>.
   Plus aucun énoncé du dossier n'est une preuve à la main (§9).
   <br><br>
@@ -751,7 +751,7 @@ notre tranche  ⇏  Théorème 2        notre tranche  ⇏  χ(ℝ²) ≥ 7</div
   <tr><td>h ≥ 20</td><td>lemme du pas ⌈h/10⌉</td><td><strong>certifié machine</strong> (<code>Queue.queue</code>, <code>Queue.sept_couleurs</code>) ; s = 1/h, seuil réel h ≥ 15</td></tr>
   <tr><td>lemme B (échelle)</td><td>ε &lt; 1 strict, dmin &lt; dmax</td><td><strong>certifié machine</strong> (<code>Pont.lemmeB</code>, Mathlib), énoncé au §7.3</td></tr>
   <tr><td>lemme A (conflit)</td><td>paire à distance 1, intérieurs admis</td><td><strong>certifié machine</strong> (<code>pont_coloriage</code>, <code>pont_interieurs</code>, <code>pont_echelle</code>)</td></tr>
-  <tr><td>Lean</td><td>66 théorèmes, 0 <code>sorry</code>, 2 projets</td><td>noyau pur 15 (dont pont 5) + Mathlib 51 (Geometrie 17, pont 6, queue 28) ; <em>couvre</em> le pont et le lemme de queue</td></tr>
+  <tr><td>Lean</td><td>70 théorèmes, 0 <code>sorry</code>, 2 projets, <strong>70 interrogés</strong></td><td>noyau pur 15 (Plafond 6, T8 4, pont 5) + Mathlib 55 (Geometrie 17, pont 6, queue 28, boîtes 4) ; compilé et vérifié le 12/11/2026, axiomes <code>#print axioms</code> sur les 70 (<code>geom/Axiomes.lean</code>, <code>lean/Axiomes.lean</code>) ; <em>couvre</em> le pont, le lemme de queue et le moteur par boîtes</td></tr>
   <tr><td>χ(ℝ²), validité de S-V</td><td>—</td><td>hors périmètre, inchangé</td></tr>
   </table>
 

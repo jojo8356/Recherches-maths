@@ -884,3 +884,60 @@ n'en font pas partie — c'est une politique, pas une panne ni un délai. Preuve
 filtrant), et l'environnement contient `GH_TOKEN=arena-egress-dummy-token`. Re-testé après
 recréation du bac à sable : mêmes six hôtes bloqués. Rien à attendre ; il faut modifier la
 politique ou compiler ailleurs. `acces-lean.md` porte désormais ce titre et cette section.
+
+## Geste 42 — les 70 théorèmes sont vérifiés par un compilateur (12/11/2026)
+
+**Ce qui change, et pourquoi c'est le geste le plus important depuis le geste 30.** Les 66 (en fait
+70) théorèmes étaient cités partout dans l'audit sur la foi de journaux du 03/11. Ils sont
+désormais recompilés, et surtout **un `#print axioms` existe pour chacun**.
+
+**Le décompte était faux.** 70, pas 66 :
+
+| projet | module | théorèmes | `#print axioms` avant | après |
+|---|---|---|---|---|
+| geom | `Geometrie` | 17 | 17 | 17 |
+| geom | `Pont` | 6 | 6 | 6 |
+| geom | `Queue` | 28 | **5** | 28 |
+| geom | `Boites` | 4 | 4 | 4 |
+| lean | `Plafond` | 6 | **4** | 6 |
+| lean | `T8` | 4 | **3** | 4 |
+| lean | `Pont` | 5 | 5 | 5 |
+| | **total** | **70** | 51 | **70** |
+
+**19 théorèmes n'étaient interrogés par aucun `#print axioms`** — dont 23 des 28 de `Queue.lean`.
+Ils compilaient ; c'est tout ce qu'on savait. C'est le trou exact par lequel `sorryAx` passerait.
+
+**Résultat de la compilation, le 12/11/2026.** `4044 jobs`, aucun `sorry`.
+`geom/Axiomes.lean` rend **55** lignes, `lean/Axiomes.lean` en rend **15** : les **70** sont dans
+`[propext, Classical.choice, Quot.sound]` ou un sous-ensemble. Deux cas remarquables, tous deux
+*plus* solides que la moyenne : `Plafond.cinq_compatible` **ne dépend d'aucun axiome**, et
+`T8.P.ext` ne dépend que de `[propext]`.
+
+**Statut des quatre théorèmes du moteur par boîte** — `clique_de_temoins`, `contrainte_auto`,
+`cell_iff_translate`, `cell_of_fini` — : compilés, axiomes propres. `cell_of_fini`, dont dépend
+tout l'argument par boîte du geste 40, est donc machine-vérifié.
+
+**Quatre défauts de ma part, tous trouvés par la compilation, aucun par relecture.**
+
+1. `lake build` ne compilait que `Geometrie` (`defaultTargets`) : `Queue`, `Pont`, `Boites`
+   n'étaient **jamais** construits. « 4030 jobs » ne les incluait pas.
+2. `dossiers/lean/Pont.lean` n'était déclaré dans **aucune** `lean_lib` — invisible de Lake
+   depuis des séances, alors que le dossier comptait ses 5 théorèmes.
+3. `lake env lean` ne trouve pas nos propres modules si leurs `.olean` ne sont pas construits
+   (le `lib/lean` du paquet est vide). Règle : **construire la cible avant de la lire**. C'est ce
+   qui a fait échouer `Boites.lean`, puis `Axiomes.lean` des deux projets.
+4. Mon script de contrôle a produit **un faux négatif** (« TOUT EST VERT » avec `Boites.lean` en
+   erreur : un journal d'échec vide était lu comme « aucun axiome supplémentaire ») puis **deux
+   faux positifs** (il refusait `[propext]` et « aucun axiome », qui sont *meilleurs* que la
+   norme). Les trois sont corrigés ; le script compare maintenant les `.lean` présents aux cibles
+   déclarées, construit avant de lire, et accepte tout sous-ensemble de l'ensemble autorisé.
+
+**Livrables.** `note/gen_axiomes.py` (générateur des deux `Axiomes.lean`, namespaces résolus
+depuis les sources), `dossiers/verifier.sh` (contrôle en une commande), `dossiers/COMPILER.md`
+(mode d'emploi et historique des pièges), `audit-sv.html` corrigé (70 et non 66, avec la mention
+« 70 interrogés »).
+
+**Ce que cela ne prouve toujours pas.** Les 38 boîtes de `Boites_data.lean` ne sont que des
+données (bornes, seuil `T`, clique) : aucune obligation de témoin n'y est écrite. Le certificat
+par boîte est prouvé en Python exact (`note/obligations_boites.py`, boîtes 0 et 1, 100 %), pas en
+Lean. Et rien dans les deux projets ne concerne χ(ℝ²).
