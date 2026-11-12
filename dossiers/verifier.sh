@@ -3,23 +3,36 @@
 #
 #   bash dossiers/verifier.sh
 #
-# Ce script ne « compile » pas seulement : il vérifie les trois choses qui comptent.
+# Ce que ce script contrôle, et que « build succeeded » ne dit PAS :
 #  1. les deux projets compilent ;
-#  2. aucun théorème ne dépend de `sorryAx` (un « build succeeded » ne le dit PAS :
-#     Lean accepte `sorry` avec un simple avertissement) ;
-#  3. les axiomes de chaque théorème sont exactement propext, Classical.choice, Quot.sound.
+#  2. aucun théorème ne dépend de `sorryAx` (Lean accepte `sorry` avec un simple
+#     avertissement : le build passe quand même) ;
+#  3. chaque théorème dont on interroge les axiomes n'a QUE propext, Classical.choice,
+#     Quot.sound ;
+#  4. les fichiers que `lake build` ne visite pas sont vérifiés QUAND MÊME, un par un ;
+#  5. une sortie inattendue n'est jamais comptée comme un succès.
 #
-# Il s'arrête proprement et dit quoi faire si une étape manque (toolchain, cache Mathlib).
+# HISTORIQUE DES DÉFAUTS DE CE SCRIPT (ils expliquent plusieurs de ses formes bizarres) :
+#  * v1 comptait les théorèmes de `geom` en lisant les journaux de `lake env lean`. Or
+#    `Boites.lean` échouait (« unknown module prefix 'Queue' »), donc son journal ne
+#    contenait aucun axiome — et le script concluait « aucun axiome supplémentaire »
+#    sur un fichier qu'il n'avait pas pu lire. Un faux négatif silencieux.
+#  * v1 ne construisait que `defaultTargets = ["Geometrie"]` : `lake build` s'arrêtait à
+#    Geometrie, et ni Queue, ni Pont, ni Boites n'étaient compilés.
+#  * v1 affichait « TOUT EST VERT » alors que Boites.lean était en erreur.
+# Le remède : `lake env lean` file par file, l'échec d'un fichier est un ÉCHEC, et le
+# bilan additionne les théorèmes RÉELLEMENT VÉRIFIÉS, jamais annoncés.
 
 set -u
 
 RACINE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ECHEC=0
+THEOREMES=0
 
 titre() { printf '\n\033[1m== %s ==\033[0m\n' "$*"; }
-ok()    { printf '  \033[32mOK\033[0m   %s\n' "$*"; }
+ok()    { printf '  \033[32mOK\033[0m    %s\n' "$*"; }
 ko()    { printf '  \033[31mÉCHEC\033[0m %s\n' "$*"; ECHEC=1; }
-info()  { printf '  ..   %s\n' "$*"; }
+info()  { printf '  ..    %s\n' "$*"; }
 
 # ---------------------------------------------------------------- branche
 titre "Branche"
@@ -41,17 +54,17 @@ if ! command -v lake >/dev/null 2>&1; then
   exit 1
 fi
 ok "lake : $(command -v lake)"
-lake --version 2>/dev/null | head -1 | sed 's/^/       /'
+lake --version 2>/dev/null | head -1 | sed 's/^/        /'
 
 # ---------------------------------------------------------------- projet sans dépendance
 titre "dossiers/lean — noyau pur, aucune dépendance (~30 s)"
 cd "$RACINE/lean" || { ko "dossier lean absent"; exit 1; }
 info "toolchain épinglée : $(cat lean-toolchain)"
-if lake build 2>&1 | tee /tmp/v_lean.log | tail -3; then :; fi
+lake build > /tmp/v_lean.log 2>&1
 if grep -q "Build completed successfully" /tmp/v_lean.log; then
   ok "build"
 else
-  ko "build (voir /tmp/v_lean.log)"
+  ko "build (voir /tmp/v_lean.log)"; tail -5 /tmp/v_lean.log | sed 's/^/        /'
 fi
 
 # ---------------------------------------------------------------- projet Mathlib
@@ -60,63 +73,94 @@ cd "$RACINE/geom" || { ko "dossier geom absent"; exit 1; }
 info "toolchain épinglée : $(cat lean-toolchain)"
 if [ ! -d .lake/packages/mathlib ]; then
   info "dépendances absentes : lake update"
-  lake update 2>&1 | tail -3
+  lake update > /tmp/v_update.log 2>&1
 fi
 if [ ! -d .lake/packages/mathlib/.lake/build/lib/lean ]; then
-  info "cache Mathlib absent : lake exe cache get (facultatif, mais évite des heures de compilation)"
-  lake exe cache get 2>&1 | tail -3
+  info "cache Mathlib absent : lake exe cache get (évite des heures de compilation)"
+  lake exe cache get > /tmp/v_cache.log 2>&1
 fi
-if lake build 2>&1 | tee /tmp/v_geom.log | tail -3; then :; fi
+info "build de TOUTES les cibles (defaultTargets ne contient que Geometrie)"
+lake build Geometrie Pont Queue Boites Boites_data > /tmp/v_geom.log 2>&1
 if grep -q "Build completed successfully" /tmp/v_geom.log; then
   ok "build"
 else
-  ko "build (voir /tmp/v_geom.log)"
+  ko "build (voir /tmp/v_geom.log)"; tail -8 /tmp/v_geom.log | sed 's/^/        /'
 fi
 
 # ---------------------------------------------------------------- contrôles par fichier
-titre "Contrôles : axiomes et absence de sorry"
-SORRY=0
-AXIOMES=0
-for f in Geometrie Queue Pont Boites Boites_data; do
-  # Boites_data est un fichier de DONNÉES : il ne contient aucun #print axioms.
-  printf '  --- %s.lean\n' "$f"
-  lake env lean "$f.lean" > "/tmp/v_$f.log" 2>&1
-  if grep -qE "declaration uses 'sorry'|sorryAx" "/tmp/v_$f.log"; then
-    ko "  $f.lean contient un sorry"; SORRY=1
+titre "Contrôles : axiomes, absence de sorry, et échec de lecture"
+verifie_fichier() {           # $1 = dossier, $2 = nom sans .lean
+  local fichier="$2.lean" journal="/tmp/v_$2.log" note="${3:-}"
+  printf '  --- %s.lean%s\n' "$2" "${note:+  ($note)}"
+  local statut=0
+  ( cd "$1" && lake env lean "$fichier" ) > "$journal" 2>&1 || statut=$?
+
+  # 1a. code de sortie non nul : `lake env lean` a échoué, même sans ligne « error: »
+  #     (c'est le cas, par exemple, si le fichier n'existe pas).
+  if [ "$statut" -ne 0 ] && ! grep -qE "^[^ ]*:[0-9]+:[0-9]+: error:" "$journal"; then
+    ko "  $2.lean : lake env lean a rendu le code $statut :"
+    tail -3 "$journal" | sed 's/^/         /'
+    return
   fi
-  if [ "$f" = "Boites_data" ]; then
-    if [ -s "/tmp/v_$f.log" ]; then
-      info "  sortie non vide (fichier de données) :"; head -5 "/tmp/v_$f.log" | sed 's/^/         /'
-    else
-      ok "  compile sans sortie (données seulement, rien à prouver)"
-    fi
-    continue
+  # 1b. une ERREUR de lecture/compilation est un échec, quoi qu'on trouve ensuite.
+  if grep -qE "^[^ ]*:[0-9]+:[0-9]+: error:" "$journal"; then
+    ko "  $2.lean ne compile pas :"
+    grep -E "error:" "$journal" | head -3 | sed 's/^/         /'
+    return
   fi
-  # chaque #print axioms doit rendre [propext, Classical.choice, Quot.sound]
-  NB=$(grep -c "depends on axioms" "/tmp/v_$f.log" || true)
-  MAUVAIS=$(grep "depends on axioms" "/tmp/v_$f.log" | grep -v "\[propext, Classical.choice, Quot.sound\]" | wc -l)
-  if [ "$NB" -eq 0 ]; then
-    info "  aucun #print axioms dans ce fichier"
-  elif [ "$MAUVAIS" -eq 0 ]; then
-    ok "  $NB théorème(s), tous aux axiomes habituels"
+  # 2. sorry
+  if grep -qE "declaration uses 'sorry'|sorryAx" "$journal"; then
+    ko "  $2.lean contient un sorry"; return
+  fi
+  # 3. axiomes
+  local nb mauvais
+  nb=$(grep -c "depends on axioms" "$journal" || true)
+  if [ "$nb" -eq 0 ]; then
+    # Un fichier sans #print axioms est normal (données) — mais on le DIT, sans le
+    # compter comme vérifié.
+    info "  compile, aucun théorème interrogé (pas de #print axioms)"
+    return
+  fi
+  mauvais=$(grep "depends on axioms" "$journal" | grep -v "\[propext, Classical.choice, Quot.sound\]" | wc -l)
+  if [ "$mauvais" -eq 0 ]; then
+    ok "  $nb théorème(s), axiomes habituels"
+    THEOREMES=$((THEOREMES + nb))
   else
-    ko "  $MAUVAIS théorème(s) avec des axiomes supplémentaires :"
-    grep "depends on axioms" "/tmp/v_$f.log" | grep -v "\[propext, Classical.choice, Quot.sound\]" | sed 's/^/         /'
-    AXIOMES=1
+    ko "  $mauvais théorème(s) avec des axiomes supplémentaires :"
+    grep "depends on axioms" "$journal" | grep -v "\[propext, Classical.choice, Quot.sound\]" | sed 's/^/         /'
+  fi
+}
+
+vermifuge() {   # compte les `theorem` déclarés, pour dire ce qui n'est pas interrogé
+  grep -c '^theorem' "$1/$2.lean" 2>/dev/null || echo 0
+}
+
+# --- geom
+for f in Geometrie Queue Pont Boites; do
+  verifie_fichier "$RACINE/geom" "$f"
+  declares=$(vermifuge "$RACINE/geom" "$f")
+  interroges=$(grep -c "depends on axioms" "/tmp/v_$f.log" || true)
+  if [ "${declares:-0}" -gt "${interroges:-0}" ]; then
+    info "  $f.lean : $declares théorèmes déclarés, $interroges interrogés par #print axioms"
   fi
 done
+verifie_fichier "$RACINE/geom" "Boites_data" "données : bornes, seuil T, clique"
+
+# --- lean (noyau pur) : les fichiers ne sont pas tous dans defaultTargets
+for f in Plafond T8; do
+  verifie_fichier "$RACINE/lean" "$f"
+done
+# Pont.lean n'est pas une lean_lib : il est vérifié par `lake env lean`, pas par `lake build`.
+info "dossiers/lean/Pont.lean n'est pas une cible de build ; vérification directe :"
+verifie_fichier "$RACINE/lean" "Pont" "noyau pur, hors cibles de build"
 
 # ---------------------------------------------------------------- bilan
 titre "Bilan"
-TOTAL=$(cat /tmp/v_Geometrie.log /tmp/v_Queue.log /tmp/v_Pont.log /tmp/v_Boites.log 2>/dev/null \
-        | grep -c "depends on axioms" || true)
-printf '  théorèmes contrôlés (geom) : %s\n' "$TOTAL"
-[ "$SORRY" -eq 0 ]    && ok "aucun sorry"                  || ko "des sorry subsistent"
-[ "$AXIOMES" -eq 0 ]  && ok "aucun axiome supplémentaire"  || ko "axiomes en trop"
-
+printf '  théorèmes contrôlés, geom + lean : %s\n' "$THEOREMES"
 if [ "$ECHEC" -eq 0 ]; then
-  printf '\n\033[32mTOUT EST VERT\033[0m — renvoyez les fichiers /tmp/v_*.log si vous voulez un examen détaillé.\n'
+  printf '\n\033[32mTOUS LES CONTRÔLES PASSENT\033[0m\n'
 else
   printf '\n\033[31mAU MOINS UN CONTRÔLE A ÉCHOUÉ\033[0m — journaux : /tmp/v_*.log\n'
 fi
+printf 'Journaux : /tmp/v_*.log\n'
 exit "$ECHEC"
