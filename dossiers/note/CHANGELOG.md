@@ -941,3 +941,102 @@ depuis les sources), `dossiers/verifier.sh` (contrôle en une commande), `dossie
 données (bornes, seuil `T`, clique) : aucune obligation de témoin n'y est écrite. Le certificat
 par boîte est prouvé en Python exact (`note/obligations_boites.py`, boîtes 0 et 1, 100 %), pas en
 Lean. Et rien dans les deux projets ne concerne χ(ℝ²).
+
+## Geste 43 — la campagne par boîte : 24 des 36 boîtes, après avoir trouvé deux fautes de sûreté (12/11/2026)
+
+**En une ligne : la campagne ne bloquait pas sur la lenteur, elle bloquait sur deux erreurs de
+mathématiques dans mon propre moteur. Corrigées, 24 boîtes sur 36 passent ; 12 restent ouvertes,
+et je ne les maquille pas en succès.**
+
+### Ce qui a été trouvé, dans l'ordre où les contrôles l'ont révélé
+
+1. **`appartient` acceptait des points hors de la cellule.** Il testait `si la violation est
+   prouvée quelque part` (`lo > 0`) au lieu de `si la satisfaction est prouvée partout`
+   (`hi ≤ 0`). Il n'écartait donc que les violations certaines, et acceptait tout le reste. Sur
+   `g ∈ [−1/4,0]`, `h ∈ [17/10, 37/20]`, le point `(−0,625 ; 0,848)` était déclaré « dans la
+   cellule » alors que la contrainte `w = (−1,0)` exige `p_x ≥ −1/2`. Ces faux sommets devenaient
+   des témoins, et le certificat prouvait des choses fausses.
+
+2. **Le seuil `T` était celui du centre de la boîte racine, propagé à toutes les feuilles.**
+   `meilleur_T` rend le plus PETIT seuil donnant une 7-clique : la marge restante est celle du
+   centre (0,03 au lieu de 0,25) et subdiviser ne l'augmente pas. D'où 18 feuilles en échec par
+   boîte. `T` est maintenant choisi pour la boîte : milieu de l'intervalle admissible, donc marge
+   maximale. Le sens des bornes compte : côté « proche » il faut `T² ≥ min_w hi_w` (pire cas du
+   majorant), côté « lointain » `T² ≤ max_w lo_w`. Je me suis trompé deux fois là-dessus ; un
+   `T²` construit sur des bornes trop larges ne prouve rien (4,7927 retenu là où le vrai maximum
+   est 4,4514).
+
+3. **Un rayon de réduction au fini faux, à deux titres.** J'ai d'abord écrit `|p_y| ≤ h/2` grâce
+   à la contrainte `(0,±1)` — or dans la base `b₁ = (1,0), b₂ = (g,h)`, le vecteur d'indices
+   `(0,1)` est `(g,h)`, pas `(0,1)`. Ensuite le second passage pouvait **élargir** le rayon
+   (jusqu'à 6528 contraintes sur `h ∈ [2,3]`, 90 s par nœud). Le rayon ne sert qu'à tronquer la
+   liste des vecteurs ; il est donc estimé numériquement et re-vérifié exactement sommet par
+   sommet — un rayon trop petit ne coûte que des sommets, jamais la sûreté.
+
+4. **Les témoins étaient restreints aux sommets.** Ce sont deux points quelconques des cellules.
+   Les milieux d'arêtes sont ajoutés ; ils sont sûrs par convexité (`Queue.cell_convex`), le
+   coefficient `(1/2, 1/2)` ne dépendant pas de `(g, h)`.
+
+5. **L'encadrement des coordonnées de sommets était 20 fois trop large** (0,374 vrai, encadré
+   dans `[0,185 ; 3,418]`). Trois corrections dans `poly2` : dérivées secondes et forme de la
+   moyenne d'ordre 2 ; `Rat.enc` par forme centrée `num/den − c = (num − c·den)/den`, dont le
+   numérateur s'annule au centre ; et cinq centres (milieu + quatre coins) pour l'ordre 2, dont
+   les encadrements sont intersectés. Chacune a été contrôlée sur des points échantillonnés :
+   **21 600 points, 0 violation** au total.
+
+### Le contrôle qui compte
+
+`note/verif_campagne.py` refait la preuve **par un autre moteur** : `audit_gh.cellule` pour la
+cellule numérique, `audit_gh.dmin2_dmax2` (polygone-polygone lent, écrit au geste 26, sans rapport
+avec la réduction au fini) pour les distances, en quatre points par feuille. C'est lui qui a
+démasqué les fautes 1 et 2 : **202 anomalies sur 738 paires**. Après correction, **0 anomalie sur
+91 feuilles** contrôlées, dont la boîte `h ∈ [5,8]` et les feuilles de `h ∈ [3,5]`.
+
+### Où en est la campagne, chiffre exact
+
+`python3 obligations_campagne.py --budget 400` (profondeur max 6), journal
+`obligations_campagne.log` :
+
+| tranche de `h` | boîtes | statut |
+|---|---|---|
+| `[9/10 ; 1]`, `[1 ; 11/10]` | 8 | **certifiées**, 1 à 2 feuilles |
+| `[11/10 ; 13/10]`, `[13/10 ; 3/2]` | 8 | **certifiées**, 4 feuilles |
+| `[3/2 ; 2]` | 4 | **certifiées**, 8 feuilles |
+| `[2 ; 3]` | 4 | **certifiées**, 16 feuilles |
+| `[3 ; 5]` | 3 sur 4 | **certifiées**, 32 feuilles ; 1 incomplète à 98,4 % |
+| `[5 ; 8]` | 0 sur 4 | **trop longues** au budget (61 à 72 % de couverture) |
+| `[8 ; 15]` | 0 sur 4 | **non abouties** |
+
+Plus les boîtes 0 et 1 du geste 40, re-certifiées sous le moteur corrigé en **une seule feuille
+chacune** (elles en demandaient 17 avec l'ancien). Total : **26 boîtes certifiées sur 38**.
+
+### Ce qui bloque les 12 restantes, et ce n'est pas la vitesse
+
+Sur `h ∈ [8 ; 15]`, le maillon faible n'est plus le choix des témoins mais **la largeur de
+l'encadrement du diamètre** : pour `g ∈ [−1/2,−1/4]`, `h ∈ [8 ; 8,3]`, le diamètre² vrai vaut
+66,95 et l'encadrement rend 70,6 ; le maximum des minorants des témoins vaut déjà 66,27, et il
+faudrait que le diamètre encadré descende sous cette valeur. L'ordre 2 est bridé par le reste
+`½ δᵀ H δ` : pour le numérateur `256 h¹⁰ + …`, `M_hh ≈ 5,2·10¹¹` sur la boîte, d'où un reste de
+`≈ 2,3·10⁹` pour une valeur de `≈ 3,3·10¹¹` — 0,7 %, mais c'est 0,7 % sur une quantité dont il
+faut 5 % de finesse.
+
+### Les prochaines pistes, dans l'ordre où je les tenterais
+
+1. **Découper d'abord en `h`** : la cellule se déplace de plus que sa taille quand `h` varie de
+   plus de ~1. Le découpage actuel alterne `g` et `h` et perd des niveaux ; une récurrence qui
+   coupe `h` jusqu'à une largeur fixée (0,1 par exemple) rendrait toutes les boîtes « faciles »,
+   au prix d'un nombre de feuilles plus grand mais de nœuds bien moins chers.
+2. **Ordre 3 ou 4 dans `enc`** : le reste décroît comme `largeur⁴`, ce qui donnerait la finesse
+   manquante sans subdivision supplémentaire.
+3. **Passer la preuve en Lean** : les boîtes certifiées ne sont toujours que des calculs Python.
+   `Boites.clique_de_temoins` et `Pont.lemmeB` sont compilés et sans axiome ; il reste à écrire,
+   pour chaque feuille, les sept témoins et le seuil `T` comme données, et à laisser `norm_num`
+   faire le reste. C'est le seul moyen que « 26 boîtes » devienne un théorème.
+
+### Avertissement sur la version précédente
+
+Un état intermédiaire de cette campagne annonçait **36 boîtes sur 36, en 6 minutes**, avec
+100 % de couverture. C'était **faux** : obtenu avec le moteur d'avant les corrections 1 et 2, et
+la vérification indépendante y trouvait 202 anomalies. Ce chiffre ne doit pas être repris. Le
+journal de cette exécution est conservé sous `obligations_campagne_v1_bancale.log`, précisément
+pour que l'erreur reste visible.

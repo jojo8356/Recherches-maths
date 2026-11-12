@@ -1,0 +1,38 @@
+36 boîtes à traiter, budget 400 s chacune
+
+boîte                h      statut feuilles     aire      s
+    2          9/10..1   certifiee        1   1.0000      2
+    3          9/10..1   certifiee        2   1.0000      9
+    4          9/10..1   certifiee        2   1.0000      9
+    5          9/10..1   certifiee        1   1.0000      2
+    6         1..11/10   certifiee        1   1.0000      2
+    7         1..11/10   certifiee        1   1.0000      3
+    8         1..11/10   certifiee        1   1.0000      3
+    9         1..11/10   certifiee        1   1.0000      3
+   10     11/10..13/10   certifiee        4   1.0000     17
+   11     11/10..13/10   certifiee        4   1.0000     22
+   12     11/10..13/10   certifiee        4   1.0000     22
+   13     11/10..13/10   certifiee        4   1.0000     17
+   14       13/10..3/2   certifiee        4   1.0000     18
+   15       13/10..3/2   certifiee        4   1.0000     22
+   16       13/10..3/2   certifiee        4   1.0000     22
+   17       13/10..3/2   certifiee        4   1.0000     18
+   18           3/2..2   certifiee        8   1.0000     38
+   19           3/2..2   certifiee        8   1.0000     49
+   20           3/2..2   certifiee        8   1.0000     49
+   21           3/2..2   certifiee        8   1.0000     38
+   22             2..3   certifiee       16   1.0000     98
+   23             2..3   certifiee       16   1.0000    125
+   24             2..3   certifiee       16   1.0000    124
+   25             2..3   certifiee       16   1.0000     96
+   26             3..5  incomplete       32   0.9844    267
+   27             3..5   certifiee       32   1.0000    273
+   28             3..5   certifiee       32   1.0000    270
+   29             3..5   certifiee       32   1.0000    264
+   30             5..8 trop_longue       41   0.7188    400
+   31             5..8 trop_longue       39   0.6094    400
+   32             5..8 trop_longue       40   0.6250    400
+   33             5..8 trop_longue       41   0.7188    400
+
+(interrompu après la boîte 33 : la tranche h ∈ [8 ; 15] n'a pas été traitée.
+ Voir CHANGELOG, geste 43, pour le détail et pour les pistes.)

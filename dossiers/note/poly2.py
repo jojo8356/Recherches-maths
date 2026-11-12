@@ -106,6 +106,11 @@ Poly.h = Poly.monome(0, 1, 1)
 G, H = Poly.g, Poly.h
 
 
+def _max_abs(iv):
+    """Plus grande valeur absolue d'un intervalle [lo, hi]."""
+    return max(abs(iv[0]), abs(iv[1]))
+
+
 def iadd(a, b):
     return (a[0] + b[0], a[1] + b[1])
 
@@ -116,15 +121,26 @@ def imul(a, b):
 
 
 class Arbre:
-    """Polynôme + ses dérivées premières, calculées UNE fois (pas d'arbre récursif :
-    un arbre complet coûterait 2^degré nœuds)."""
-    __slots__ = ("f", "dg", "dh")
+    """Polynôme, ses dérivées premières et secondes, calculées UNE fois.
+
+    Les dérivées secondes servent à la forme de la moyenne d'ORDRE 2 (`enc`), sans quoi
+    l'encadrement d'une coordonnée de sommet reste much trop large sur les boîtes hautes :
+    sur g ∈ [−1/2,−1/4], h ∈ [9/10, 1] la vraie valeur de |s|² vaut 0,373 et l'encadrement
+    d'ordre 1 donnait [0,165 ; 3,418] — un facteur 20, qui rendait toute preuve impossible.
+    """
+    __slots__ = ("f", "dg", "dh", "dgg", "dgh", "dhh")
 
     def __init__(self, f):
         self.f = f
         dg, dh = f.dg(), f.dh()
         self.dg = dg if not dg.zero() else None
         self.dh = dh if not dh.zero() else None
+        dgg = dg.dg() if self.dg is not None else Poly()
+        dgh = dg.dh() if self.dg is not None else Poly()
+        dhh = dh.dh() if self.dh is not None else Poly()
+        self.dgg = dgg if not dgg.zero() else None
+        self.dgh = dgh if not dgh.zero() else None
+        self.dhh = dhh if not dhh.zero() else None
 
 
 def comp(f):
@@ -202,7 +218,47 @@ def enc(f, boite, prof=0):
     # directe est exacte sur un monôme mais perd les compensations.
     d = ieval(a.f, boite)
     lo, hi = max(out[0], d[0]), min(out[1], d[1])
-    return (lo, hi) if lo <= hi else out
+    ordre1 = (lo, hi) if lo <= hi else out
+
+    # ---- ordre 2, en CINQ CENTRES : f(x) = f(c) + df(c)·δ + ½ δᵀ H(ξ) δ.
+    #
+    # Un seul centre (le milieu) ne suffit pas : la forme centrée en c est excellente près
+    # de c et s'élargit comme |f'|·|x − c|. Sur g ∈ [−1/2,−1/4], h ∈ [8 ; 10,33] le
+    # diamètre² VRAI de l'enveloppe des sommets vaut 78, et l'encadrement au centre donnait
+    # 574 : la largeur n'était pas de la précision, c'était tout le problème.
+    #
+    # On encadre donc aussi depuis les quatre coins, et on intersecte : chaque encadrement
+    # est sûr, donc leur intersection l'est, et près de chaque point de la boîte c'est le
+    # centre le plus proche qui est le plus fin. C'est l'astuce qui fait passer le certificat
+    # des boîtes h ≲ 2 aux boîtes h ∈ [8, 15].
+    if a.dgg is not None or a.dgh is not None or a.dhh is not None:
+        # Bornes des dérivées secondes, calculées UNE fois.
+        Mgg = _max_abs(ieval(a.dgg, boite)) if a.dgg is not None else F(0)
+        Mgh = _max_abs(ieval(a.dgh, boite)) if a.dgh is not None else F(0)
+        Mhh = _max_abs(ieval(a.dhh, boite)) if a.dhh is not None else F(0)
+        for (cg, ch, dg, dh) in ((gc, hc, rg, rh), (g0, h0, g1 - g0, h1 - h0),
+                                (g1, h0, g1 - g0, h1 - h0), (g0, h1, g1 - g0, h1 - h0),
+                                (g1, h1, g1 - g0, h1 - h0)):
+            valc = a.f.eval(cg, ch)
+            l_lo = l_hi = F(0)
+            if a.dg is not None:
+                c1 = a.dg.eval(cg, ch)
+                l_lo += min(c1 * dg, c1 * (-dg))
+                l_hi += max(c1 * dg, c1 * (-dg))
+            if a.dh is not None:
+                c1 = a.dh.eval(cg, ch)
+                l_lo += min(c1 * dh, c1 * (-dh))
+                l_hi += max(c1 * dh, c1 * (-dh))
+            # Reste d'ordre 2 : ½ δᵀ H δ avec |δ_g| ≤ dg et |δ_h| ≤ dh — LES MÊMES
+            # amplitudes que le terme linéaire. Utiliser les demi-largeurs rg, rh pour un
+            # centre qui est un COIN était la faute : là, |δ| va jusqu'à 2·r, donc le
+            # reste est jusqu'à 4 fois plus grand, et l'encadrement devenait FAUX
+            # (350 violations sur 7200 points échantillonnés, avant correction).
+            rem = (Mgg * dg * dg + 2 * Mgh * dg * dh + Mhh * dh * dh) / 2
+            lo2, hi2 = max(ordre1[0], valc + l_lo - rem), min(ordre1[1], valc + l_hi + rem)
+            if lo2 <= hi2:
+                ordre1 = (lo2, hi2)
+    return ordre1
 
 
 def enc_rat(num, den, boite):
@@ -248,16 +304,61 @@ class Rat:
         return Rat(self.n * o.d, self.d * o.n)
 
     def enc(self, boite):
-        return enc_rat(self.n, self.d, boite)
+        """Encadrement de num/den, par FORME CENTRÉE, intersecté avec la forme naïve.
+
+        POURQUOI CE N'EST PAS `enc_rat(num, den)` TOUT SEUL : encadrer le numérateur puis le
+        dénominateur et diviser les deux largeurs est correct mais catastrophique dès que
+        les deux dépendent de (g, h). Sur g ∈ [−1/2,−1/4], h ∈ [9/10,1], une coordonnée de
+        sommet qui vaut 0,374 au centre s'encadrait dans [0,185 ; 3,418] — un facteur 20,
+        qui rendait toute obligation impossible à prouver.
+
+        Forme centrée : soit c la valeur exacte au centre et d = num − c·den, qui S'ANNULE
+        exactement au centre. Alors
+
+            num/den − c = d / den ,
+
+        et d s'encadre en O(largeur²) puisqu'il est nul au centre (c'est exactement le
+        phénomène que la forme de la moyenne exploite). La largeur du résultat ne contient
+        plus le terme c × largeur(den), qui était le coupable.
+
+        Sûreté : les deux encadrements (centré, naïf) sont corrects, donc leur intersection
+        l'est aussi ; en cas d'intersection vide — impossible si les deux sont sûrs, mais on
+        ne parie pas là-dessus — on garde le naïf. `den` doit être de signe constant.
+        """
+        naif = enc_rat(self.n, self.d, boite)
+        g0, g1, h0, h1 = boite
+        gc, hc = (g0 + g1) / 2, (h0 + h1) / 2
+        dc = self.d.eval(gc, hc)
+        if dc == 0:
+            return naif
+        c = self.n.eval(gc, hc) / dc
+        d = self.n - Poly.const(c) * self.d
+        idd = enc(d, boite)
+        ivd = enc(self.d, boite)
+        if ivd[0] > 0:
+            inv = (1 / ivd[1], 1 / ivd[0])
+        elif ivd[1] < 0:
+            inv = (1 / ivd[1], 1 / ivd[0])
+        else:
+            return naif
+        prod = imul(idd, inv)
+        lo = c + prod[0]
+        hi = c + prod[1]
+        lo, hi = max(lo, naif[0]), min(hi, naif[1])
+        return (lo, hi) if lo <= hi else naif
 
     def signe_enc(self, boite):
-        """(min, max) du signe : on multiplie par le signe du dénominateur, supposé constant."""
-        a = enc(self.n, boite)
+        """(min, max) de la valeur de num/den sur la boîte ; den doit être de signe constant.
+
+        ATTENTION : ce n'est PAS « encadrer num, encadrer den, diviser ». Cette version-là
+        (celle d'avant) était correcte mais très large, parce que la largeur de den se
+        multipliait par la valeur de num/den. Sur les boîtes hautes elle rendait impossibles
+        des inégalités vraies. On passe par `enc`, qui utilise la forme centrée
+        num/den − c = (num − c·den)/den et converge en O(largeur²) au centre.
+        """
         b = enc(self.d, boite)
-        if b[0] > 0:
-            return a
-        if b[1] < 0:
-            return (-a[1], -a[0])
+        if b[0] > 0 or b[1] < 0:
+            return self.enc(boite)
         raise ZeroDivisionError(f"dénominateur non défini en signe : {b}")
 
 

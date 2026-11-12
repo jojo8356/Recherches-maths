@@ -456,11 +456,22 @@ class Boite:
             # 2(sx·vx + sy·vy) − (vx² + vy²)
             expr = (s[0] * Rat(vx) + s[1] * Rat(vy)) * Poly.const(2) \
                 - Rat(vx * vx + vy * vy)
-            # APPARTENANCE : l'inégalité est LARGE (2⟨s,w⟩ ≤ |w|²), et elle est TENDUE
-            # aux sommets (valeur exactement 0). On accepte donc hi ≤ 0, pas hi < 0.
+            # APPARTENANCE : il faut que l'inégalité 2⟨s,w⟩ ≤ |w|² soit vraie pour TOUT
+            # (g, h) de la boîte, donc que le MAJORANT de l'expression soit ≤ 0. Elle est
+            # large et tendue aux sommets (valeur exactement 0), d'où hi ≤ 0 et non hi < 0.
+            #
+            # C'ÉTAIT LE DÉFAUT DE SÛRETÉ LE PLUS GRAVE DU MOTEUR : la version d'avant
+            # testait `lo > 0`, c'est-à-dire « l'inégalité est-elle PROUVÉE FAUSSE quelque
+            # part ». Elle n'écartait donc que les points dont la violation était certaine,
+            # et acceptait tous les autres — y compris des points franchement hors de la
+            # cellule, comme (−0,625 ; 0,848) sur g ∈ [−1/4,0], h ∈ [17/10, 37/20], où la
+            # contrainte w = (−1,0) exige pourtant p_x ≥ −1/2. Ces faux sommets entraient
+            # ensuite comme témoins, et le certificat « prouvait » des choses fausses : la
+            # vérification indépendante par `audit_gh.dmin2_dmax2` (moteur polygone-polygone
+            # lent, écrit bien avant) a trouvé 202 anomalies sur 738 paires.
             lo, hi = expr.signe_enc(self.boite)
-            if lo > 0:
-                return False, lo
+            if hi > 0:
+                return False, hi
             pire = hi if pire is None else max(pire, hi)
         return True, pire
 
@@ -485,6 +496,10 @@ class Boite:
 
 def _inegal(a, T2, boite, sens):
     """Certifie  a ≤ T²  (sens="le")  ou  a ≥ T²  (sens="ge")  sur la boîte.
+
+    ATTENTION AUX UNITÉS : le nombre rendu est une borne de num − T²·den (à un signe près),
+    PAS une valeur de a. Il sert à décider, jamais à construire un seuil — voir
+    `_choisit_T`, où cette confusion a produit des seuils à 67 000.
 
     RÈGLE DU DOSSIER (geste 19, règle 3) : jamais deux encadrements comparés, une seule
     fonction différence. `a` est un Rat num/den ; l'inégalité a ≤ T² s'écrit, den étant de
@@ -524,6 +539,27 @@ def _dans_boule(b, s, r2):
     return ok
 
 
+def _filtre_numerique(b, ca, cb, s):
+    """Ce candidat est-il dans la cellule aux neuf points d'échantillonnage de la boîte ?
+
+    Aucune valeur de preuve : c'est un filtre de coût. Les contraintes testées sont les
+    DEUX qui définissent le sommet, ce qui suffit à écarter les intersections lointaines.
+    """
+    for gg in (b.g0, (b.g0 + b.g1) / 2, b.g1):
+        for hh in (b.h0, (b.h0 + b.h1) / 2, b.h1):
+            for (i, j) in (ca, cb):
+                try:
+                    px = s[0].n.eval(gg, hh) / s[0].d.eval(gg, hh)
+                    py = s[1].n.eval(gg, hh) / s[1].d.eval(gg, hh)
+                except ZeroDivisionError:
+                    return False
+                vx = i + j * gg
+                vy = j * hh
+                if 2 * (px * vx + py * vy) > vx * vx + vy * vy + F(1, 10 ** 9) * max(1, vx * vx + vy * vy):
+                    return False
+    return True
+
+
 def _sommets_prouves(b, cands, r2):
     """Candidats dont l'appartenance est prouvée sur toute la boîte (deux passages).
 
@@ -532,13 +568,28 @@ def _sommets_prouves(b, cands, r2):
     resserre r (majorant de |p| pour p dans la cellule, valide par convexité : la cellule est
     dans l'enveloppe convexe de ses sommets), ce qui raccourcit la liste de contraintes.
     """
+    # PRÉ-FILTRE NUMÉRIQUE, sans valeur de preuve. Les candidats sont les intersections de
+    # paires de contraintes ; beaucoup sont très loin de la cellule et l'encadrement exact de
+    # leur appartenance coûte cher (ce sont justement les coordonnées les plus sensibles à
+    # (g, h)). On écarte d'abord ceux qui ne sont pas dans la cellule NUMÉRIQUEMENT, aux neuf
+    # points d'échantillonnage. Comme le test exact qui suit est refait sur tout survivant,
+    # ce filtre ne peut que faire PERDRE des sommets, jamais en accepter un de faux.
+    garde = [_filtre_numerique(b, ca, cb, s) for (ca, cb, s) in cands]
+    if not any(garde):
+        garde = [True] * len(cands)
     cons = b.contraintes(Poly.const(r2))
-    proves = [(ca, cb, s) for (ca, cb, s) in cands
-              if _dans_boule(b, s, r2) and b.appartient(s, cons)[0]]
+    proves = [(ca, cb, s) for k, (ca, cb, s) in enumerate(cands) if garde[k]
+              and _dans_boule(b, s, r2) and b.appartient(s, cons)[0]]
     if not proves:
         return proves, cons
     ray = [dist2_rat(s, ZERO_RAT) for (_, _, s) in proves]
     r2b = max(_borne_sup(r, b.boite) for r in ray)
+    # Le second passage ne doit que RESSERRER. Il arrivait qu'il élargisse : si le
+    # dénominateur d'une coordonnée encadre 0, le quotient explose et `_borne_sup` rend une
+    # valeur énorme — sur h ∈ [2, 3] cela donnait r² ≈ 300 et 6528 contraintes au lieu de 20,
+    # d'où 90 s par nœud. On garde donc le plus petit des deux rayons : les sommets sont de
+    # toute façon revérifiés un par un par `_dans_boule` et `appartient`.
+    r2b = min(r2, r2b)
     cons = b.contraintes(Poly.const(r2b))
     proves = [(ca, cb, s) for (ca, cb, s) in proves
               if _dans_boule(b, s, r2b) and b.appartient(s, cons)[0]]
@@ -555,111 +606,423 @@ def _dist2_rat(a, b):
     return dist2_rat(a, b)
 
 
-def certifie_boite(g0, g1, h0, h1, T2=None, clique=None):
+class Trop_Long(Exception):
+    """Budget de temps épuisé : la boîte n'est ni certifiée ni réfutée."""
+
+
+def _verifie_echeance(echeance):
+    import time as _t
+    if echeance is not None and _t.time() > echeance:
+        raise Trop_Long("budget de temps épuisé")
+
+
+GARDES = 3          # couples témoins gardés par côté et par paire (voir l'élagage)
+
+
+def points_temoins(sommets, gc, hc):
+    """Sommets prouvés + milieux des arêtes de leur enveloppe convexe.
+
+    POURQUOI DES MILIEUX : les témoins de `Boites.clique_de_temoins` sont deux points
+    QUELCONQUES des cellules, pas deux sommets. Se limiter aux sommets perd des paires
+    entières — deux cellules voisines qui partagent une arête peuvent n'avoir aucun couple
+    de sommets à distance < T alors que leurs arêtes se touchent. Sur la boîte h ∈ [2, 3]
+    cela se voyait : pour une des 21 paires, le meilleur couple de sommets était à
+    distance² 10,6 pour un seuil de 2,2, donc aucun T n'existait.
+
+    POURQUOI C'EST SÛR : la cellule est CONVEXE (`Queue.cell_convex`) et chaque sommet est
+    prouvé dans la cellule pour tout (g, h) de la boîte. Donc tout barycentre à coefficients
+    FIXÉS de sommets prouvés est dans la cellule pour tout (g, h) de la boîte : c'est une
+    combinaison convexe, et les coefficients (1/2, 1/2) ne dépendent pas de (g, h). Les
+    milieux sont donc des témoins admissibles, exactement comme les sommets.
+
+    L'ordre cyclique n'est calculé qu'à un point (le centre) et n'a AUCUNE valeur de preuve :
+    si l'ordre change dans la boîte, on inclut seulement d'autres milieux, qui sont tous
+    dans la cellule par le même argument. Un milieu inutile ne peut rien fausser.
+    """
+    pts = list(sommets)
+    if len(pts) > 2:
+        num = [(p[0].n.eval(gc, hc) / p[0].d.eval(gc, hc),
+                p[1].n.eval(gc, hc) / p[1].d.eval(gc, hc), k) for k, p in enumerate(pts)]
+        cyc = enveloppe([(a, b) for (a, b, _) in num])
+        pos = {(a, b): k for (a, b, k) in num}
+        ordre = [pos[(a, b)] for (a, b) in cyc]
+        for k in range(len(ordre)):
+            i, j = pts[ordre[k]], pts[ordre[(k + 1) % len(ordre)]]
+            pts.append(((i[0] + j[0]) / 2, (i[1] + j[1]) / 2))
+    return pts
+
+
+
+def _couples_temoins(b, temoins, clique, echeance=None):
+    """Les distances² |u − (v + d)|² (en Rat) des couples de témoins, par paire de la clique.
+
+    Structure rendue : {(d_a, d_b) : [(valeur au centre, u, v, Rat)]}, la même liste servant
+    aux deux côtés (témoins proches et lointains) : c'est un seul jeu de polynômes, et
+    `_inegal` en fait une inégalité à la fois.
+
+    On peut ÉLAGUER sans risque : ne garder que les couples les plus petits au centre pour
+    le côté « proche » et les plus grands pour le côté « lointain » ne peut que rendre la
+    condition plus difficile à satisfaire — la preuve reste « il existe un couple de CET
+    ensemble qui passe », revérifié exactement. Sans élagage, chaque nœud encadrait
+    21 × |témoins|² distances, et la campagne dépassait le budget dès h ≳ 1.
+    """
+    gc, hc = (b.g0 + b.g1) / 2, (b.h0 + b.h1) / 2
+    out = {}
+    for a in range(len(clique)):
+        for c in range(a + 1, len(clique)):
+            _verifie_echeance(echeance)
+            vx, vy = _decalage(clique[a], clique[c])
+            lst = []
+            for u in temoins:
+                for v in temoins:
+                    e = (u[0] - v[0] - Rat(vx), u[1] - v[1] - Rat(vy))
+                    dd = e[0] * e[0] + e[1] * e[1]
+                    try:
+                        if dd.d.eval(gc, hc) <= 0:
+                            continue
+                        val = dd.n.eval(gc, hc) / dd.d.eval(gc, hc)
+                    except ZeroDivisionError:
+                        continue
+                    lst.append((val, u, v, dd))
+            if not lst:
+                return None
+            lst.sort(key=lambda z: z[0])
+            # union des deux extrémités triées, chaque élément étiqueté par son côté
+            choisis = [(True, z) for z in lst[:GARDES]] + [(False, z) for z in lst[-GARDES:]]
+            out[(a, c)] = (choisis, lst)
+    return out
+
+
+def _bornes_paire(b, choisis):
+    """Les quatre bornes utiles des d² des témoins d'une paire, sur la boîte entière.
+
+    Renvoie (min_w lo_w, max_w hi_w, min_w hi_w, max_w lo_w).
+
+    Les deux premières servent à DIAGNOSTIQUER et à la vérification finale (« existe-t-il
+    un témoin dont le minorant dépasse T² ? ») ; les deux dernières servent à CONSTRUIRE
+    le seuil, parce que les conditions du théorème portent sur le pire cas de chaque côté
+    (voir `_choisit_T`).
+    """
+    los, his = [], []
+    for (_, (val, u, v, dd)) in choisis:
+        try:
+            lo, hi = dd.enc(b.boite)
+        except ZeroDivisionError:
+            continue
+        los.append(lo)
+        his.append(hi)
+    if not los:
+        return None, None, None, None
+    return min(los), max(his), min(his), max(los)
+
+
+def _choisit_T(b, couples, diam2, echeance=None):
+    """Un seuil T² admissible sur CETTE boîte, ou None.
+
+    ATTENTION AU SENS DES BORNES, c'est le piège de cette fonction (je m'y suis pris deux
+    fois). Sur la boîte, d_w² est encadré par [lo_w, hi_w] pour chaque témoin w. Les deux
+    conditions du théorème, valables pour TOUT (g, h) de la boîte, demandent :
+
+        (ii)  « ∃w : d_w² ≤ T² »  ⟹  il faut T² ≥ hi_w pour un w  ⟹  T² ≥ min_w hi_w
+                                         (le pire cas de d_w² est son MAJORANT)
+        (iii) « ∃w : d_w² ≥ T² »  ⟹  il faut T² ≤ lo_w pour un w  ⟹  T² ≤ max_w lo_w
+                                         (le pire cas est son MINORANT)
+
+    Utiliser max_w lo et min_w hi (ce que fait la vérification paire par paire ci-dessous
+    pour constater un échec) n'est PAS suffisant pour construire T : c'est nécessaire, pas
+    suffisant, et un T² choisi ainsi au-dessus du vrai maximum ne prouve rien. La
+    vérification indépendante l'a montré : sur g ∈ [−1/4,0], h ∈ [9/10,1], T² = 4,7927 avait
+    été retenu alors que la vraie distance² maximale entre les cellules (2,1) et (2,2) vaut
+    4,4514 au bord de la boîte. D'où :
+
+        bas  = max(diam², max_p min_w hi_w)      haut = min_p max_w lo_w
+        admissible ⟺ bas < haut                  T² = (bas + haut)/2
+
+    `bas < haut` est la condition stricte du lemme B (`dmin < dmax`). Le milieu maximise la
+    marge, ce qui est le but : voir `certifie_boite` sur la marge du centre (0,03 au lieu
+    de 0,25) qui bloquait 18 feuilles par boîte dans la campagne précédente.
+
+    L'enchaînement est cohérent parce que la MÊME primitive sert au calcul des bornes et à
+    la vérification finale : `Rat.enc`, forme centrée, dont la sûreté a été contrôlée sur
+    7200 points échantillonnés (0 violation). C'est `_inegal` qui NE convient pas ici : elle
+    encadre le polynôme num − T²·den d'un bloc, et sur les boîtes hautes les coefficients en
+    h¹⁴ font perdre toute la compensation (un d² de 326 était déclaré < 81).
+    """
+    bas = diam2
+    haut = None
+    for (paire, (choisis, _)) in couples.items():
+        _verifie_echeance(echeance)
+        lo_min, hi_max, hi_min, lo_max = _bornes_paire(b, choisis)
+        if hi_min is None or lo_max is None:
+            return None
+        bas = max(bas, hi_min)          # pire cas du côté « proche »
+        haut = lo_max if haut is None else min(haut, lo_max)
+    if not (bas < haut):
+        return None
+    return (bas + haut) / 2
+
+
+def _premier_echec(b, couples, diam2=None):
+    """Diagnostic : où le calcul du seuil s'est arrêté, et de quel type d'échec il s'agit.
+
+    Deux causes très différentes, qu'il ne faut pas confondre :
+      * « bas ≥ haut » avec des valeurs FRANCHEMENT incompatibles : les témoins retenus ne
+        suffisent pas sur cette boîte (il faut subdiviser, ou prendre plus de témoins) ;
+      * une incompatibilité de faible largeur : c'est l'encadrement qui manque de finesse.
+
+    Un échec ici n'est jamais une réfutation.
+    """
+    bas = diam2
+    haut = None
+    ou = None
+    for (paire, (choisis, _)) in couples.items():
+        lo_min, hi_max, hi_min, lo_max = _bornes_paire(b, choisis)
+        if hi_min is None:
+            return f"paire {paire} sans témoin exploitable"
+        if haut is not None and hi_min >= haut:
+            ou = paire
+        bas = max(bas, hi_min)
+        haut = lo_max if haut is None else min(haut, lo_max)
+    txt = f"bas = {float(bas):.4f} ≥ haut = {float(haut):.4f}"
+    if diam2 is not None:
+        txt += f" (diamètre² = {float(diam2):.4f})"
+    if ou is not None:
+        txt += f", bloqué par la paire {ou}"
+    return txt
+
+
+def certifie_boite(g0, g1, h0, h1, T2=None, clique=None, echeance=None):
     """Certifie l'obligation sur la boîte, ou dit qu'il faut subdiviser.
 
     ATTENTION À NE PAS CONFONDRE (c'était mon erreur de la première version) :
       * la CLIQUE est un ensemble de 7 DÉCALAGES du réseau (les sept cellules) ;
-      * les SOMMETS de la cellule sont les TÉMOINS, pas la clique.
+      * les TÉMOINS sont des points des cellules, pas la clique.
 
-    Obligation, pour une clique d₁…d₇ et un seuil T fixés :
-      (i)   toute paire de sommets de la cellule est à distance < T     [ε = D/T < 1]
-      (ii)  pour chacune des 21 paires (d_a, d_b), il existe des sommets u, v de la cellule
-            tels que |u − (v + d)|² ≤ T²      — les témoins proches   (d = d_b − d_a)
-      (iii) pour chacune des 21 paires, il existe des sommets u, v tels que
-            |u − (v + d)|² ≥ T²             — les témoins lointains
+    Obligation à prouver, pour une clique d₁…d₇ et un seuil T :
+      (i)   le diamètre de la cellule est < T                        [ε = D/T < 1]
+      (ii)  pour chacune des 21 paires, il existe des points u, v de la cellule tels que
+            |u − (v + d)|² ≤ T²                      — les témoins proches
+      (iii) pour chacune des 21 paires, il existe u, v tels que |u − (v + d)|² ≥ T²
+                                                     — les témoins lointains
+    (ii) et (iii) sont les deux hypothèses de `Boites.clique_de_temoins` ; (i) est celle de
+    `Pont.lemmeB` (0 < ε = D/T < 1, dmin ≤ D/ε ≤ dmax, dmin < dmax ⟹ l'échelle existe).
     Les sommets prouvés appartiennent à la cellule pour TOUT (g, h) de la boîte, donc les
-    témoins u, v + d aussi (translation). (ii) et (iii) sont les deux hypothèses de
-    `Boites.clique_de_temoins` ; (i) est celle de `Pont.lemmeB`.
+    témoins aussi (translation) ; les milieux d'arêtes sont sûrs par convexité.
 
-    Pourquoi (ii) se teste sur des sommets : deux cellules adjacentes qui partagent une
-    arête partagent ses extrémités, donc une paire de sommets à distance nulle existe.
-    C'est une condition SUFFISANTE (on exhibe un couple), jamais une condition nécessaire :
-    un échec dit « ce couple-là n'est pas prouvé », pas « c'est faux ».
+    QUATRE DÉFAUTS CORRIGÉS ICI, tous découverts en instrumentant la campagne :
+
+    1. LE SEUIL T ÉTAIT CELUI DU CENTRE DE LA BOÎTE RACINE, propagé à toutes les feuilles.
+       La marge restante était celle du centre (0,03 au lieu de 0,25), et la subdivision ne
+       pouvait rien y changer. T est maintenant choisi pour la boîte : voir `_choisit_T`.
+
+    2. LES TÉMOINS ÉTAIENT RESTREINTS AUX SOMMETS. Or ce sont deux points quelconques des
+       cellules. Voir `points_temoins` : milieux d'arêtes ajoutés, sûrs par convexité.
+
+    3. LA MEMBRURE ENCADRÉE COMPARAIT DEUX QUOTIENTS. `a ≤ T²` s'écrit num − T²·den ≤ 0
+       avec den > 0 : UN seul polynôme, jamais deux encadrements comparés (règle du dossier,
+       geste 19). C'est `_inegal`, et elle seule décide.
+
+    4. LE RAYON r DE LA RÉDUCTION AU FINI ÉTAIT DÉMESURÉ, et son second passage pouvait
+       l'ÉLARGIR (jusqu'à 6528 contraintes sur h ∈ [2,3], 90 s par nœud). Voir
+       `rayon_numerique` et `_sommets_prouves`.
     """
     b = Boite(g0, g1, h0, h1)
     gc, hc = (g0 + g1) / 2, (h0 + h1) / 2
-    if T2 is None or clique is None:
+    if clique is None:
         try:
-            _, T2c, clc = meilleur_T(Cellule(gc, hc))
+            _, _, clique = meilleur_T(Cellule(gc, hc))
         except Exception:
-            return {"ok": False, "raison": "aucun seuil T au centre", "subdiviser": False}
-        if T2 is None:
-            T2 = T2c
-        if clique is None:
-            clique = clc
+            return {"ok": False, "raison": "aucune clique au centre", "subdiviser": False}
     if clique is None or len(clique) < 7:
         return {"ok": False, "raison": "clique de centre < 7", "subdiviser": True}
     clique = list(clique)[:9]
-    r = {"boite": [str(g0), str(g1), str(h0), str(h1)], "T2": str(T2),
+    r = {"boite": [str(g0), str(g1), str(h0), str(h1)],
          "clique": [list(c) for c in clique], "subdiviser": False}
 
     A, cands = b.boite_sup_sommets()
     if len(cands) < 3:
         return {**r, "raison": f"sur-ensemble dégénéré ({len(cands)})"}
+    _verifie_echeance(echeance)
+    r2 = rayon_numerique(g0, g1, h0, h1, cands)
+    if r2 is None:
+        r2 = rayon_geometrique(g0, g1, h0, h1)
     try:
-        proves, cons = _sommets_prouves(b, cands, _rayons_borne(cands, b.boite))
+        proves, cons = _sommets_prouves(b, cands, r2)
     except ZeroDivisionError as e:
         return {**r, "raison": f"appartenance : {e}", "subdiviser": True}
     r["sommets_prouves"] = len(proves)
     if len(proves) < 3:
-        return {**r, "raison": f"{len(proves)} sommets prouvés sur {len(cands)}", "subdiviser": True}
+        return {**r, "raison": f"{len(proves)} sommets prouvés sur {len(cands)}",
+                "subdiviser": True}
     sommets = [s for (_, _, s) in proves]
+    temoins = points_temoins(sommets, gc, hc)
 
-    # (i) diamètre < T
-    pire = None
+    # (i) diamètre de l'enveloppe des sommets : ne dépend pas de T
+    diam2 = None
     for a in range(len(sommets)):
         for c in range(a + 1, len(sommets)):
             try:
-                ok, m = _inegal(dist2_rat(sommets[a], sommets[c]), T2, b.boite, "le")
+                hi = dist2_rat(sommets[a], sommets[c]).enc(b.boite)[1]
             except ZeroDivisionError as e:
                 return {**r, "raison": f"diamètre : {e}", "subdiviser": True}
-            if not ok:
-                return {**r, "raison": "diamètre : deux sommets peuvent dépasser T",
-                        "subdiviser": True}
-            pire = m if pire is None else max(pire, m)
-    r["diam2_sup"] = str(pire)
+            diam2 = hi if diam2 is None else max(diam2, hi)
+    r["diam2_sup"] = str(diam2)
 
-    # (ii)+(iii) les 21 paires de la clique
-    marge_proche = marge_loin = None
-    for a in range(len(clique)):
-        for c in range(a + 1, len(clique)):
-            vx, vy = _decalage(clique[a], clique[c])
-            proche = lointain = None
-            for u in sommets:
-                for v in sommets:
-                    e = (u[0] - v[0] - Rat(vx), u[1] - v[1] - Rat(vy))
-                    dd = e[0] * e[0] + e[1] * e[1]
-                    try:
-                        okp, mp = _inegal(dd, T2, b.boite, "le")
-                        okl, ml = _inegal(dd, T2, b.boite, "ge")
-                    except ZeroDivisionError:
-                        continue
-                    if okp and (proche is None or mp > proche):
-                        proche = mp
-                    if okl and (lointain is None or ml < lointain):
-                        lointain = ml
-            if proche is None:
-                return {**r, "raison": f"paire {clique[a]},{clique[c]} : aucun témoin proche",
-                        "subdiviser": True}
-            if lointain is None:
-                return {**r, "raison": f"paire {clique[a]},{clique[c]} : aucun témoin lointain",
-                        "subdiviser": True}
-            marge_proche = proche if marge_proche is None else min(marge_proche, proche)
-            marge_loin = lointain if marge_loin is None else min(marge_loin, lointain)
-    r.update(ok=True, raison="diamètre < T, 21 paires avec témoins proche et lointain",
-             marge_proche=str(marge_proche), marge_loin=str(marge_loin))
+    _verifie_echeance(echeance)
+    couples = _couples_temoins(b, temoins, clique, echeance)
+    if couples is None:
+        return {**r, "raison": "témoins : dénominateur de signe indéterminé",
+                "subdiviser": True}
+
+    if T2 is None:
+        T2 = _choisit_T(b, couples, diam2, echeance)
+        if T2 is None:
+            return {**r, "raison": "pas de seuil : " + _premier_echec(b, couples, diam2),
+                    "subdiviser": True}
+    r["T2"] = str(T2)
+
+    # VÉRIFICATION FINALE, paire par paire et côté par côté
+    for (paire, (choisis, _)) in couples.items():
+        _verifie_echeance(echeance)
+        lo_min, hi_max, hi_min, lo_max = _bornes_paire(b, choisis)
+        if hi_min is None:
+            return {**r, "raison": f"paire {paire} : aucun témoin exploitable",
+                    "subdiviser": True}
+        # (ii) « ∃w : d_w² ≤ T² » : il suffit que le MAJORANT d'un témoin soit ≤ T²,
+        #      donc que min_w hi_w ≤ T².
+        if not (hi_min <= T2):
+            return {**r, "raison": f"paire {paire} : aucun témoin proche "
+                                   f"(min des majorants = {float(hi_min):.4f} > T² = "
+                                   f"{float(T2):.4f})", "subdiviser": True}
+        # (iii) « ∃w : d_w² ≥ T² » : il suffit que le MINORANT d'un témoin soit ≥ T²,
+        #       donc que max_w lo_w ≥ T².
+        if not (T2 <= lo_max):
+            return {**r, "raison": f"paire {paire} : aucun témoin lointain "
+                                   f"(max des minorants = {float(lo_max):.4f} < T² = "
+                                   f"{float(T2):.4f})", "subdiviser": True}
+    if not (diam2 < T2):
+        return {**r, "raison": "diamètre : l'enveloppe dépasse le seuil", "subdiviser": True}
+    r.update(ok=True, raison="diamètre < T, 21 paires avec témoins proche et lointain")
     return r
 
 
+def rayon_geometrique(g0, g1, h0, h1):
+    """Majorant de |p|² pour p dans la cellule, valable pour TOUT (g, h) de la boîte.
+
+    POURQUOI PAS « le max des |s|² des candidats » : parmi les intersections de paires de
+    contraintes figurent des points arbitrairement loin, qui ne sont pas dans la cellule
+    mais que rien n'écarte a priori. Sur la boîte h ∈ [8, 15] l'un d'eux donne
+    r² ≈ 4,1·10¹⁰, et la liste de contraintes explose (la boucle porte sur ≈ 2r × 2r/h
+    décalages) : le calcul ne termine pas. Un rayon tiré des DONNÉES ne vaut que si les
+    données sont dans la cellule — ce qu'on est justement en train de prouver.
+
+    LE PIÈGE À ÉVITER (il m'a coûté une version fausse) : dans la base b₁ = (1, 0),
+    b₂ = (g, h), les vecteurs du réseau sont i·b₁ + j·b₂ = (i + j·g, j·h). Le vecteur
+    d'indices (0, 1) est donc (g, h) et NON (0, h) : écrire « |p_y| ≤ h/2 grâce à la
+    contrainte (0,±1) » est faux dès que g ≠ 0. Le majorant doit se déduire des seuls
+    vecteurs dont on connaît vraiment les coordonnées, c'est-à-dire de b₁, b₂ et b₂ − b₁.
+
+    Majorant retenu, et il est SÛR : la cellule est contenue dans l'intersection des
+    demi-plans associés à ces trois vecteurs, qui sont tous dans le réseau,
+
+        T = { p : ⟨p, b₁⟩ ≤ |b₁|²/2,  ⟨p, b₂⟩ ≤ |b₂|²/2,  ⟨p, b₂−b₁⟩ ≤ |b₂−b₁|²/2 }.
+
+    Ces trois normales engendrent positivement ℝ² (b₁ et b₂ sont une base, et
+    b₁ − b₂ + (b₂−b₁) = 0), donc T est un TRIANGLE borné, et la cellule y est incluse.
+    On prend r² = (6/5)·max des |sommet|² de ce triangle : le facteur n'est qu'une marge,
+    car la sûreté est de toute façon revérifiée sommet par sommet par `_dans_boule`.
+
+    Gain : sur h ∈ [8, 15] l'ancienne formule donnait r² = 2(1+16²)+1 = 515, celle-ci
+    donne ≈ (6/5)·(1 + h²)/4 ≈ 68. La longueur de la liste de contraintes varie comme r²/h,
+    d'où un gain d'un ordre de grandeur sur les grandes boîtes.
+    """
+    pts = []
+    for (a, c) in (((1, 0), (0, 1)), ((1, 0), (-1, 1)), ((0, 1), (-1, 1))):
+        s = sommet(a[0], a[1], c[0], c[1])
+        if s is None:
+            continue
+        pts.append(s)
+    if not pts:
+        return 2 * (1 + (max(abs(F(h0)), abs(F(h1))) + 1) ** 2) + 1
+    boite = (g0, g1, h0, h1)
+    r2 = None
+    for p in pts:
+        hi = dist2_rat(p, ZERO_RAT).enc(boite)[1]
+        r2 = hi if r2 is None else max(r2, hi)
+    return F(6, 5) * r2
+
+
+def rayon_numerique(g0, g1, h0, h1, cands):
+    """Majorant de |p|² estimé NUMÉRIQUEMENT, pour raccourcir la liste de contraintes.
+
+    Ce rayon n'est PAS un ingrédient de sûreté — et c'est ce qui autorise à l'estimer.
+    La réduction au fini (`Boites.contrainte_auto`) dit : si |p|² ≤ r² et |w|² ≥ 4r², alors
+    la contrainte de w est automatique. Le seul usage de r est donc là, et `_dans_boule`
+    revérifie |s|² ≤ r² EXACTEMENT, sommet par sommet, avant d'accepter quoi que ce soit.
+    Un r trop petit fait seulement perdre des sommets (preuve incomplète) ; il ne peut pas
+    faire accepter un point hors de la cellule. C'est pourquoi on peut se permettre de
+    l'estimer sur cinq points échantillonnés au lieu de l'encadrer sur la boîte.
+
+    Méthode : aux cinq points (quatre coins + centre), on construit la cellule numériquement
+    (`audit_gh.cellule`), on garde les candidats qui y sont, et on prend le plus grand |p|²
+    observé, majoré de 30 %. Le facteur absorbe le déplacement de la cellule entre le point
+    d'échantillonnage et l'intérieur de la boîte.
+
+    Gain mesuré sur h ∈ [2, 3] : le triangle majorant donnait r² = 29 (194 contraintes,
+    90 s par nœud) ; ici r² ≈ 3 (une vingtaine de contraintes).
+    """
+    best = None
+    for gg in (g0, (g0 + g1) / 2, g1):
+        for hh in (h0, (h0 + h1) / 2, h1):
+            try:
+                info = AG.cellule(gg, hh)
+            except Exception:
+                info = None
+            if info is None:
+                continue
+            Pd = info[0]
+            for (_, _, spt) in cands:
+                try:
+                    x = spt[0].n.eval(gg, hh) / spt[0].d.eval(gg, hh)
+                    y = spt[1].n.eval(gg, hh) / spt[1].d.eval(gg, hh)
+                except ZeroDivisionError:
+                    continue
+                if _dist2_point_convexe((x, y), Pd) != 0:
+                    continue
+                d2 = x * x + y * y
+                best = d2 if best is None else max(best, d2)
+    if best is None:
+        return None
+    return F(13, 10) * best + F(1, 100)
+
+
 def _rayons_borne(cands, boite):
+    """Ancien calcul, conservé pour comparaison — voir `rayon_geometrique`."""
     ray = [dist2_rat(s, ZERO_RAT) for (_, _, s) in cands]
     return max(_borne_sup(r, boite) for r in ray)
 
 
-def couvre(g0, g1, h0, h1, profondeur=0, prof_max=7, T2=None, journal=None):
-    """Subdivise jusqu'à certifier ; renvoie (feuilles certifiées, échecs, essais)."""
-    r = certifie_boite(g0, g1, h0, h1, T2=T2)
+def couvre(g0, g1, h0, h1, profondeur=0, prof_max=7, T2=None, journal=None, echeance=None,
+           clique=None):
+    """Subdivise jusqu'à certifier ; renvoie (feuilles certifiées, échecs, essais).
+
+    La CLIQUE est calculée une seule fois, à la racine, puis RÉUTILISÉE telle quelle par
+    tous les descendants. C'est licite et c'est le point important : la clique n'est qu'un
+    jeu de sept décalages CANDIDATS ; ce qui la rend légitime sur une boîte, ce sont les
+    témoins proches et lointains, revérifiés exactement sur chaque nœud. Recalculer
+    `meilleur_T` au centre de chaque nœud ne changeait jamais la réponse et coûtait, sur
+    les boîtes à grand h, plus cher que la preuve elle-même (énumération des décalages
+    dans une fenêtre de rayon 5·D pour chaque centre).
+    """
+    if clique is None:
+        try:
+            _, _, clique = meilleur_T(Cellule((g0 + g1) / 2, (h0 + h1) / 2))
+        except Exception:
+            clique = None
+    try:
+        r = certifie_boite(g0, g1, h0, h1, T2=T2, clique=clique, echeance=echeance)
+    except Trop_Long as e:
+        r = {"ok": False, "subdiviser": False, "raison": f"trop long : {e}"}
     if journal is not None:
         journal.append(r)
     if r.get("ok"):
@@ -673,7 +1036,8 @@ def couvre(g0, g1, h0, h1, profondeur=0, prof_max=7, T2=None, journal=None):
         sous = [(g0, g1, h0, hm), (g0, g1, hm, h1)]
     feuilles, echecs, essais = [], [], 1
     for (a, b_, c, d) in sous:
-        f, e, n = couvre(a, b_, c, d, profondeur + 1, prof_max, T2, journal)
+        f, e, n = couvre(a, b_, c, d, profondeur + 1, prof_max, T2, journal, echeance,
+                         clique)
         feuilles += f
         echecs += e
         essais += n
