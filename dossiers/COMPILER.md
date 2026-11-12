@@ -9,11 +9,38 @@ Deux projets indépendants, dans `dossiers/` :
 
 ---
 
+## ATTENTION : la branche
+
+Le travail récent (gestes 39 à 41, `verifier.sh`, `COMPILER.md`, lakefile corrigé) n'est **pas**
+sur `main`, qui ne contient que le commit initial. Il est sur la branche
+`arena/dfb03fac-recherches-maths`. Un `git clone` nu vous laisse sur `main` et **aucun des
+fichiers récents n'existe** :
+
+```
+bash: dossiers/verifier.sh: Aucun fichier ou dossier de ce nom
+```
+
+Clonez la bonne branche, ou basculez dessus :
+
+```bash
+git clone -b arena/dfb03fac-recherches-maths https://github.com/jojo8356/Recherches-maths.git
+# ou, dépôt déjà cloné :
+git fetch origin && git checkout arena/dfb03fac-recherches-maths
+```
+
+Vérification en une ligne — doit afficher `verifier.sh` :
+
+```bash
+ls dossiers/verifier.sh
+```
+
 ## Le plus court : un script fait tout
 
 ```bash
-git clone https://github.com/jojo8356/Recherches-maths.git
-bash Recherches-maths/dossiers/verifier.sh
+git clone -b arena/dfb03fac-recherches-maths \
+    https://github.com/jojo8356/Recherches-maths.git
+cd Recherches-maths
+bash dossiers/verifier.sh
 ```
 
 Il enchaîne les deux builds et les contrôles d'axiomes, et rend un bilan vert ou rouge.
@@ -139,6 +166,8 @@ Soyons précis sur le périmètre, pour éviter une fausse impression de « tout
 | `cache` échoue / très long | pas d'accès au cache Mathlib | `lake build` compilera Mathlib depuis la source (long, ~10 Go de disque) |
 | `push_neg` déprécié (avertissement) | Mathlib a renommé la tactique | **avertissement seulement**, sans effet sur les preuves |
 | `cd: aucun fichier ou dossier de ce nom: dossiers/lean` | vous êtes dans `~`, pas dans le dépôt cloné | `cd Recherches-maths` d'abord (voir plus haut) |
+| `dossiers/verifier.sh: Aucun fichier ou dossier de ce nom` | vous êtes sur `main`, où le fichier n'existe pas | `git checkout arena/dfb03fac-recherches-maths` |
+| `bash: dossiers/[verifier.sh](http://verifier.sh): …` | un rendu markdown a transformé le nom en lien | taper la commande sans markdown : `bash dossiers/verifier.sh` |
 | `no configuration file with a supported extension: ~/lakefile.toml` | même cause : `lake` cherche un projet dans le répertoire courant | se placer dans `dossiers/lean` ou `dossiers/geom` |
 | `warning: could not canonicalize path: ~/.elan/toolchains` | bénin : dossier pas encore créé au premier lancement | ignorable, disparaît ensuite |
 

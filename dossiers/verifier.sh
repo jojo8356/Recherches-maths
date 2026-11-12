@@ -21,6 +21,17 @@ ok()    { printf '  \033[32mOK\033[0m   %s\n' "$*"; }
 ko()    { printf '  \033[31mÉCHEC\033[0m %s\n' "$*"; ECHEC=1; }
 info()  { printf '  ..   %s\n' "$*"; }
 
+# ---------------------------------------------------------------- branche
+titre "Branche"
+BRANCHE="$(git -C "$RACINE" branch --show-current 2>/dev/null || echo '(inconnue)')"
+info "branche : $BRANCHE"
+if [ "$BRANCHE" = "main" ]; then
+  ko "vous êtes sur main, qui ne contient pas le travail récent (gestes 39-41).
+      Le lakefile y est encore celui du bac à sable (/var/tmp) et Boites_data n'y est pas déclaré.
+      Basculez d'abord :  git checkout arena/dfb03fac-recherches-maths"
+  exit 1
+fi
+
 # ---------------------------------------------------------------- prérequis
 titre "Prérequis"
 if ! command -v lake >/dev/null 2>&1; then
