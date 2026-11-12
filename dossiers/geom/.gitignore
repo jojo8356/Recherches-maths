@@ -1,0 +1,3 @@
+# Lake reconstruit tout ; ces dossiers ne doivent pas être versionnés.
+.lake/
+lake-packages/

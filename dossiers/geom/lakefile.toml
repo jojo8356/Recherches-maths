@@ -18,5 +18,12 @@ name = "Queue"
 [[lean_lib]]
 name = "Boites"
 
-packagesDir = "/var/tmp/geom-packages"
-buildDir = "/var/tmp/geom-build"
+# Boites_data est un fichier généré par note/gen_obligations.py (geste 40).
+# Il DOIT être déclaré ici : Lake ne construit que des bibliothèques déclarées, et
+# `lake build Boites_data` échoue avec « unknown target » sinon.
+[[lean_lib]]
+name = "Boites_data"
+
+# Note : `packagesDir` et `buildDir` étaient fixés à /var/tmp/... pour le bac à sable de
+# l'audit. Ces chemins n'existent pas ailleurs et faisaient échouer la création du dossier.
+# On revient aux emplacements par défaut de Lake (.lake/ dans le projet).
