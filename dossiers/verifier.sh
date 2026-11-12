@@ -56,6 +56,37 @@ fi
 ok "lake : $(command -v lake)"
 lake --version 2>/dev/null | head -1 | sed 's/^/        /'
 
+# ---------------------------------------------------------------- cohérence lakefile
+# Ce contrôle est né de TROIS bugs identiques : un .lean présent dans le dossier mais absent
+# des [[lean_lib]]. `lake build` ne le construit alors jamais, et `lake env lean` échoue sur
+# « unknown module prefix ». Ont été dans ce cas : Boites_data, Axiomes, puis Pont (dans
+# dossiers/lean) — ce dernier invisible de Lake pendant des séances entières.
+titre "Cohérence : chaque .lean du dossier est-il une cible déclarée ?"
+for dossier in lean geom; do
+  dir="$RACINE/$dossier"
+  [ -d "$dir" ] || continue
+  declares=$(python3 - "$dir/lakefile.toml" <<'PY'
+import sys, tomllib
+d = tomllib.load(open(sys.argv[1], "rb"))
+print(" ".join(l["name"] for l in d.get("lean_lib", [])))
+PY
+)
+  manquants=""
+  for f in "$dir"/*.lean; do
+    [ -e "$f" ] || continue
+    m="$(basename "$f" .lean)"
+    case " $declares " in *" $m "*) ;; *) manquants="$manquants $m" ;; esac
+  done
+  if [ -z "$manquants" ]; then
+    ok "  $dossier : tous les .lean sont déclarés ($(echo $declares | wc -w) cibles)"
+  else
+    ko "  $dossier : fichier(s) présent(s) mais non déclaré(s) dans lakefile.toml :"
+    printf '         %s\n' $manquants
+    printf '         lake build ne les construira jamais et lake env lean échouera.\n'
+    printf '         (Votre copie est peut-être en retard : git pull)\n'
+  fi
+done
+
 # ---------------------------------------------------------------- projet sans dépendance
 titre "dossiers/lean — noyau pur, aucune dépendance (~30 s)"
 cd "$RACINE/lean" || { ko "dossier lean absent"; exit 1; }

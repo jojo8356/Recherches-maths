@@ -357,3 +357,45 @@ lake build                     # Plafond, T8, Pont
 lake build Axiomes
 lake env lean Axiomes.lean     # 15 théorèmes
 ```
+
+---
+
+## Troisième passage : `Pont` toujours absent → votre copie est en retard
+
+La sortie montrait `[2/5] Plafond`, `[3/5] T8`, `[4/5] Axiomes` : **`Pont` n'était pas dans le
+plan de build** (5 cibles au total, or il en faudrait 6). C'est la signature d'un `lakefile.toml`
+d'avant le correctif. Le dépôt, lui, est correct — vérifié par un `git clone` neuf :
+
+```
+dossiers/lean : defaultTargets = ['Plafond', 'T8', 'Pont']
+                lean_lib       = ['Plafond', 'T8', 'Pont', 'Axiomes']
+```
+
+**Le correctif `Pont` est dans le commit `bf0147b`.** Si `git log --oneline -1` ne l'affiche pas :
+
+```bash
+git pull            # récupère bf0147b
+cd dossiers/lean
+lake build          # doit lister 6 jobs : Plafond, T8, Pont, Axiomes, +2
+lake env lean Axiomes.lean
+```
+
+### Un contrôle automatique, parce que c'est arrivé trois fois
+
+Trois fichiers ont été trouvés présents mais non déclarés : `Boites_data`, `Axiomes`, puis
+`Pont`. Chaque fois le symptôme est identique — `unknown module prefix` — et chaque fois la cause
+est la même : `lake build` ne construit que des cibles déclarées.
+
+`verifier.sh` compare désormais **les `.lean` présents** et **les cibles déclarées**, avant de
+lancer quoi que ce soit :
+
+```
+== Cohérence : chaque .lean du dossier est-il une cible déclarée ? ==
+  ÉCHEC   lean : fichier(s) présent(s) mais non déclaré(s) dans lakefile.toml :
+         Pont
+         lake build ne les construira jamais et lake env lean échouera.
+         (Votre copie est peut-être en retard : git pull)
+```
+
+Testé dans les deux sens (avec et sans la déclaration). Ce contrôle aurait attrapé les trois
+bugs du premier coup.
