@@ -9,6 +9,42 @@ Deux projets indépendants, dans `dossiers/` :
 
 ---
 
+## Le plus court : un script fait tout
+
+```bash
+git clone https://github.com/jojo8356/Recherches-maths.git
+bash Recherches-maths/dossiers/verifier.sh
+```
+
+Il enchaîne les deux builds et les contrôles d'axiomes, et rend un bilan vert ou rouge.
+Si vous préférez la main, lisez la suite.
+
+---
+
+## L'erreur la plus fréquente : être dans le mauvais dossier
+
+```
+~ ❯ cd dossiers/lean
+cd: aucun fichier ou dossier de ce nom: dossiers/lean
+```
+
+`dossiers/` est **dans le dépôt cloné**, pas dans votre répertoire personnel. `lake` a ensuite
+échoué en cherchant `lakefile.toml` dans `~` — il regarde le répertoire *courant*, et n'y trouvait
+aucun projet. Il faut d'abord entrer dans le dépôt :
+
+```bash
+git clone https://github.com/jojo8356/Recherches-maths.git
+cd Recherches-maths          # <-- l'étape oubliée
+ls dossiers/                 # doit montrer : lean, geom, note, …
+cd dossiers/lean
+lake build
+```
+
+Si vous voyez déjà ces deux erreurs, **votre installation est correcte** : la toolchain
+`v4.35.0` s'est bien installée (566 Mo téléchargés). Il ne manquait que le `cd`.
+
+---
+
 ## 0. Prérequis
 
 ```bash
@@ -102,6 +138,9 @@ Soyons précis sur le périmètre, pour éviter une fausse impression de « tout
 | `failed to download lean-4.36.0-rc2` | elan n'a pas la toolchain | `elan toolchain install leanprover/lean4:v4.36.0-rc2` |
 | `cache` échoue / très long | pas d'accès au cache Mathlib | `lake build` compilera Mathlib depuis la source (long, ~10 Go de disque) |
 | `push_neg` déprécié (avertissement) | Mathlib a renommé la tactique | **avertissement seulement**, sans effet sur les preuves |
+| `cd: aucun fichier ou dossier de ce nom: dossiers/lean` | vous êtes dans `~`, pas dans le dépôt cloné | `cd Recherches-maths` d'abord (voir plus haut) |
+| `no configuration file with a supported extension: ~/lakefile.toml` | même cause : `lake` cherche un projet dans le répertoire courant | se placer dans `dossiers/lean` ou `dossiers/geom` |
+| `warning: could not canonicalize path: ~/.elan/toolchains` | bénin : dossier pas encore créé au premier lancement | ignorable, disparaît ensuite |
 
 ## 5. Un piège que j'ai créé en corrigeant (à savoir si vous voyez l'erreur)
 
