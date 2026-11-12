@@ -1,0 +1,52 @@
+==============================================================================
+1. Accessibilité des hôtes (TCP 443)
+==============================================================================
+  OUVERT  github.com                               redirection des releases elan
+  OUVERT  api.github.com                           métadonnées des releases
+  OUVERT  codeload.github.com                      archives de source (git clone)
+  BLOQUÉ  objects.githubusercontent.com            CIBLE du 302 : artefacts de release elan
+  BLOQUÉ  release-assets.githubusercontent.com     artefacts de release (autre nom)
+  BLOQUÉ  raw.githubusercontent.com                scripts d'installation (elan-init.sh)
+  BLOQUÉ  releases.lean-lang.org                   toolchain lean4 (ce qu'elan télécharge)
+  BLOQUÉ  leanprover-community.github.io           cache Mathlib (GitHub Pages, servi par Fastly)
+  BLOQUÉ  mathlib.cache.azureedge.net              repli du cache Mathlib
+
+==============================================================================
+2. Aucun substitut dans les dépôts accessibles
+==============================================================================
+  pypi/lean4        0.01 Mo  (sans description)
+  pypi/lean         0.37 Mo  A CLI aimed at making it easier to run QuantConnect'
+  pypi/pyelan       0.02 Mo  (sans description)
+  npm           : aucun paquet ne fournit le binaire lean (@leanprover/* = interfaces, pas de toolchain)
+  => les deux dépôts autorisés ne servent pas d'artefact Lean compilé.
+
+==============================================================================
+3. Outils de compilation sur place
+==============================================================================
+  g++      /usr/bin/g++
+  make     /usr/bin/make
+  cmake    ABSENT
+  ninja    ABSENT
+  zstd     ABSENT
+
+  2 cœurs, 3.8 Go de RAM
+  Mathlib depuis la source : ~10 Go et plusieurs heures ; hors de portée ici
+
+==============================================================================
+VERDICT
+==============================================================================
+  6 hôte(s) à ouvrir pour compiler :
+    - objects.githubusercontent.com
+    - release-assets.githubusercontent.com
+    - raw.githubusercontent.com
+    - releases.lean-lang.org
+    - leanprover-community.github.io
+    - mathlib.cache.azureedge.net
+
+  Les quatre premiers suffisent pour la toolchain et les dépendances :
+    objects.githubusercontent.com   (elan + lean4 si via releases GitHub)
+    releases.lean-lang.org          (lean4, voie normale d'elan)
+    raw.githubusercontent.com       (elan-init.sh)
+    leanprover-community.github.io  (cache Mathlib : SANS lui, Mathlib depuis la source)
+  Volumes : elan 5 Mo ; lean4 608 Mo (linux.tar.zst) ; cache Mathlib ~5 Go.
+  Rien de tout cela n'est atteignable aujourd'hui, d'où le report de compilation.

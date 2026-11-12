@@ -678,3 +678,198 @@ calcul fini). Journal : `geom/build3.log`. Le brouillon `Essai.lean` a été sup
 
 Reste : les obligations par boîte (témoins + inégalités rationnelles sur les 38 rectangles de
 `Boites_data.lean`), désormais outillées de bout en bout. §13 de l'audit mis à jour en conséquence.
+
+## Geste 39 — le point bloquant est levé : ce n'était pas la forme du retour (12/11/2026)
+
+**Ce qui bloquait, mot pour mot.** « Au point d'export (g = −3/8, h = 219/250), la clique de la
+boîte 0 ne donne que 20/21 paires en conflit avec mon calcul `dmin2_dmax2`, alors que `omega_exact`
+annonce ω = 7 — probablement parce que `audit_gh.cellule` renvoie une liste dont le premier élément
+est le polygone. »
+
+**L'hypothèse est fausse, et la vraie cause est ailleurs.** `cellule(g, h)` renvoie le triplet
+`(sommets, W, rayon²)` ; `cellule(g, h)[0]` **est** la liste des sommets, et c'est bien elle qu'il
+faut passer à `dmin2_dmax2`. Prendre le triplet entier ne reproduit pas 20/21 : cela ne produit
+aucun compte, pas un compte faux. Le 20/21 est réel, mais il vient de ce que **les deux calculs ne
+comparent pas la même quantité** :
+
+| écriture | condition testée | seuil effectif au centre de la boîte 0 |
+|---|---|---|
+| `graphe_exact` / `omega_exact` | σ²·dmin² ≤ diam² ≤ σ²·dmax² | T = diam/σ = **1,1824** (σ = 99/100) |
+| `Boites.clique_de_temoins` | dmin² ≤ 1 ≤ dmax² | T = **1** |
+
+Confondre « σ = 1 » avec « T = 1 » est le piège : à σ = 1 le seuil vaut diam = 1,17056, pas 1.
+Sur la paire ((−1,−2), (1,0)), dmin² = 1158001/1000000 = 1,158001, comprise entre 1 et
+diam² = 1,370210 : en conflit dès que σ ≥ 0,9193, séparée au seuil 1. D'où **20/21 au centre,
+19/21 à g = −1/2, 19/21 à g = 1/2, h = 9/10** — exactement la valeur rapportée.
+
+**La conséquence, qui est la vraie conclusion : la 7-clique de la boîte 0 n'est pas réparable.**
+Au seuil 1, la clique maximale du vrai graphe vaut **ω = 6** au centre et **5** sur les bords
+verticaux. Ce n'est pas un défaut de témoins : dmin² > 1 signifie que les deux cellules sont
+réellement à distance > 1, donc qu'aucune paire de points ne les rapproche. Aucun choix de témoins
+ne peut donc satisfaire `clique_de_temoins` avec les sept décalages exportés.
+
+**Ce que la boîte 0 fournit réellement, et qui suffit.** La condition d'échelle **uniforme**
+« dmin < dmax et D < dmax pour les 21 paires, à un même s » tient sur toute la boîte :
+ε = D/dmax ≤ **0,606982** au pire sur une grille 5 × 5 (coins, milieux d'arêtes, centre).
+C'est précisément l'hypothèse du **lemme B** de `Pont.lean` (0 < ε < 1, D/ε ≤ dmax, dmin < dmax),
+dont la conclusion est l'existence d'**une** échelle s rendant les 21 paires doublement tangentes.
+Et sur les 38 boîtes, les 25 points d'échantillonnage donnent **0 violation** de `D < dmax`,
+ε maximum 0,9934 (boîte 36, h ∈ [8, 15]).
+
+**Ce que la forme de la donnée exportée doit devenir.** Non pas « sept décalages + un seuil figé »,
+mais par paire **quatre points** : deux à distance² ≤ 1 et deux à distance² ≥ 1, avec l'échelle s
+figée par boîte (et non par paire). C'est ce que `Pont.pont_coloriage` consomme, et c'est un lemme
+déjà compilé — rien à ajouter côté Lean. En revanche **vérifier ces quatre points sur toute la
+boîte** est un calcul neuf.
+
+**Un quatrième seuil, trouvé en écrivant ce geste.** Vérifier « D < dmax » sur la boîte ne suffit
+pas : le s du lemme B vit dans l'intervalle ouvert ]1/dmax, min(1/dmin, 1/D)[, dont la non-vacuité
+exige **max dmin² < min dmax²**. Sur les 38 boîtes ce rapport vaut de 1,00 à **1,96** : il échoue
+presque partout. Autrement dit, une **7-clique à échelle uniforme** n'existe pas sur ces boîtes —
+mais elle n'est pas nécessaire : on peut recouvrir la boîte par un nombre fini de sous-boîtes dont
+chacune porte sa propre échelle (le lemme B est ponctuel en (g, h), et la conclusion « χ ≥ 7 » est
+ponctuelle). C'est la forme du certificat à écrire, et c'est un changement de gabarit, pas un
+contournement.
+
+**Contrôle.** `note/reconciliation_boite0.py` → **exit 0, VERDICT : RÉCONCILIÉ**, journal
+`note/reconciliation_boite0.log`. Il réfute explicitement l'hypothèse du « premier élément »,
+reproduit 20/21 et 19/21, montre ω(T = 1) = 6, et mesure ε = 0,606982. Arithmétique rationnelle
+exacte, aucun flottant dans une décision (les flottants ne servent qu'à l'affichage et à la taille
+de fenêtre).
+
+**Environnement, non résolu.** La consigne demandait d'installer elan puis
+`leanprover/lean4:v4.36.0-rc2`. **Impossible depuis ce bac à sable** : `raw.githubusercontent.com`,
+`release-assets.githubusercontent.com` et `objects.githubusercontent.com` sont injoignables
+(`SSL_ERROR_SYSCALL` sur 443) — seuls `github.com`, `codeload.github.com`, `api.github.com`,
+`registry.npmjs.org`, `pypi.org` et `files.pythonhosted.org` répondent. L'API GitHub rend bien
+l'URL de l'archive d'elan, mais l'hôte qui la sert est bloqué. **Rien n'a donc été recompilé dans
+ce geste** : les quatre théorèmes cités (`cell_of_fini` compris) sont ceux des journaux de la
+séance du 03/11, pas d'une vérification d'aujourd'hui. À refaire dans un environnement qui atteint
+les releases GitHub.
+
+**Ce qui n'est pas fait.** Les obligations par boîte ne sont pas générées : la réconciliation
+change leur **forme** (échelle par boîte, quatre témoins par paire, sous-boîtes pour la condition
+d'échelle uniforme), et écrire le générateur sur l'ancienne forme aurait figé l'erreur. C'est le
+geste suivant, à faire une fois l'environnement Lean rétabli.
+
+## Geste 40 — les obligations par boîte, en forme corrigée : boîtes 0 et 1 certifiées (12/11/2026)
+
+**Ce que le geste 39 imposait.** La donnée « sept décalages + seuil figé » n'est pas une entrée
+valide de `Boites.clique_de_temoins` : elle n'y est qu'une 6-clique. La forme correcte est
+l'échelle **par boîte** (le quantificateur du théorème est ∀(g, h) ∃s, donc s dépend du réseau,
+mais il est fixe sur chaque boîte certifiée), avec des témoins prouvés sur **toute** la boîte.
+
+**Le moteur, `note/obligations.py`.** Quatre pièces, chacune payée par une erreur.
+
+1. *Corps de différences* (la réduction du moteur Rust, geste 26) : `dmin²(V, V+d) = dist(d, K)`
+   et `dmax² = max_{z∈K}|z−d|²` avec K = P−P indépendant du décalage. Deux distances
+   point-polygone au lieu de polygone-polygone. **Contrôle : 48/48 valeurs identiques au moteur
+   lent `audit_gh.dmin2_dmax2`** (6 réseaux × 8 décalages).
+2. *Sommets symboliques* : les sommets de la cellule sont des fractions rationnelles en (g, h) ;
+   `sommet(i₁,j₁,i₂,j₂)` les rend en `Rat(num, den)` par Cramer, avec `det = 2δ·h`. Contrôle :
+   les 6 sommets de la cellule en (−3/8, 219/250) sont reconstruits exactement à partir des
+   paires de contraintes actives.
+3. *Appartenance sur la boîte par `cell_of_fini`* : la contrainte `2⟨s,w⟩ ≤ |w|²` pour tout w du
+   réseau se ramène aux w de longueur < 2r. C'est un « pour tout » sur des inégalités
+   **linéaires**, donc une forme de la moyenne suffit, sans subdivision.
+4. *Témoins* : parmi les sommets prouvés, on cherche un couple u, v avec |u−(v+d)|² ≤ T² et un
+   couple avec ≥ T². Condition **suffisante** (on exhibe), jamais nécessaire : un échec dit
+   « ce couple n'est pas prouvé », pas « c'est faux ».
+
+**Quatre erreurs de ma part, dont deux fausses preuves.**
+
+- **La réduction au fini était fausse telle que je l'écrivais.** `cell_of_fini` a pour hypothèse
+  `|p−v|² ≤ r²` ; je filtrait les candidats sur les seules contraintes de la fenêtre. Une
+  intersection lointaine qui satisfait la fenêtre est alors acceptée à tort, et elle gonfle le
+  diamètre (premier symptôme : « diamètre majoré 10,81 ≥ T », pour une vraie valeur de 1,17).
+  Corrigé par `_dans_boule`, qui prouve l'hypothèse manquante. **C'est exactement le genre
+  d'oubli que la machine attrape et que la relecture laisse passer.**
+- **Le graphe de conflit n'est pas un graphe d'appartenance.** J'écrivais « a et b en conflit
+  ssi d_a et d_b sont tous deux dans S_T = {dmin < T < dmax} ». Faux : c'est un graphe de
+  **Cayley**, a ~ b ssi **d_b − d_a** ∈ S_T. Le symptôme a été un refus net, « aucun témoin
+  proche pour ((−2,−2), (−1,1)) », dont le décalage vaut |(1+3g, 3h)| = 2,63 ≫ T = 1,62. Avec
+  la bonne relation, la boîte 0 rend une 7-clique locale `(0,0),(0,1),(1,0),(1,1),(1,2),(2,1),(2,2)`
+  et le réseau carré rend ω = 9 (le pavé 3×3), ce qui est un contrôle de cohérence.
+- **Jamais deux encadrements comparés.** Une distance² valait *exactement* 1 (num = den = 256h⁸)
+  et l'encadrement du quotient donnait [0,735 ; 1,360]. Corrigé par `_inegal` : den de signe
+  connu, puis **un seul** polynôme `num − T²·den` encadré. C'est la règle du geste 19, et elle
+  était violée dans mon propre code.
+- *Points contre décalages* : première version, je prenais les sommets de la cellule pour la
+  clique. La clique est un ensemble de **décalages** ; les sommets sont les **témoins**. Les deux
+  erreurs précédentes étaient masquées par celle-là.
+
+**Résultat : couverture complète des deux boîtes de l'export initial.**
+
+| région | feuilles | échecs | essais | aire couverte | profondeur |
+|---|---|---|---|---|---|
+| boîte 0, g ∈ [−1/2, −1/4], h ∈ [433/500, 9/10] | 17 | 0 | 33 | 17/2000 = 17/2000 (**1,000000**) | 9 |
+| boîte 1, g ∈ [1/4, 1/2], h ∈ [433/500, 9/10] | 17 | 0 | 33 | 17/2000 = 17/2000 (**1,000000**) | 9 |
+
+93 s pour les deux. La profondeur compte : à profondeur 5, 96,9 % de chaque boîte ; la profondeur
+9 ferme le reste. C'est la constatation déjà écrite au geste 15 (marges utiles 4,5 × 10⁻⁴ plus
+petites que la variation sur une boîte, 3 × 10⁻³) — elle n'était pas propre à l'ancien
+paramétrage (ρ, θ), elle est intrinsèque à l'encadrement.
+
+**Ce que cela ne prouve pas, et qu'il faut dire.** Le certificat couvre **deux boîtes sur 38**.
+Les 36 autres (jusqu'à h = 15) ne sont pas traitées, et la réduction `Queue.lean` (h ≥ 15) n'est
+pas recompilée ici. La couverture obtenue est exacte et reproductible, elle n'est pas encore la
+région.
+
+**Le générateur, `note/gen_obligations.py`.** Il réécrit `geom/Boites_data.lean` en forme corrigée :
+une `structure Boite` (g₀, g₁, h₀, h₁, **T**, clique), une déclaration par boîte, T par boîte.
+38 boîtes, 12 472 octets. Il n'écrit **pas** les obligations de témoins pour les 38 : sur celles
+qui ne sont pas certifiées, ce serait du `sorry` déguisé. La liste des obligations à écrire est
+celle que produit `obligations_boites.py`.
+
+**Contrôle.** `python3 obligations_boites.py` → **exit 0**, « COUVERTURE COMPLÈTE »,
+`obligations_boites.json` + journal. `obligations._auto_test()` → 48/48 conformes au moteur lent.
+Arithmétique rationnelle exacte de bout en bout, aucun flottant dans une décision.
+
+**Lean : toujours pas recompilé.** Les hôtes de release GitHub restent injoignables depuis ce bac
+à sable (cf. geste 39). `Boites_data.lean` est donc écrit mais non compilé ; la `structure Boite`
+n'a pas été vérifiée par `lake build`.
+
+## Geste 41 — accès Lean : diagnostic chiffré, et ce qu'il faudrait ouvrir (12/11/2026)
+
+**Demande** : « rétablir l'accès aux releases GitHub pour compiler ». **Fait : le diagnostic, pas
+le rétablissement.** Je ne peux pas ouvrir un accès réseau qui ne m'appartient pas ; ce geste
+établit exactement ce qui manque, vérifié et chiffré, pour que la demande porte sur des hôtes
+précis.
+
+**Six hôtes bloqués sur dix nécessaires** (et non trois, comme je l'écrivais au geste 39) :
+`objects.githubusercontent.com` (cible du 302 des releases), `release-assets.githubusercontent.com`,
+`raw.githubusercontent.com` (`elan-init.sh`), `releases.lean-lang.org` (toolchain, voie normale
+d'`elan`), `leanprover-community.github.io` et `mathlib.cache.azureedge.net` (cache Mathlib).
+Volumes : elan 5 Mo, toolchain 608 Mo, cache Mathlib ~5 Go.
+
+**Ce qui ne marche pas, essayé et non supposé** : PyPI `lean4`/`lean`/`pyelan` sont des wrappers
+(0,01–0,37 Mo) ; `lean-dojo`, seul paquet volumineux (67 Mo), a été téléchargé et inspecté — c'est
+un jeu de données de benchmark, aucun binaire ; sept requêtes npm ne rendent que des interfaces et
+de la coloration syntaxique ; rien ne subsiste de la séance précédente (`~/.elan`, `/var/tmp/geom-*`
+absents, bac à sable neuf). Compiler Lean 4 depuis la source est possible en principe (`codeload`
+répond 200) mais exclu ici : 2 cœurs, 3,8 Go de RAM, Mathlib ≈ 10 Go et plusieurs heures.
+
+**Le point qui compte** : même avec le toolchain, **rien ne compilerait**. `Geometrie.lean` et
+`Queue.lean` importent `Mathlib.Analysis.Convex.Topology` et
+`Mathlib.Topology.Order.IntermediateValue`. Le toolchain seul ne suffit donc pas ; il faut le
+cache Mathlib, et `leanprover-community.github.io` est un domaine **GitHub Pages** — servi par
+Fastly, pas par `github.com`. Autoriser `github.com` ne l'autorise pas. C'est la raison pour
+laquelle « les releases GitHub » est une description incomplète du blocage.
+
+**Une erreur de méthode, corrigée.** Ma première version du diagnostic testait
+`socket.create_connection((hote, 443))` et concluait « un seul hôte bloqué » — faux pour six. Un
+proxy de sortie transparent accepte la connexion TCP **puis** coupe au `ClientHello` TLS : un test
+de connexion est un faux positif systématique, et le symptôme côté client est
+`SSL_ERROR_SYSCALL`, jamais un refus. `diag_lean_acces.py` teste désormais une requête HTTPS
+réelle. C'est exactement le genre d'erreur que la règle du dossier (« calibrer la mesure contre un
+juge indépendant ») attrape quand on l'applique ; ici c'est la comparaison à `curl` qui l'a
+attrapée.
+
+**Livrables.** `note/diag_lean_acces.py` (exit 1, reproductible, journal `diag_lean_acces.log`) et
+`note/acces-lean.md` (les deux issues : ouvrir quatre hôtes, ou compiler ailleurs — `dossiers/geom/`
+est autonome et épinglé, quatre commandes suffisent).
+
+**État, sans embellissement.** Les 66 théorèmes cités dans l'audit sont ceux des journaux du
+03/11 ; rien n'a été recompilé depuis. `Boites_data.lean`, réécrit au geste 40 en forme corrigée,
+**n'a jamais vu `lake build`** : ni la `structure Boite`, ni la syntaxe des rationnels ne sont
+vérifiées par un compilateur. Le certificat par boîte est prouvé en Python exact, pas en Lean.
