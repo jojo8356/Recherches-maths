@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 2 — Hadwiger–Nelson : construire une prédiction</title><style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;--ok:#3f8a7a;--ko:#b34a3c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 30px;max-width:66ch}
+  h2{font-size:1.24rem;margin:50px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:24px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1rem;margin:22px 0 4px;color:var(--acc)}
+  p{margin:10px 0} ul,ol{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.89em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .ok{background:#eef4f1;border-left:4px solid var(--ok);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ok strong{color:#2c6a5d}
+  .ko{background:#f8eeec;border-left:4px solid var(--ko);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ko strong{color:#8f3a2c}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:24px 0}
+  .verdict strong{color:#ffd9b8}
+  figure{margin:24px 0;text-align:center} figcaption{font-size:.85rem;color:var(--muted);margin-top:6px;text-align:left}
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+  .dash div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px}
+  .dash b{display:block;font-size:1.35rem;color:var(--acc);font-variant-numeric:tabular-nums}
+  .dash span{font-size:.76rem;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:8px}
+  .tag.t1{background:#e8f0ee;color:#2c6a5d} .tag.t2{background:#f6e9e6;color:#8f3a2c} .tag.t3{background:#eee9f4;color:#5b4580}
+  @media(max-width:680px){.dash{grid-template-columns:1fr 1fr}h1{font-size:1.55rem}}
+
+.pred{background:linear-gradient(180deg,#fff,#f8f5ee);border:1px solid #e3ded4;border-radius:12px;padding:18px 20px;margin:22px 0}
+.pred .big{font-size:1.15rem;font-weight:650;color:#2b3a55;margin:0 0 6px}
+.bet{border:1px solid #e3ded4;border-radius:9px;padding:12px 14px;margin:12px 0;background:#fff}
+.bet h4{margin:0 0 4px;font-size:.94rem;color:#2b3a55}
+.bet p{margin:3px 0;font-size:.9rem}
+.bet .kill{color:#8f3a2c;font-size:.86rem}
+</style></head><body><div class="wrap">
+
+<div class="kicker">Heuristique et histoire de la preuve · Phase 2 du protocole</div>
+<h1>Hadwiger–Nelson : construire une prédiction</h1>
+<p class="sub">La phase 1 cherchait à avoir tort. La phase 2 cherche à <em>deviner</em> — et à deviner de façon à pouvoir être prise en défaut. Trois produits : un modèle de coût chiffré, une de mes idées tuée en vingt minutes, et trois histoires de preuve dont une seule survit à un test express.</p>
+
+<div class="dash">
+  <div><b>10⁵</b><span>taille prédite d'un témoin à 6 couleurs</span></div>
+  <div><b>0,2267</b><span>densité d'une classe sans distance 1 (idée réfutée)</span></div>
+  <div><b>3</b><span>histoires de preuve testées, 1 seule viable</span></div>
+  <div><b>4</b><span>paris falsifiables</span></div>
+</div>
+
+<h2><span class="num">P1</span>Le modèle du coût : combien de sommets pour gagner une couleur ?</h2>
+<p>Donnée de la phase 1 : la taille du plus petit témoin connu vaut 2, 3, 7, 509 pour k = 2, 3, 4, 5. Les ratios successifs sont 1,5 ; 2,33 ; <strong>72,7</strong>. Le rapport entre les deux derniers ratios vaut <strong>31,2</strong> : le coût d'une couleur ne croît pas, il <em>explose</em>.</p>
+<figure><svg viewBox="0 0 700 360" width="100%" role="img" aria-label="extrapolation">
+<rect width="700" height="360" fill="#fbf8f3"/><line x1="64" y1="312.0" x2="550" y2="312.0" stroke="#eae5db" stroke-width="1"/><text x="54" y="316.0" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^0</text><line x1="64" y1="271.7" x2="550" y2="271.7" stroke="#eae5db" stroke-width="1"/><text x="54" y="275.7" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^1</text><line x1="64" y1="231.4" x2="550" y2="231.4" stroke="#eae5db" stroke-width="1"/><text x="54" y="235.4" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^2</text><line x1="64" y1="191.1" x2="550" y2="191.1" stroke="#eae5db" stroke-width="1"/><text x="54" y="195.1" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^3</text><line x1="64" y1="150.9" x2="550" y2="150.9" stroke="#eae5db" stroke-width="1"/><text x="54" y="154.9" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^4</text><line x1="64" y1="110.6" x2="550" y2="110.6" stroke="#eae5db" stroke-width="1"/><text x="54" y="114.6" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^5</text><line x1="64" y1="70.3" x2="550" y2="70.3" stroke="#eae5db" stroke-width="1"/><text x="54" y="74.3" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^6</text><line x1="64" y1="30.0" x2="550" y2="30.0" stroke="#eae5db" stroke-width="1"/><text x="54" y="34.0" text-anchor="end" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10^7</text><text x="103.7" y="334" text-anchor="middle" font-size="12" fill="#6b7280" font-family="system-ui,sans-serif">k = 2</text><text x="202.9" y="334" text-anchor="middle" font-size="12" fill="#6b7280" font-family="system-ui,sans-serif">k = 3</text><text x="302.0" y="334" text-anchor="middle" font-size="12" fill="#6b7280" font-family="system-ui,sans-serif">k = 4</text><text x="401.2" y="334" text-anchor="middle" font-size="12" fill="#6b7280" font-family="system-ui,sans-serif">k = 5</text><text x="500.4" y="334" text-anchor="middle" font-size="12" fill="#6b7280" font-family="system-ui,sans-serif">k = 6</text><line x1="401.2" y1="203.0" x2="500.4" y2="128.0" stroke="#8ea653" stroke-width="2" stroke-dasharray="5 4"/><circle cx="500.4" cy="128.0" r="5" fill="#8ea653"/><text x="512.4" y="132.0" font-size="11.5" fill="#8ea653" font-family="system-ui sans-serif">37 012</text><line x1="401.2" y1="203.0" x2="500.4" y2="67.8" stroke="#d99544" stroke-width="2" stroke-dasharray="5 4"/><circle cx="500.4" cy="67.8" r="5" fill="#d99544"/><text x="512.4" y="71.8" font-size="11.5" fill="#d99544" font-family="system-ui sans-serif">1 153 401</text><line x1="401.2" y1="203.0" x2="500.4" y2="52.3" stroke="#b34a3c" stroke-width="2" stroke-dasharray="5 4"/><circle cx="500.4" cy="52.3" r="5" fill="#b34a3c"/><text x="512.4" y="56.3" font-size="11.5" fill="#b34a3c" font-family="system-ui sans-serif">2 798 255</text><polyline points="103.7,299.9 202.9,292.8 302.0,278.0 401.2,203.0" fill="none" stroke="#2b3a55" stroke-width="2.6"/><circle cx="103.7" cy="299.9" r="5.5" fill="#2b3a55"/><text x="112.7" y="291.9" font-size="12" fill="#1a2233" font-family="ui-monospace,monospace">2</text><circle cx="202.9" cy="292.8" r="5.5" fill="#2b3a55"/><text x="211.9" y="284.8" font-size="12" fill="#1a2233" font-family="ui-monospace,monospace">3</text><circle cx="302.0" cy="278.0" r="5.5" fill="#2b3a55"/><text x="311.0" y="270.0" font-size="12" fill="#1a2233" font-family="ui-monospace,monospace">7</text><circle cx="401.2" cy="203.0" r="5.5" fill="#2b3a55"/><text x="410.2" y="195.0" font-size="12" fill="#1a2233" font-family="ui-monospace,monospace">509</text><text x="556" y="46" font-size="10.5" fill="#8ea653" font-family="system-ui,sans-serif">M1 — le ratio stagne (×72,7)</text><text x="556" y="63" font-size="10.5" fill="#d99544" font-family="system-ui,sans-serif">M2 — le ratio croît comme au cran précédent</text><text x="556" y="80" font-size="10.5" fill="#b34a3c" font-family="system-ui,sans-serif">M3 — double exponentielle</text>
+<text x="307.0" y="352" text-anchor="middle" font-size="12" fill="#6b7280" font-family="system-ui,sans-serif">taille du plus petit graphe unité k-chromatique connu (échelle log) et trois extrapolations pour k = 6</text></svg>
+<figcaption>Trois extrapolations raisonnables vers k = 6, calibrées sur les mêmes quatre points. Elles divergent de deux ordres de grandeur — c'est précisément l'information : la croissance est mal contrainte par les données, mais sa <em>forme</em> est claire.</figcaption></figure>
+<table>
+<tr><th>modèle</th><th class="num">prédiction n₆</th></tr>
+<tr><td>M1 — le ratio stagne à ×72,7</td><td class="num">37 012</td></tr>
+<tr><td>M2 — le ratio croît comme au cran précédent (×31)</td><td class="num">1 153 401</td></tr>
+<tr><td>M3 — double exponentielle (log log affine)</td><td class="num">2 798 255</td></tr>
+</table>
+<div class="pred">
+<p class="big">Prédiction P1 — tout témoin 6-chromatique a très probablement plus de 10⁵ sommets (fourchette des modèles : 3,7·10⁴ à 2,8·10⁶), soit au moins 73 fois le record actuel.</p>
+<p>Conséquences, si c'est vrai : (i) la recherche par SAT à l'échelle est morte à court terme ; (ii) une percée du côté « χ ≥ 6 » viendra d'une <strong>famille paramétrée</strong> de graphes, pas d'un objet isolé ; (iii) si aucune famille de ce type n'existe, χ = 5 est le scénario le plus économique.</p>
+</div>
+<div class="ko"><strong>Objection sérieuse, à ne pas cacher —</strong> l'alternative est que le saut 7 → 509 soit un artefact de la méthode : de Grey a construit <em>gros</em> (1581), puis on a comprimé (509) sans jamais chercher petit. Si le vrai minimum était de l'ordre de 50, ces quatre points ne diraient rien. Comment trancher : la compression 1581 → 509 en trois ans d'efforts intensifs (facteur 3) suggère un plancher proche ; si 509 était loin de l'optimum, la compression aurait été bien plus spectaculaire.</div>
+
+<h2><span class="num">P2</span>Mon idée préférée, tuée en vingt minutes</h2>
+<p>Idée : ramener le côté « ≤ 6 » à un problème d'optimisation à un seul nombre. Soit δ<sub>max</sub> la densité maximale d'une partie <em>mesurable</em> du plan ne contenant aucun couple à distance 1. Une partition en k classes a des densités qui somment à 1 ; donc si δ<sub>max</sub> &lt; 1/6, aucun 6-coloriage mesurable n'existe. Il suffirait alors de calculer δ<sub>max</sub>. C'est élégant, et c'est faux.</p>
+<figure><svg viewBox="0 0 700 240" width="100%" role="img" aria-label="densités"><rect width="700" height="240" fill="#fbf8f3"/><line x1="70" y1="120" x2="630" y2="120" stroke="#2b3a55" stroke-width="2"/><line x1="70.0" y1="114" x2="70.0" y2="126" stroke="#2b3a55" stroke-width="1.4"/><text x="70.0" y="146" text-anchor="middle" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.12</text><line x1="199.2" y1="114" x2="199.2" y2="126" stroke="#2b3a55" stroke-width="1.4"/><text x="199.2" y="146" text-anchor="middle" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.15</text><line x1="414.6" y1="114" x2="414.6" y2="126" stroke="#2b3a55" stroke-width="1.4"/><text x="414.6" y="146" text-anchor="middle" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.2</text><line x1="630.0" y1="114" x2="630.0" y2="126" stroke="#2b3a55" stroke-width="1.4"/><text x="630.0" y="146" text-anchor="middle" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.25</text><rect x="271.0" y="106" width="258.7" height="28" fill="#f6e9e6"/><circle cx="168.5" cy="120" r="6.5" fill="#4b6fa8"/><line x1="168.5" y1="113" x2="168.5" y2="70" stroke="#4b6fa8" stroke-width="1.2" stroke-dasharray="3 3"/><text x="168.5" y="60" text-anchor="middle" font-size="12.5" fill="#4b6fa8" font-family="ui-monospace,monospace">1/7 = 0,1429</text><text x="168.5" y="44" text-anchor="middle" font-size="10.5" fill="#6b7280" font-family="system-ui,sans-serif">classe du 7-coloriage (E5)</text><circle cx="271.0" cy="120" r="6.5" fill="#7b5ea7"/><line x1="271.0" y1="127" x2="271.0" y2="170" stroke="#7b5ea7" stroke-width="1.2" stroke-dasharray="3 3"/><text x="271.0" y="186" text-anchor="middle" font-size="12.5" fill="#7b5ea7" font-family="ui-monospace,monospace">1/6 = 0,1667</text><text x="271.0" y="202" text-anchor="middle" font-size="10.5" fill="#6b7280" font-family="system-ui,sans-serif">seuil qu'il faudrait franchir</text><circle cx="529.7" cy="120" r="6.5" fill="#b34a3c"/><line x1="529.7" y1="113" x2="529.7" y2="70" stroke="#b34a3c" stroke-width="1.2" stroke-dasharray="3 3"/><text x="529.7" y="60" text-anchor="middle" font-size="12.5" fill="#b34a3c" font-family="ui-monospace,monospace">π/(8√3) = 0,2267</text><text x="529.7" y="44" text-anchor="middle" font-size="10.5" fill="#6b7280" font-family="system-ui,sans-serif">classe SANS distance 1, densité atteignable</text><text x="350.0" y="226" text-anchor="middle" font-size="11.5" fill="#8f3a2c" font-family="system-ui,sans-serif">la classe rouge dépasse le seuil violet : aucune borne de densité ne peut interdire 6 couleurs</text></svg>
+<figcaption>Contre-exemple explicite : des disques de rayon r &lt; 1/2 (donc de diamètre &lt; 1) dont les centres sont aux sommets d'un réseau hexagonal de pas 1 + 2r. Dans un disque, diamètre &lt; 1 ; entre deux disques, distance minimale &gt; 1 : <strong>aucun couple à distance exactement 1</strong>, et pourtant la densité vaut π/(8√3) = 0,2267.</figcaption></figure>
+<table>
+<tr><th>quantité</th><th class="num">valeur</th></tr>
+<tr><td>densité d'une classe du 7-coloriage (phase 1, E5)</td><td class="num">1/7 = 0,1429</td></tr>
+<tr><td>seuil qu'il aurait fallu franchir</td><td class="num">1/6 = 0,1667</td></tr>
+<tr><td>densité d'une classe sans distance 1 (construction ci-dessus)</td><td class="num"><strong>π/(8√3) = 0,2267</strong></td></tr>
+</table>
+<div class="ko"><strong>Réfutation —</strong> δ<sub>max</sub> ≥ 0,2267 ≫ 1/6. Aucune borne de densité ne peut interdire 6 couleurs. La densité n'est pas la bonne variable : <strong>l'obstruction n'est pas la taille des classes, mais leur compatibilité</strong> — le problème est un problème de <em>recouvrement</em>, pas de taille. C'est la leçon la plus utile de cette phase, et elle a coûté vingt minutes au lieu de six mois.</div>
+<div class="ok"><strong>Deux sous-produits conservés —</strong> (1) un énoncé net, démontrable en deux lignes : <span class="mono">δ_max ≥ π/(8√3)</span> (disque optimal par l'inégalité isodiamétrique, réseau hexagonal de pas 1 + 2r). (2) Une mesure quantitative de l'inefficacité du 7-coloriage : chaque classe n'utilise que <strong>63 %</strong> de la densité qu'une classe seule pourrait atteindre. Le prix de la compatibilité est donc de 37 % — voilà l'ordre de grandeur du « champ libre » dont disposerait un 6-coloriage.</div>
+
+<h2><span class="num">P3</span>Une correction que je dois à la phase 0</h2>
+<p>En phase 0 j'avais écrit que l'outillage algébrique est « structurellement aveugle » parce que (ℝ²,+) n'a pas de quotient fini. C'est trop court, et faux sur un point : le tore plat ℝ²/Λ <em>est</em> un quotient, et le graphe de distances unité y est bien défini ; son nombre chromatique minore celui du plan. Le vrai blocage est ailleurs, et il est calculable.</p>
+<div class="box"><strong>La contrainte « pas de distance 1 » s'écrit</strong> ⟨f, f∗σ⟩ = ∫ |f̂(ξ)|² · 2πJ₀(2π|ξ|) dξ = 0, où σ est la mesure du cercle unité. Toute borne de type Delsarte / programmation linéaire exige un noyau <em>positif</em>. Or J₀ change de signe une infinité de fois : ses zéros positifs sont 2,4048 ; 5,5201 ; 8,6537 ; 11,7915 (calculés ici par série + bissection).</div>
+<p>Voilà la vraie raison de la faiblesse spectrale : ce n'est pas l'absence de structure, c'est un <strong>problème de signe</strong>. Toute la difficulté consiste à modifier le noyau pour le rendre positif sans perdre trop de masse — c'est exactement le travail de Falconer (1981), qui en tire la borne ≥ 5 dans le cas mesurable. <strong>La cible concrète devient donc : exhiber un noyau positif K tel que la borne LP correspondante donne 6.</strong> C'est un problème d'optimisation, énonçable, attaquable, et à ma connaissance non résolu.</p>
+
+<h2><span class="num">P4</span>Trois histoires de preuve, et le test express de chacune</h2>
+<p>Étape 7 du protocole : écrire l'histoire de la preuve <em>avant</em> la preuve. Trois scénarios pour la valeur de χ(ℝ²), chacun en trois phrases, puis un test bon marché du mécanisme invoqué.</p>
+
+<h3>Scénario A — χ = 5 (« aucun témoin à 6 couleurs n'existe »)</h3>
+<p><em>Histoire :</em> on exhibe un ordre d'élimination universel pour les graphes de distance unité, c'est-à-dire une borne de dégénérescence. Tout graphe unité fini se colorie alors gloutonnement en 5 couleurs, et par de Bruijn–Erdős le plan aussi. La preuve ne construit rien : elle montre que la géométrie interdit les configurations trop rigides.</p>
+<p><em>Test express :</em> quelle dégénérescence ont réellement les témoins connus ?</p>
+<table>
+<tr><th>graphe</th><th class="num">sommets</th><th class="num">degré max</th><th class="num">dégénérescence</th><th class="num">χ</th></tr>
+<tr><td>fuseau de Moser</td><td class="num">7</td><td class="num">4</td><td class="num">3</td><td class="num">4</td></tr>
+<tr><td>patch du réseau triangulaire</td><td class="num">49</td><td class="num">6</td><td class="num">3</td><td class="num">3</td></tr>
+</table>
+<div class="ok"><strong>Verdict : viable, et même très propre.</strong> La dégénérescence ne « voit » jamais la chromaticité (elle vaut 3 là où χ vaut 4), donc une borne de dégénérescence est un mécanisme <em>crédible</em> et nullement contredit. L'énoncé à démontrer est d'une netteté totale : <strong>tout graphe de distance unité fini est 4-dégénéré</strong>. S'il est vrai, χ(ℝ²) = 5 exactement et la question est close. S'il est faux, il existe un témoin, donc χ ≥ 6.</div>
+
+<h3>Scénario B — χ = 6 (« un témoin existe »)</h3>
+<p><em>Histoire :</em> on construit un gadget qui, dans tout 5-coloriage, force deux points marqués à prendre la même couleur, puis on le compose avec lui-même pour créer la contradiction. Le graphe vit dans un corps de nombres fixé (ℚ(√3), ℚ(√11), …) et une famille paramétrée en fournit une infinité d'exemplaires. La découverte est une affaire de conception, pas de puissance de calcul.</p>
+<p><em>Test express :</em> la phase 1 a mesuré que le gadget fondateur (le diamant) force l'égalité à 3 couleurs mais <em>plus du tout</em> à 4. À 5 couleurs, l'espoir qu'un gadget élémentaire force quoi que ce soit est encore plus mince.</p>
+<div class="ko"><strong>Verdict : viable mais coûteux</strong> — c'est l'histoire la moins contraignante et la plus cohérente avec 57 ans d'échec. Elle prédit exactement ce que P1 chiffre : de très gros objets, découverts par famille.</div>
+
+<h3>Scénario C — χ = 7 (« aucun 6-coloriage n'existe »)</h3>
+<p><em>Histoire :</em> on traite d'abord le cas mesurable en raffinant un noyau positif (P3) pour obtenir χ<sub>m</sub> = 7. On retire ensuite l'hypothèse de mesurabilité par un argument de régularité / compacité, c'est-à-dire le pont manquant identifié en phase 0. La preuve est globale et ne contient aucun graphe.</p>
+<p><em>Test express :</em> la phase 1 a montré que <em>toute</em> la famille cellulaire plafonne à 7 (clique de 7 hexagones), et Woodall que des classes régulières (courbes de Jordan) en exigent déjà 6.</p>
+<div class="ko"><strong>Verdict : viable, et c'est la seule histoire appuyée sur un mécanisme déjà démontré dans deux cas particuliers</strong> (cellulaire : 7 ; Jordan : ≥ 6). Le maillon manquant est identifié et unique.</div>
+
+<h2><span class="num">P5</span>La prédiction, classée et chiffrée</h2>
+<table>
+<tr><th>issue</th><th class="num">probabilité subjective</th><th>raison principale</th></tr>
+<tr><td>χ(ℝ²) = 7</td><td class="num">45 %</td><td>toutes les familles démontrables plafonnent à 7 ; un 6-coloriage devrait être non cellulaire, et Woodall montre que la régularité coûte déjà 6</td></tr>
+<tr><td>χ(ℝ²) = 6</td><td class="num">40 %</td><td>la borne inférieure n'a jamais reculé (4 → 5 en 60 ans) et les variantes régulières donnent 6 ; un 6-coloriage sauvage reste possible</td></tr>
+<tr><td>χ(ℝ²) = 5</td><td class="num">15 %</td><td>scénario le plus économique si aucune famille paramétrée n'existe (P1) — mais il exige une preuve universelle sur tous les graphes unité, ce que rien n'annonce</td></tr>
+</table>
+<div class="pred">
+<p class="big">Méta-prédiction, la seule qui soit vraiment utile : le cas <em>mesurable</em> (et le cas « classes de Jordan ») sera résolu avant le cas général, et c'est là que portera la prochaine percée — parce que c'est le seul endroit où l'on dispose d'outils (noyaux, mesure, recouvrement).</p>
+<p>Elle est falsifiable : si la prochaine grande annonce porte sur une famille de graphes, je me suis trompé.</p>
+</div>
+
+<h3>Quatre paris, chacun avec son protocole de mise en défaut</h3>
+<div class="bet"><h4>Pari 1 — Tout témoin 6-chromatique a plus de 10⁴ sommets (ou n'existe pas).</h4>
+<p>Issu de P1. C'est le pari le plus vulnérable de tous.</p>
+<p class="kill">Le tuer : exhiber un graphe unité 6-chromatique à 10⁴ sommets ou moins.</p></div>
+<div class="bet"><h4>Pari 2 — Le record du témoin 5-chromatique (509) ne descendra pas sous 400 avant 2030.</h4>
+<p>Si 509 est loin de l'optimum, ce pari tombe vite.</p>
+<p class="kill">Le tuer : publier un graphe unité 5-chromatique à moins de 400 sommets.</p></div>
+<div class="bet"><h4>Pari 3 — Aucun 6-coloriage du plan ne sera jamais exhibé sous forme périodique.</h4>
+<p>La phase 1 a tué le cas cellulaire (clique de 7) ; je parie que la périodicité est le vrai obstacle et qu'un hypothétique 6-coloriage devra être apériodique et pathologique.</p>
+<p class="kill">Le tuer : exhiber un 6-coloriage invariant par un réseau, c'est-à-dire une 6-coloration mesurable du tore plat ℝ²/Λ.</p></div>
+<div class="bet"><h4>Pari 4 — L'énoncé « tout graphe unité fini est 4-dégénéré » est faux.</h4>
+<p>Je parie contre, parce qu'une borne universelle aussi forte contredirait la tendance historique (4 → 5) ; mais s'il était vrai, χ = 5 serait réglé immédiatement.</p>
+<p class="kill">Le tuer : exhiber un graphe unité fini de dégénérescence ≥ 5, ou mieux, de degré minimal ≥ 5.</p></div>
+
+<h2><span class="num">P6</span>Ce que la phase 2 change concrètement</h2>
+<table>
+<tr><th>cible</th><th>pourquoi elle est nouvelle</th></tr>
+<tr><td><strong>Un noyau positif qui donne 6</strong></td><td>P3 transforme « l'analyse harmonique ne marche pas » en un problème d'optimisation explicite : trouver K défini-positif dont la transformée de Fourier majore la contrainte. Falconer a fait cette recette pour 5 ; personne ne l'a poussée à 6. C'est la cible la plus concrète du dossier.</td></tr>
+<tr><td><strong>La conjecture de 4-dégénérescence</strong></td><td>P4 fournit l'énoncé exact dont la vérité donnerait χ = 5 : « tout graphe unité fini est 4-dégénéré ». Atelier immédiat : calculer la dégénérescence de bibliothèques de graphes unité, chercher un contre-exemple de dégénérescence ≥ 5.</td></tr>
+<tr><td><strong>La famille paramétrée</strong></td><td>P1 dit que la taille est la mauvaise variable : ce qui compte est l'existence d'une <em>famille</em>. Chercher non pas « un graphe à 6 couleurs » mais « un motif qu'on peut répéter ».</td></tr>
+</table>
+<div class="verdict"><strong>Ce que la phase 2 a établi, en une phrase —</strong> le problème n'est ni un problème de taille (P1 le chiffre, P2 le démontre) ni un problème de densité (P2 le tue), mais un problème de <strong>compatibilité globale</strong> : il faut faire cohabiter des classes qui, prises séparément, peuvent être grosses. C'est là que les six couleurs échouent ou passent.</div>
+
+<h2><span class="num">7</span>Honnêteté</h2>
+<ul>
+<li><strong>Les probabilités de P5 sont subjectives</strong>, calibrées sur rien d'autre que les arguments cités. Elles n'ont aucune valeur statistique.</li>
+<li><strong>P1 repose sur quatre points.</strong> Trois modèles y sont ajustés ; ils divergent de deux ordres de grandeur. La prédiction « ≥ 10⁵ » est une tendance, pas une mesure.</li>
+<li><strong>P2 tue mon idée, mais ne dit rien sur χ.</strong> Une idée réfutée n'est pas un progrès vers la solution — c'est un progrès vers le bon problème.</li>
+<li><strong>P3 corrige la phase 0</strong> et affaiblit son verrou W3 ; les verrous W1, W2, W4, W5 restent intacts.</li>
+<li><strong>Le scénario A est le seul que j'aie pu tester.</strong> B et C n'ont pas de test bon marché — et c'est en soi une information : ils relèvent de la construction, pas du calcul.</li>
+</ul>
+
+<h2><span class="num">8</span>Reproductibilité</h2>
+<table class="small"><tr><th>fichier</th><th>rôle</th></tr>
+<tr><td class="mono">phase2_calc.py</td><td>P1 (ratios, trois modèles) et P2 (densité, contre-exemple)</td></tr>
+<tr><td class="mono">phase2_bessel.py</td><td>P3 — J₀ par série, zéros par bissection, signes du noyau de Fourier</td></tr>
+<tr><td class="mono">phase2_stories.py</td><td>P4 — dégénérescence du fuseau et d'un patch triangulaire</td></tr>
+<tr><td class="mono">figures2.py</td><td>les deux figures de cette phase</td></tr></table>
+<p class="small" style="margin-top:34px;border-top:1px solid var(--line);padding-top:16px">
+Phase 2 terminée le 2 novembre 2026 · dossier complet : phase 0 (le mur) → phase 1 (falsification) → phase 2 (prédiction). Suite : la cible du noyau positif, ou l'atelier de dégénérescence.</p>
+</div></body></html>

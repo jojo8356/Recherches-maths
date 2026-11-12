@@ -1,0 +1,28 @@
+recupere 33 cas du premier jet
+  anisotrope d=0.05: omega 3/3 six False/False
+  anisotrope d=0.1: omega 3/3 six False/False
+  anisotrope d=0.2: omega 3/3 six False/False
+  anisotrope d=0.3: omega 4/4 six False/False
+  anisotrope d=0.4: omega 4/4 six False/False
+  anisotrope d=0.5: omega 7/7 six False/False
+  anisotrope d=0.6: omega 7/7 six False/False
+  anisotrope d=0.7: omega 6/6 six False/False
+  anisotrope d=0.8: omega 10/10 six False/False
+  anisotrope d=0.9: omega 9/9 six False/False
+  anisotrope d=0.98: omega 7/7 six False/False
+  divers d=0.05: omega 3/3 six False/False
+  divers d=0.1: omega 3/3 six False/False
+  divers d=0.2: omega 3/3 six False/False
+  divers d=0.3: omega 4/4 six False/False
+  divers d=0.4: omega 4/4 six False/False
+  divers d=0.5: omega 6/6 six False/False
+  divers d=0.6: omega 6/6 six False/False
+  divers d=0.7: omega 11/11 six False/False
+  divers d=0.8: omega 8/8 six False/False
+  divers d=0.9: omega 8/8 six False/False
+  divers d=0.98: omega 8/8 six False/False
+echantillon de 60 points de la carte : 0 ecarts entre conventions
+  rangee theta=60 faite
+  rangee theta=90 faite
+  rangee theta=120 faite
+ecrit conventions.json | 0 6-coloriages (strict), 0 (large)

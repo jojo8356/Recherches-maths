@@ -1,0 +1,29 @@
+{
+ "fichier": "certificat.json",
+ "couverture_prouvee": true,
+ "rapport": {
+  "nb_boites": 26423,
+  "noeuds_parcourus": 28564,
+  "ecart_max_stockage": "1/175921860444160",
+  "aire_exacte": "60",
+  "aire_domaine": "60",
+  "aire_egale": true,
+  "profondeurs": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "recouvrement": "exact (coupe complete de l'arbre quaternaire)"
+ },
+ "controle_negatif_boite_retiree": {
+  "detecte": true,
+  "raison": "coupe incomplete : des cellules ne sont couvertes par aucune boite"
+ },
+ "controle_negatif_boite_invalide": {
+  "detecte": true,
+  "raison": "1 boites hors domaine ou non dyadiques"
+ }
+}

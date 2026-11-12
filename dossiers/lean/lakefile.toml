@@ -1,0 +1,9 @@
+name = "plafond"
+version = "0.1.0"
+defaultTargets = ["Plafond", "T8"]
+
+[[lean_lib]]
+name = "Plafond"
+
+[[lean_lib]]
+name = "T8"

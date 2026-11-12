@@ -1,0 +1,33 @@
+{
+ "e_positif_ech_99_100": {
+  "attendu": "accepté",
+  "obtenu": "accepté (ω ≥ 7, diam² 1.578..1.578)",
+  "ok": true,
+  "temps": 1.02
+ },
+ "a_ech_1_2": {
+  "attendu": "refus",
+  "obtenu": "refus (omega = 5 < 7 au centre)",
+  "ok": true
+ },
+ "b_majorant_ecrase": {
+  "attendu": "refus",
+  "obtenu": "refus (incohérence : diamètre haut 0.0343 < bas 1.5776)",
+  "ok": true
+ },
+ "c_reseau_degenere": {
+  "attendu": "refus",
+  "obtenu": "refus (cellule vide au centre)",
+  "ok": true
+ },
+ "d_temoin_faux": {
+  "attendu": "PointHors (retrait)",
+  "obtenu": "PointHors 26",
+  "ok": true
+ },
+ "f_faux_sommet": {
+  "obtenu": "ω ≥ 7 (la cellule (5,5) écartée)",
+  "attendu": "clique ≤ vraie clique",
+  "ok": true
+ }
+}

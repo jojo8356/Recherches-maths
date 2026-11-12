@@ -1,0 +1,21 @@
+Queue.lean:46:8: warning: This simp argument is unused:
+  Set.mem_prod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Prod.exists]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+Queue.lean:351:2: warning: Try this: intro col hcol a b hab
+
+Note: This linter can be disabled with `set_option linter.tacticAnalysis.introMerge false`
+'Queue.pas_borne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Queue.proche_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Queue.loin_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Queue.queue' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Queue.sept_couleurs' depends on axioms: [propext, Classical.choice, Quot.sound]

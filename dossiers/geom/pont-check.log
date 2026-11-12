@@ -1,0 +1,6 @@
+'Pont.lemmeB' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Pont.pont_coloriage' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Pont.pont_interieurs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Pont.pont_echelle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Pont.lemmeB_sans_dmin_lt_dmax_est_faux' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Pont.temoin_naif_echoue' depends on axioms: [propext, Classical.choice, Quot.sound]

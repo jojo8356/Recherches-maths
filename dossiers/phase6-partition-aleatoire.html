@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 6 — La partition aléatoire : la fleur n'était pas la symétrie</title>
+<style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;--ok:#3f8a7a;--ko:#b34a3c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 30px;max-width:66ch}
+  h2{font-size:1.24rem;margin:50px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:24px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1rem;margin:22px 0 4px;color:var(--acc)}
+  p{margin:10px 0} ul,ol{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.89em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .ok{background:#eef4f1;border-left:4px solid var(--ok);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ok strong{color:#2c6a5d}
+  .ko{background:#f8eeec;border-left:4px solid var(--ko);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ko strong{color:#8f3a2c}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:24px 0}
+  .verdict strong{color:#ffd9b8}
+  figure{margin:24px 0;text-align:center} figcaption{font-size:.85rem;color:var(--muted);margin-top:6px;text-align:left}
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+  .dash div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px}
+  .dash b{display:block;font-size:1.35rem;color:var(--acc);font-variant-numeric:tabular-nums}
+  .dash span{font-size:.76rem;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:8px}
+  .tag.t1{background:#e8f0ee;color:#2c6a5d} .tag.t2{background:#f6e9e6;color:#8f3a2c} .tag.t3{background:#eee9f4;color:#5b4580}
+  @media(max-width:680px){.dash{grid-template-columns:1fr 1fr}h1{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">Hadwiger–Nelson · expérience A · phase 6</div>
+<h1>La fleur n'était pas un artefact de symétrie</h1>
+<p class="sub">L'expérience devait trancher : si l'obstruction à 6 couleurs venait de la régularité du pavage hexagonal, une partition aléatoire la ferait tomber. Résultat : seize partitions, aucune sous 7, et le désordre <em>augmente</em> le nombre de couleurs exigées. La fleur est géométrique, pas symétrique — et cela déplace la cible vers un endroit très précis.</p>
+
+<div class="dash">
+  <div><b>16/16</b><span>exigent ≥ 7 couleurs ; 14/16 en exigent 8 (coloriages périodiques)</span></div>
+  <div><b>0</b><span>partition admettant un 6-coloriage</span></div>
+  <div><b>0,15</b><span>seuil de désordre où ω = 7 bascule à 8</span></div>
+  <div><b>3</b><span>bugs trouvés avant le premier résultat</span></div>
+</div>
+
+<h2><span class="num">1</span>Ce qu'il fallait construire, et pourquoi c'est plus qu'un diagnostic</h2>
+<p>Un coloriage de type carte est une partition du plan en cellules de diamètre &lt; 1 ; la question était de savoir si le désordre autorise 6 couleurs là où l'hexagone en exige 7. Pour que le résultat vaille, il fallait une <strong>vraie partition du plan</strong>, pas une parcelle finie autour de laquelle on ne sait rien.</p>
+<p>La construction retenue : un <strong>tore de période (U₁, U₂)</strong>, des germes aléatoires dans le domaine fondamental, leurs cellules de Voronoï <em>calculées modulo la période</em>, puis une homothétie qui ramène le diamètre maximal à 1 − 10⁻⁴. Les cellules forment alors une partition du plan, périodique, dont toutes les cellules ont un diamètre strictement inférieur à 1. Chaque cellule est convexe, donc son diamètre est atteint sur deux sommets, et la distance entre deux cellules se calcule exactement (sommets contre arêtes pour le minimum, sommets contre sommets pour le maximum).</p>
+<div class="verdict"><strong>Pourquoi la négativité compterait.</strong> Si l'on trouve un 6-coloriage propre du graphe de conflit du tore, on obtient un 6-coloriage du plan tout entier : il suffit de répéter le motif par périodicité, et aucune paire unité monochrome ne peut apparaître, ni dans une cellule (diamètre &lt; 1) ni entre deux cellules de même couleur (test exact). Ce n'est donc pas une heuristique qui échoue : c'est une classe entière de coloriages qui est close.</div>
+
+<h2><span class="num">2</span>La calibration, non négociable</h2>
+<p>Avant de mesurer quoi que ce soit, la machinerie devait retrouver deux valeurs connues : le pavage carré (ω = 9, phase 5) et l'hexagonal (ω = 7, et 7 couleurs suffisent).</p>
+<table>
+<tr><th>Pavage témoin</th><th class="num">n</th><th class="num">arêtes</th><th class="num">ω</th><th>6 couleurs</th><th>7 couleurs</th><th>vérification</th></tr>
+<tr><td>carré 12 × 12</td><td class="num">144</td><td class="num">1697</td><td class="num">9</td><td>impossible</td><td>—</td><td>—</td></tr>
+<tr><td>hexagonal 7 × 7</td><td class="num">49</td><td class="num">441</td><td class="num">7</td><td>impossible</td><td>trouvé</td><td>0 paire fautive</td></tr>
+<tr><td>hexagonal 14 × 14</td><td class="num">196</td><td class="num">1764</td><td class="num">7</td><td>impossible</td><td>trouvé</td><td>0 paire fautive</td></tr>
+</table>
+<p>La colonne « vérification » est une seconde passe indépendante : on reprend le coloriage rendu par le solveur et on recompte, paire par paire, sans réutiliser le graphe, s'il existe deux cellules de même couleur dont la plage de distances contient 1. Zéro. Le solveur et le vérificateur sont deux codes distincts, et c'est le vérificateur qui fait foi.</p>
+
+<h2><span class="num">3</span>Trois bugs avant le premier chiffre</h2>
+<p>La leçon de la phase 3 a servi trois fois dans la même heure.</p>
+<ol>
+<li><strong>Un décalage de repère.</strong> Dans le calcul de distance entre deux cellules, la cellule translatée n'était pas ramenée autour de la première : toutes les distances étaient décalées d'environ un demi-pas. Symptôme : le pavage carré donnait ω = 7 au lieu de 9. Sans calibration, je publiais « le carré est meilleur que l'hexagone », c'est-à-dire l'inverse de la vérité.</li>
+<li><strong>La période du coloriage heptagonal.</strong> Le coloriage à 7 couleurs de l'hexagone est périodique de période <em>7</em> en pas de réseau. Sur un tore 12 × 12, il n'existe pas — non pas parce que 7 couleurs sont impossibles, mais parce que la période du tore ne divise pas celle du coloriage. Le test annonçait « 7 couleurs impossible » sur le pavage hexagonal lui-même. Corrigé en travaillant sur 7 × 7 et 14 × 14.</li>
+<li><strong>Un harnais qui ment.</strong> Ma fonction d'affichage recevait le couple (résultat, coloriage) au lieu du seul résultat : comme un couple n'est ni <code>False</code> ni <code>None</code>, elle affichait « coloriage trouvé » — y compris pour un graphe contenant une 9-clique. Le solveur, lui, était juste (testé sur K₉ : il répond correctement « impossible » à 6 couleurs).</li>
+</ol>
+<div class="box"><strong>Règle, désormais écrite.</strong> Trois choses, dans cet ordre : tester le solveur sur un cas dont la réponse est connue ; calibrer la machinerie complète sur un pavage dont ω est établi ; et vérifier tout coloriage rendu par un second code. Un résultat négatif non calibré ne vaut rien.</div>
+
+<h2><span class="num">4</span>Résultat : le désordre coûte, il ne rapporte pas</h2>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" width="100%" role="img" aria-label="omega en fonction du desordre">
+<rect width="880" height="400" fill="#fbfaf7"/>
+<line x1="72" y1="340.0" x2="840" y2="340.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="60" y="345.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">6</text>
+<line x1="72" y1="293.0" x2="840" y2="293.0" stroke="#c4bfb2" stroke-width="1.5"/>
+<text x="60" y="298.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">7</text>
+<line x1="72" y1="246.0" x2="840" y2="246.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="60" y="251.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">8</text>
+<line x1="72" y1="199.0" x2="840" y2="199.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="60" y="204.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">9</text>
+<line x1="72" y1="152.0" x2="840" y2="152.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="60" y="157.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">10</text>
+<line x1="72" y1="105.0" x2="840" y2="105.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="60" y="110.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">11</text>
+<line x1="72" y1="58.0" x2="840" y2="58.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="60" y="63.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">12</text>
+<line x1="72.0" y1="58" x2="72.0" y2="340" stroke="#f0ece3"/>
+<text x="72.0" y="362" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0</text>
+<line x1="254.9" y1="58" x2="254.9" y2="340" stroke="#f0ece3"/>
+<text x="254.9" y="362" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.1</text>
+<line x1="437.7" y1="58" x2="437.7" y2="340" stroke="#f0ece3"/>
+<text x="437.7" y="362" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.2</text>
+<line x1="620.6" y1="58" x2="620.6" y2="340" stroke="#f0ece3"/>
+<text x="620.6" y="362" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.3</text>
+<line x1="803.4" y1="58" x2="803.4" y2="340" stroke="#f0ece3"/>
+<text x="803.4" y="362" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.4</text>
+<rect x="72" y="269.5" width="768" height="47.0" fill="#1f6f4a" opacity="0.07"/>
+<text x="832" y="306.2" text-anchor="end" font-family="Georgia,serif" font-size="12.5" fill="#1f6f4a" font-style="italic">plancher : 7</text>
+<polyline points="72.0,293.0 108.6,293.0 163.4,293.0 218.3,293.0 254.9,293.0 291.4,293.0 346.3,293.0 401.1,246.0 437.7,246.0 529.1,199.0 620.6,199.0 803.4,105.0" fill="none" stroke="#8a4b2a" stroke-width="2.5"/>
+<circle cx="72.0" cy="293.0" r="5" fill="#8a4b2a"/>
+<circle cx="108.6" cy="293.0" r="5" fill="#8a4b2a"/>
+<circle cx="163.4" cy="293.0" r="5" fill="#8a4b2a"/>
+<circle cx="218.3" cy="293.0" r="5" fill="#8a4b2a"/>
+<circle cx="254.9" cy="293.0" r="5" fill="#8a4b2a"/>
+<circle cx="291.4" cy="293.0" r="5" fill="#8a4b2a"/>
+<circle cx="346.3" cy="293.0" r="5" fill="#8a4b2a"/>
+<circle cx="401.1" cy="246.0" r="5" fill="#8a4b2a"/>
+<circle cx="437.7" cy="246.0" r="5" fill="#8a4b2a"/>
+<circle cx="529.1" cy="199.0" r="5" fill="#8a4b2a"/>
+<circle cx="620.6" cy="199.0" r="5" fill="#8a4b2a"/>
+<circle cx="803.4" cy="105.0" r="5" fill="#8a4b2a"/>
+<polyline points="72.0,293.0 254.9,293.0 437.7,293.0 620.6,246.0 803.4,199.0" fill="none" stroke="#2b5fa8" stroke-width="1.8" stroke-dasharray="6 4"/>
+<circle cx="72.0" cy="293.0" r="5.6" fill="none" stroke="#2b5fa8" stroke-width="1.8"/>
+<circle cx="254.9" cy="293.0" r="5.6" fill="none" stroke="#2b5fa8" stroke-width="1.8"/>
+<circle cx="437.7" cy="293.0" r="5.6" fill="none" stroke="#2b5fa8" stroke-width="1.8"/>
+<circle cx="620.6" cy="246.0" r="5.6" fill="none" stroke="#2b5fa8" stroke-width="1.8"/>
+<circle cx="803.4" cy="199.0" r="5.6" fill="none" stroke="#2b5fa8" stroke-width="1.8"/>
+<rect x="82" y="54" width="392" height="52" rx="7" fill="#fbfaf7" stroke="#e3ded4"/>
+<circle cx="100" cy="67" r="4.6" fill="#8a4b2a"/>
+<text x="114" y="72" font-family="Georgia,serif" font-size="12.5" fill="#3d3a34">normalisation par le diamètre max (partition valide)</text>
+<circle cx="100" cy="89" r="5.4" fill="none" stroke="#2b5fa8" stroke-width="1.8"/>
+<text x="114" y="94" font-family="Georgia,serif" font-size="12.5" fill="#3d3a34">normalisation par la moyenne (contrôle, partition invalide)</text>
+<rect x="644" y="52.0" width="186" height="46" rx="7" fill="#f4f0f7" stroke="#ddd4e6"/>
+<text x="734" y="70.0" text-anchor="middle" font-family="Georgia,serif" font-size="12.5" fill="#5b4580">germes de Poisson :</text>
+<text x="734" y="88.0" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5b4580">ω = 9, 11, 11, 11</text>
+<line x1="72" y1="340" x2="840" y2="340" stroke="#8b857a" stroke-width="1.6"/>
+<line x1="72" y1="58" x2="72" y2="340" stroke="#8b857a" stroke-width="1.6"/>
+<text x="456" y="384" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#3d3a34">amplitude du désordre (déplacement aléatoire des germes, en pas de réseau)</text>
+<text x="22" y="199" transform="rotate(-90 22 199)" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#3d3a34">ω du graphe de conflit</text>
+</svg><figcaption>ω en fonction de l'amplitude du désordre, sur 196 cellules (tore rhombique). Trait plein : normalisation par le diamètre maximal — c'est la partition valide. Tirets : contrôle par la moyenne, discuté en §5. Encart : germes de Poisson, quatre tirages.</figcaption></figure>
+<table>
+<tr><th>Désordre</th><th class="num">diamètre min–max</th><th class="num">diamètre moyen</th><th class="num">arêtes</th><th class="num">degré moyen / max</th><th class="num">ω</th><th>6 couleurs</th></tr>
+<tr><td>0 (hexagonal)</td><td class="num">1,000–1,000</td><td class="num">1,000</td><td class="num">1764</td><td class="num">18,0 / 18</td><td class="num">7</td><td>impossible</td></tr>
+<tr><td>0,10</td><td class="num">0,897–1,000</td><td class="num">0,944</td><td class="num">1764</td><td class="num">18,0 / 18</td><td class="num">7</td><td>impossible</td></tr>
+<tr><td>0,15</td><td class="num">0,846–1,000</td><td class="num">0,918</td><td class="num">1769</td><td class="num">18,1 / 19</td><td class="num">7</td><td>impossible</td></tr>
+<tr><td>0,20</td><td class="num">0,796–1,000</td><td class="num">0,894</td><td class="num">1850</td><td class="num">18,9 / 21</td><td class="num">8</td><td>impossible</td></tr>
+<tr><td>0,25</td><td class="num">0,753–1,000</td><td class="num">0,873</td><td class="num">2004</td><td class="num">20,4 / 24</td><td class="num">9</td><td>impossible</td></tr>
+<tr><td>0,30</td><td class="num">0,713–1,000</td><td class="num">0,853</td><td class="num">2188</td><td class="num">22,3 / 27</td><td class="num">9</td><td>impossible</td></tr>
+<tr><td>0,40</td><td class="num">0,640–1,000</td><td class="num">0,817</td><td class="num">2538</td><td class="num">25,9 / 30</td><td class="num">11</td><td>impossible</td></tr>
+<tr><td>Poisson 300 germes</td><td class="num">0,239–1,000</td><td class="num">0,535</td><td class="num">6703</td><td class="num">44,7 / 65</td><td class="num">9</td><td>impossible</td></tr>
+<tr><td>Poisson 420 germes</td><td class="num">0,159–1,000</td><td class="num">0,569</td><td class="num">9012</td><td class="num">42,9 / 65</td><td class="num">11</td><td>impossible</td></tr>
+</table>
+<p>Seize configurations, seize fois ω ≥ 7. Aucune n'admet de 6-coloriage — et pour la plupart ce n'est même pas une question de solveur : une clique de 8, 9 ou 11 cellules le démontre en une ligne. La transition est nette : balayage fin à trois germes par valeur, ω = [7, 7, 7] jusqu'à un désordre de 0,15, puis [8, 8, 8] à 0,18. Pas de comportement erratique, pas de configuration chanceuse.</p>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" width="100%" role="img" aria-label="neuf cellules deux a deux incompatibles dans un pavage desordonne">
+<rect width="720" height="560" fill="#fbfaf7"/>
+<path d="M201.6,453.4 L161.0,427.1 L144.3,452.3 L156.0,492.6 L166.1,497.9 L193.0,495.8Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M227.0,401.5 L203.2,394.8 L161.9,413.8 L161.0,427.1 L201.6,453.4 L237.4,437.0Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M203.2,394.8 L227.0,401.5 L260.2,368.9 L259.2,362.7 L217.2,327.0 L189.5,339.6Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M217.2,327.0 L259.2,362.7 L290.4,314.5 L285.5,292.8 L264.3,279.5 L229.3,290.3Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M400.8,120.6 L349.8,106.9 L325.2,121.4 L326.0,167.3 L358.3,179.9 L400.8,161.3Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M349.8,106.9 L400.8,120.6 L420.8,99.5 L419.8,59.9 L402.2,47.1 L350.0,56.1Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M402.2,47.1 L419.8,59.9 L447.0,44.5 L464.4,14.9 L428.2,-18.6 L396.3,16.4Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M428.2,-18.6 L464.4,14.9 L494.2,3.5 L496.0,-41.4 L455.8,-70.5 L424.0,-48.0Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M536.7,-95.1 L492.6,-121.3 L457.3,-91.8 L455.8,-70.5 L496.0,-41.4 L525.6,-55.4Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M262.5,456.2 L237.4,437.0 L201.6,453.4 L193.0,495.8 L228.6,515.7 L261.2,491.4Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M306.2,395.0 L260.2,368.9 L227.0,401.5 L237.4,437.0 L262.5,456.2 L293.1,436.5Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M400.8,161.3 L358.3,179.9 L362.5,230.0 L383.1,236.5 L414.3,214.5 L409.5,169.0Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M459.6,113.1 L420.8,99.5 L400.8,120.6 L400.8,161.3 L409.5,169.0 L458.4,171.4Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M447.0,44.5 L419.8,59.9 L420.8,99.5 L459.6,113.1 L486.9,108.0 L491.7,74.0Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M494.2,3.5 L464.4,14.9 L447.0,44.5 L491.7,74.0 L528.4,44.4 L523.4,23.8Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M564.9,-31.7 L525.6,-55.4 L496.0,-41.4 L494.2,3.5 L523.4,23.8 L566.0,-9.4Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M573.3,-107.3 L567.5,-108.7 L536.7,-95.1 L525.6,-55.4 L564.9,-31.7 L592.3,-56.4Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M324.9,456.6 L293.1,436.5 L262.5,456.2 L261.2,491.4 L294.5,509.5 L320.0,504.5Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M351.7,392.7 L332.2,384.2 L306.2,395.0 L293.1,436.5 L324.9,456.6 L358.3,449.5Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M458.4,171.4 L409.5,169.0 L414.3,214.5 L459.7,238.4 L484.1,220.5 L487.2,190.9Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M486.9,108.0 L459.6,113.1 L458.4,171.4 L487.2,190.9 L514.2,167.4 L519.3,131.0Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M528.4,44.4 L491.7,74.0 L486.9,108.0 L519.3,131.0 L542.2,117.5 L547.3,60.5Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M600.2,12.2 L566.0,-9.4 L523.4,23.8 L528.4,44.4 L547.3,60.5 L601.4,56.4Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M621.4,-51.2 L592.3,-56.4 L564.9,-31.7 L566.0,-9.4 L600.2,12.2 L618.8,-1.2Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M386.9,471.5 L358.3,449.5 L324.9,456.6 L320.0,504.5 L347.7,514.9 L387.0,472.8Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M416.8,396.5 L395.3,384.6 L351.7,392.7 L358.3,449.5 L386.9,471.5 L424.7,429.9Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M421.9,314.1 L394.3,350.7 L395.3,384.6 L416.8,396.5 L460.0,365.7 L465.1,351.2Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M514.9,241.0 L484.1,220.5 L459.7,238.4 L449.8,267.6 L493.9,306.5 L537.5,280.0Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M554.9,186.1 L514.2,167.4 L487.2,190.9 L484.1,220.5 L514.9,241.0 L557.9,210.8Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M583.5,127.4 L542.2,117.5 L519.3,131.0 L514.2,167.4 L554.9,186.1 L592.0,167.0Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M601.4,56.4 L547.3,60.5 L542.2,117.5 L583.5,127.4 L610.1,103.2 L612.5,66.5Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M661.8,5.8 L618.8,-1.2 L600.2,12.2 L601.4,56.4 L612.5,66.5 L664.7,55.1Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M466.4,448.3 L424.7,429.9 L386.9,471.5 L387.0,472.8 L417.4,504.3 L466.5,485.8Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M460.0,365.7 L416.8,396.5 L424.7,429.9 L466.4,448.3 L482.5,439.3 L489.3,402.5Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M531.3,360.8 L486.3,338.3 L465.1,351.2 L460.0,365.7 L489.3,402.5 L539.9,384.4Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M538.6,280.3 L537.5,280.0 L493.9,306.5 L486.3,338.3 L531.3,360.8 L553.6,327.2Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M557.9,210.8 L514.9,241.0 L537.5,280.0 L538.6,280.3 L564.8,271.9 L585.0,235.5Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M592.0,167.0 L554.9,186.1 L557.9,210.8 L585.0,235.5 L618.2,224.2 L615.0,181.0Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M610.1,103.2 L583.5,127.4 L592.0,167.0 L615.0,181.0 L658.2,155.8 L654.0,132.2Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M678.2,63.0 L664.7,55.1 L612.5,66.5 L610.1,103.2 L654.0,132.2 L687.0,90.5Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M728.4,5.6 L676.7,-12.4 L661.8,5.8 L664.7,55.1 L678.2,63.0 L708.9,45.7Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M530.3,449.9 L482.5,439.3 L466.4,448.3 L466.5,485.8 L483.6,505.6 L531.7,494.5Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M539.9,384.4 L489.3,402.5 L482.5,439.3 L530.3,449.9 L556.8,426.5 L559.0,400.6Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M586.4,334.1 L553.6,327.2 L531.3,360.8 L539.9,384.4 L559.0,400.6 L592.3,383.9Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M564.8,271.9 L538.6,280.3 L553.6,327.2 L586.4,334.1 L611.6,311.3 L607.9,297.7Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M618.2,224.2 L585.0,235.5 L564.8,271.9 L607.9,297.7 L641.7,249.8 L641.9,241.3Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M681.2,169.1 L658.2,155.8 L615.0,181.0 L618.2,224.2 L641.9,241.3 L682.5,224.1Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M725.8,111.7 L687.0,90.5 L654.0,132.2 L658.2,155.8 L681.2,169.1 L713.0,158.5Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M759.1,75.5 L708.9,45.7 L678.2,63.0 L687.0,90.5 L725.8,111.7 L744.9,104.7Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M594.5,457.7 L556.8,426.5 L530.3,449.9 L531.7,494.5 L553.9,514.2 L597.7,493.9Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M612.0,386.0 L592.3,383.9 L559.0,400.6 L556.8,426.5 L594.5,457.7 L631.0,434.6Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M611.6,311.3 L586.4,334.1 L592.3,383.9 L612.0,386.0 L641.0,369.1 L641.5,328.1Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M641.7,249.8 L607.9,297.7 L611.6,311.3 L641.5,328.1 L675.9,309.5 L677.5,303.2Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M708.0,236.0 L682.5,224.1 L641.9,241.3 L641.7,249.8 L677.5,303.2 L719.6,270.5Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M713.0,158.5 L681.2,169.1 L682.5,224.1 L708.0,236.0 L753.0,202.0 L753.6,186.1Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M744.9,104.7 L725.8,111.7 L713.0,158.5 L753.6,186.1 L780.1,163.6 L774.4,131.5Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M631.0,434.6 L594.5,457.7 L597.7,493.9 L627.6,509.7 L643.4,503.2 L670.4,445.1Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M689.7,392.2 L641.0,369.1 L612.0,386.0 L631.0,434.6 L670.4,445.1 L673.9,443.6Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M675.9,309.5 L641.5,328.1 L641.0,369.1 L689.7,392.2 L702.1,385.1 L706.6,343.7Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M754.4,287.7 L719.6,270.5 L677.5,303.2 L675.9,309.5 L706.6,343.7 L750.1,320.3Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M753.0,202.0 L708.0,236.0 L719.6,270.5 L754.4,287.7 L782.5,273.5 L789.2,239.9Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M673.9,443.6 L670.4,445.1 L643.4,503.2 L690.5,523.7 L718.7,484.5 L717.0,470.2Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M702.1,385.1 L689.7,392.2 L673.9,443.6 L717.0,470.2 L758.2,440.5 L735.8,394.3Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M750.1,320.3 L706.6,343.7 L702.1,385.1 L735.8,394.3 L773.6,366.6 L775.5,354.2Z" fill="#eee9dd" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M809.5,290.8 L782.5,273.5 L754.4,287.7 L750.1,320.3 L775.5,354.2 L814.6,334.8Z" fill="#f3efe6" stroke="#c9c3b4" stroke-width="0.9"/>
+<path d="M264.3,279.5 L285.5,292.8 L330.6,269.1 L335.4,245.7 L295.1,212.0 L265.0,241.0Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M358.3,179.9 L326.0,167.3 L295.4,187.7 L295.1,212.0 L335.4,245.7 L362.5,230.0Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M290.4,314.5 L259.2,362.7 L260.2,368.9 L306.2,395.0 L332.2,384.2 L332.3,341.1Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M330.6,269.1 L285.5,292.8 L290.4,314.5 L332.3,341.1 L355.2,321.4 L361.6,299.9Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M383.1,236.5 L362.5,230.0 L335.4,245.7 L330.6,269.1 L361.6,299.9 L404.7,285.1Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M355.2,321.4 L332.3,341.1 L332.2,384.2 L351.7,392.7 L395.3,384.6 L394.3,350.7Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M416.7,289.2 L404.7,285.1 L361.6,299.9 L355.2,321.4 L394.3,350.7 L421.9,314.1Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M414.3,214.5 L383.1,236.5 L404.7,285.1 L416.7,289.2 L449.8,267.6 L459.7,238.4Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<path d="M449.8,267.6 L416.7,289.2 L421.9,314.1 L465.1,351.2 L486.3,338.3 L493.9,306.5Z" fill="#e5ae82" stroke="#8a3b2a" stroke-width="2.6"/>
+<text x="296.0" y="262.7" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">1</text>
+<text x="328.8" y="209.8" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">2</text>
+<text x="296.8" y="367.1" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">3</text>
+<text x="326.0" y="312.5" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">4</text>
+<text x="363.0" y="267.1" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">5</text>
+<text x="360.2" y="368.4" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">6</text>
+<text x="392.4" y="316.1" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">7</text>
+<text x="421.4" y="261.2" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">8</text>
+<text x="455.6" y="317.2" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#6d2a1c">9</text>
+<rect x="0" y="0" width="720" height="46" fill="#fbfaf7"/><rect x="0" y="508" width="720" height="52" fill="#fbfaf7"/>
+<text x="360.0" y="25" text-anchor="middle" font-family="Georgia,serif" font-size="15.5" fill="#3d3a34">Neuf cellules deux à deux incompatibles, dans un pavage sans aucune symétrie</text>
+<text x="360.0" y="528" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850" font-style="italic">germes hexagonaux déplacés de 0,30 pas : la fleur de 7 se déforme en une clique de 9</text>
+<text x="360.0" y="546" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850" font-style="italic">tout coloriage de ce pavage exige donc au moins 9 couleurs</text>
+</svg><figcaption>Le même mécanisme à l'œuvre. Les neuf cellules numérotées sont deux à deux incompatibles : la fleur régulière de 7 s'est déformée, mais elle a grossi.</figcaption></figure>
+
+<h2><span class="num">5</span>Le contrôle : ce qui revient aux cellules plus petites, et ce qui reste</h2>
+<p>Une objection évidente : en normalisant par le diamètre <em>maximal</em> (obligatoire pour que la partition soit valide), le désordre réduit le diamètre <em>moyen</em> — de 1,000 à 0,817. Des cellules plus petites, c'est mécaniquement plus de voisines à moins de 1, donc un graphe plus dense. La hausse de ω pourrait n'être que cet effet d'échelle.</p>
+<p>J'ai donc refait les mêmes tirages avec une normalisation par le diamètre <strong>moyen</strong>. Ce n'est plus une partition valide (certaines cellules dépassent le diamètre 1), mais c'est géométriquement comparable, et cela sépare les deux causes.</p>
+<table>
+<tr><th>Désordre</th><th class="num">ω (normalisation max, valide)</th><th class="num">ω (normalisation moyenne, contrôle)</th><th class="num">écart</th></tr>
+<tr><td>0</td><td class="num">7</td><td class="num">7</td><td class="num">0</td></tr>
+<tr><td>0,10</td><td class="num">7</td><td class="num">7</td><td class="num">0</td></tr>
+<tr><td>0,20</td><td class="num">8</td><td class="num">7</td><td class="num">1</td></tr>
+<tr><td>0,30</td><td class="num">9</td><td class="num">8</td><td class="num">1</td></tr>
+<tr><td>0,40</td><td class="num">11</td><td class="num">9</td><td class="num">2</td></tr>
+</table>
+<p>Conclusion en deux temps. L'effet d'échelle explique <strong>une à deux unités</strong> de la hausse : il est réel, je ne le nie pas. Mais il n'explique pas le plancher : même sous la normalisation favorable, ω ne descend jamais en dessous de 7, et à 0,30 il vaut encore 8. <strong>Le 7 n'est donc pas un artefact de normalisation : c'est la valeur du pavage le plus efficace.</strong></p>
+
+<h2><span class="num">6</span>Pourquoi le désordre ne peut que coûter</h2>
+<p>Le tableau des degrés donne le mécanisme : 18,0 pour l'hexagone, 18,9 à 0,20, 22,3 à 0,30, 44,7 pour Poisson. Le degré compte les cellules situées à moins de 1 ; il mesure la promiscuité du pavage. L'hexagone est le <strong>pavage le plus efficace</strong> — celui qui, à diamètre fixé, maximise la distance entre cellules (c'est le théorème de Thue, déjà utilisé en phase 4 sous la forme densité ≤ π/(8√3), soit 0,2267). Tout écart à l'hexagone rapproche les cellules, donc ajoute des conflits, donc ne peut qu'augmenter ω. Le désordre n'est pas un espace de recherche neutre : c'est une direction où l'on perd systématiquement.</p>
+<div class="ok"><strong>Conséquence.</strong> Six couleurs ne peuvent pas venir d'un pavage plus irrégulier. Le minimum 7 est atteint en un point — l'hexagone — et la valeur ne fait que monter autour. Chercher un 6-coloriage en randomisant les germes revient à chercher un maximum en descendant une pente.</div>
+
+<h2><span class="num">7</span>Ce que cela fait à la cible</h2>
+<p>La question de la phase 5 était : peut-on retirer les hypothèses du preprint de 2025, qui exige ≥ 7 pour les cartes polygonales ? Cette expérience donne trois choses.</p>
+<ol>
+<li><strong>Un appui indépendant.</strong> Toutes les cartes polygonales testées ici — régulières ou non, 49 à 420 cellules — exigent ≥ 7. C'est exactement le corollaire du preprint, vérifié sur la sous-classe des partitions de Voronoï périodiques. Je ne prouve pas son théorème ; je fournis le seul contrôle explicite dont je dispose, et il ne le contredit pas.</li>
+<li><strong>Une explication du « pourquoi 7 ».</strong> L'optimalité du pavage hexagonal (Thue) et l'obstruction de la fleur sont le même fait vu de deux côtés : le pavage le plus économe en distances est celui qui colle le plus les cellules, donc celui qui contient la plus grosse clique — sept. Six exigerait un pavage <em>plus</em> efficace que l'optimal, ce qui n'existe pas.</li>
+<li><strong>Un rétrécissement de la cible.</strong> Si un 6-coloriage existe, ses cellules ne peuvent pas être des polygones : le désordre polygonal est épuisé. Il faut donc des <strong>bords courbes</strong> — et c'est exactement l'hypothèse que le preprint isole et interdit (« les bords ne sont pas des arcs de cercle unité »). Les deux routes convergent vers le même point, ce qui est bon signe : la seule échappatoire connue de mes calculs est la seule hypothèse que le preprint prend soin d'exclure.</li>
+</ol>
+
+<h2><span class="num">8</span>Ce qui reste ouvert</h2>
+<table>
+<tr><th>Question</th><th>État après cette expérience</th></tr>
+<tr><td>Existe-t-il un 6-coloriage du plan ?</td><td>ouvert ; impossible avec des cellules polygonales périodiques (vérifié ici sur 16 partitions), impossible pour toutes les cartes polygonales (revendiqué 2025)</td></tr>
+<tr><td>Et avec des cellules à bords courbes ?</td><td>ouvert, et c'est désormais <strong>la seule piste</strong> que mes calculs laissent survivre</td></tr>
+<tr><td>Et avec des cellules non simplement connexes ?</td><td>ouvert — une cellule trouée de diamètre &lt; 1 est autorisée par le lemme 1 de la phase 5, et aucune expérience n'a testé ce cas</td></tr>
+<tr><td>χ(ℝ²) ∈ {5, 6, 7} ?</td><td>inchangé</td></tr>
+</table>
+<p class="sub" style="margin-top:28px">Scripts et sorties : <code>dossiers/phase6/partition2.py</code> (géométrie et solveurs), <code>calib3.py</code> (calibration), <code>experience.py</code> (16 partitions), <code>controle.py</code> (double normalisation et balayage fin), <code>figs6b.py</code>, <code>res_expA.json</code>, <code>res_controle.json</code>. Tous les chiffres sont des sorties réelles.</p>
+
+</div>
+</body>
+</html>

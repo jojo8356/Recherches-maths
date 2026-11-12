@@ -1,0 +1,105 @@
+⚠ [4028/4038] Built Geometrie (52s)
+warning: Geometrie.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Analysis.InnerProductSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.MetricSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+info: Geometrie.lean:87:26: Try this:
+  [apply] abel_nf
+warning: Geometrie.lean:149:0: automatically included section variable(s) unused in theorem `Geometrie.conflit_iff_zero`:
+  [InnerProductSpace ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: Geometrie.lean:172:8: This simp argument is unused:
+  Set.mem_image
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Geometrie.lean:252:0: automatically included section variable(s) unused in theorem `Geometrie.centre_mem_cellule`:
+  [InnerProductSpace ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: Geometrie.lean:252:56: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+info: Geometrie.lean:311:0: 'Geometrie.centre_mem_cellule' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:312:0: 'Geometrie.cellule_Lint_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:313:0: 'Geometrie.cellule_Lint_ge' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:314:0: 'Geometrie.controle_negatif' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:315:0: 'Geometrie.controle_negatif_encadrement' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:316:0: 'Geometrie.dist_le_dist_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:317:0: 'Geometrie.cellule_convexe' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:318:0: 'Geometrie.dist_sub_left' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:319:0: 'Geometrie.cellule_translate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:320:0: 'Geometrie.conflit_translation' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:321:0: 'Geometrie.conflit_symm' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:322:0: 'Geometrie.conflit_iff_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:323:0: 'Geometrie.isPreconnected_dist_set' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:324:0: 'Geometrie.existe_paire_distance_un' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:325:0: 'Geometrie.conflit_iff_encadrement' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:326:0: 'Geometrie.mem_Lint' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:327:0: 'Geometrie.conflit_vecteur_unitaire' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [4029/4038] Ran Geometrie:irArts
+warning: Geometrie.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Analysis.InnerProductSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.MetricSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+⚠ [4030/4038] Built Queue (55s)
+warning: Queue.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Queue.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Queue.lean:46:8: This simp argument is unused:
+  Set.mem_prod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Prod.exists]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+info: Queue.lean:86:2: Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+warning: Queue.lean:351:2: Try this: intro col hcol a b hab
+
+Note: This linter can be disabled with `set_option linter.tacticAnalysis.introMerge false`
+info: Queue.lean:375:0: 'Queue.pas_borne' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:376:0: 'Queue.proche_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:377:0: 'Queue.loin_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:378:0: 'Queue.queue' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:379:0: 'Queue.sept_couleurs' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [4031/4038] Ran Queue:irArts
+warning: Queue.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Queue.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+ℹ [4033/4038] Built Pont (64s)
+info: Pont.lean:137:0: 'Pont.lemmeB' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Pont.lean:138:0: 'Pont.pont_coloriage' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Pont.lean:139:0: 'Pont.pont_interieurs' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Pont.lean:140:0: 'Pont.pont_echelle' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Pont.lean:159:0: 'Pont.lemmeB_sans_dmin_lt_dmax_est_faux' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Pont.lean:160:0: 'Pont.temoin_naif_echoue' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [4036/4038] Built Boites (61s)
+info: Boites.lean:37:0: 'Boites.clique_de_temoins' depends on axioms: [propext, Classical.choice, Quot.sound]
+warning: Boites.lean:56:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+warning: Boites.lean:48:47: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+info: Boites.lean:59:0: 'Boites.contrainte_auto' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (4038 jobs).

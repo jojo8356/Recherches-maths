@@ -1,0 +1,235 @@
+{
+ "fichier": "certificat_temoins.jsonl",
+ "controle_negatif": false,
+ "nb_verifiees": 0,
+ "nb_echecs": 30,
+ "raisons": {
+  "aucune paire generique certifiee": 30
+ },
+ "echecs": [
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    60.0,
+    60.3
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    60.3,
+    60.6
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    60.6,
+    60.9
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    60.9,
+    61.2
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    61.2,
+    61.5
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    61.5,
+    61.8
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    61.8,
+    62.1
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    62.1,
+    62.4
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    62.4,
+    62.7
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    62.7,
+    63.0
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    63.0,
+    63.3
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    63.3,
+    63.6
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    63.6,
+    63.9
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    63.9,
+    64.2
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    64.2,
+    64.5
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    64.5,
+    64.8
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    64.8,
+    65.1
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    65.1,
+    65.4
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    65.4,
+    65.7
+   ],
+   "raison": "aucune paire generique certifiee"
+  },
+  {
+   "r": [
+    1.0,
+    1.01
+   ],
+   "t": [
+    65.7,
+    66.0
+   ],
+   "raison": "aucune paire generique certifiee"
+  }
+ ],
+ "temps_s": 507.4,
+ "marge_app_min": null,
+ "marge_paire_min": null,
+ "boites": []
+}

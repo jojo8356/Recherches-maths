@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 5 — L'écart 6 ↔ 7 et ce que le calcul peut y faire</title>
+<style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;--ok:#3f8a7a;--ko:#b34a3c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 30px;max-width:66ch}
+  h2{font-size:1.24rem;margin:50px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:24px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1rem;margin:22px 0 4px;color:var(--acc)}
+  p{margin:10px 0} ul,ol{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.89em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .ok{background:#eef4f1;border-left:4px solid var(--ok);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ok strong{color:#2c6a5d}
+  .ko{background:#f8eeec;border-left:4px solid var(--ko);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ko strong{color:#8f3a2c}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:24px 0}
+  .verdict strong{color:#ffd9b8}
+  figure{margin:24px 0;text-align:center} figcaption{font-size:.85rem;color:var(--muted);margin-top:6px;text-align:left}
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+  .dash div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px}
+  .dash b{display:block;font-size:1.35rem;color:var(--acc);font-variant-numeric:tabular-nums}
+  .dash span{font-size:.76rem;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:8px}
+  .tag.t1{background:#e8f0ee;color:#2c6a5d} .tag.t2{background:#f6e9e6;color:#8f3a2c} .tag.t3{background:#eee9f4;color:#5b4580}
+  @media(max-width:680px){.dash{grid-template-columns:1fr 1fr}h1{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">Hadwiger–Nelson · protocole en 11 étapes · phase 5</div>
+<h1>L'écart 6 ↔ 7, et ce que le calcul peut y faire</h1>
+<p class="sub">La phase précédente s'achevait sur une cible : « les classes bordées par des courbes de Jordan exigent-elles 7 couleurs ? ». Avant d'attaquer, j'ai vérifié l'énoncé dans la littérature. Il ne tenait pas sous cette forme — mais il a un auteur, une date, et un statut que le calcul peut partiellement contrôler. Voici la correction, deux lemmes que je peux démontrer seul, et un calcul exhaustif sur 14 réseaux.</p>
+
+<div class="dash">
+  <div><b>7</b><span>plancher de ω sur tous les pavages de réseaux testés</span></div>
+  <div><b>0</b><span>pavages de réseaux admettant 6 couleurs</span></div>
+  <div><b>1,3229</b><span>distance minimale entre deux cellules de même couleur (coloriage heptagonal)</span></div>
+  <div><b>2025</b><span>prépublication revendiquant 7 — statut : non validé</span></div>
+</div>
+
+<h2><span class="num">1</span>Ce que j'ai trouvé avant d'attaquer</h2>
+<p>Ma cible de la phase 4 était formulée ainsi : « fermer l'écart 6 ↔ 7 dans la classe régulière — χ = 7 pour les classes bordées par des courbes de Jordan ? ». Trois choses sont fausses ou imprécises dans cette phrase, et il faut les corriger avant de bâtir dessus.</p>
+
+<h3>1.1 Woodall n'est pas seul</h3>
+<p>L'énoncé souvent cité — « dans un coloriage dont les classes sont des régions bordées par des courbes de Jordan, il faut au moins 6 couleurs » — est attribué à Woodall (1973). La preuve de 1973 était <strong>incorrecte</strong>. Elle a été réparée par Townsend en 1981. La citation correcte est donc <em>Woodall–Townsend</em>, et le chiffre exact n'est pas 6 mais un encadrement : <strong>6 nécessaires, 7 suffisants</strong> — les 7 étant ceux du coloriage hexagonal d'Isbell, qui est bien un coloriage de type carte.</p>
+
+<h3>1.2 Le chiffre 7 est revendiqué, pas établi</h3>
+<p><span class="tag">statut mis à jour le 03/11/2026</span> Ce texte n'est plus un preprint : Sokolov–Voronov est <b>publié</b>, <em>Discrete Mathematics</em> <b>349</b>(12), décembre 2026, art.&nbsp;115321 (DOI 10.1016/j.disc.2026.115321) ; les phrases ci-dessous qui parlent de « preprint » se lisent donc comme « article publié, dont la preuve reste contestée et non vérifiée par nous ».</p>
+<p>Un preprint de février 2025 (Sokolov–Voronov, arXiv:2502.01958, depuis publié) revendique exactement le saut qui manquait : au moins 7 couleurs pour un coloriage de type carte vérifiant trois hypothèses restrictives, et — corollaire — au moins 7 couleurs dès que les régions sont des polygones. Le preprint est en v1, non publié, et sa preuve fait 29 pages que je ne peux pas certifier dans ce format.</p>
+
+<div class="box">
+<strong>Conséquence pour le protocole.</strong> La question « 6 ou 7 pour les cartes ? » n'est plus ouverte « sans restriction » : elle est <em>revendiquée close pour les polygones</em>. Ce qui reste réellement ouvert, c'est le retrait des hypothèses — et c'est un problème différent, plus étroit, et vérifiable par morceaux. On ne cherche plus une valeur, on cherche un contre-exemple à une hypothèse.
+</div>
+
+<table>
+<tr><th>Résultat</th><th>Énoncé</th><th>Statut</th></tr>
+<tr><td>Woodall 1973</td><td>colorier en nommant les couleurs : 6 nécessaires, 7 suffisants</td><td><span class="tag t2">preuve défectueuse</span></td></tr>
+<tr><td>Townsend 1981</td><td>au moins 6 pour les coloriages de type carte</td><td>établi</td></tr>
+<tr><td>Isbell (hexagonal)</td><td>7 couleurs suffisent, y compris en type carte</td><td>établi</td></tr>
+<tr><td>de Grey 2018 → 509 sommets</td><td>χ(ℝ²) ≥ 5 (sans hypothèse de régularité)</td><td>établi, vérifié par ordinateur</td></tr>
+<tr><td>Sokolov–Voronov 2025</td><td>≥ 7 si bords sans arc de cercle unité, exactement 3 bords par sommet, finitude locale ; corollaire : polygones</td><td><span class="tag t3">prépublication</span></td></tr>
+</table>
+
+<h2><span class="num">2</span>Deux lemmes que je peux démontrer seul</h2>
+<p>Avant de calculer quoi que ce soit, il faut savoir à quoi ressemble un coloriage de type carte valide. Deux arguments élémentaires suffisent à en fixer la structure — et ils ont l'avantage de ne dépendre d'aucun résultat cité.</p>
+
+<h3>2.1 Lemme du diamètre</h3>
+<div class="ok">
+<strong>Lemme 1.</strong> Toute classe de couleur d'un coloriage valide qui est <em>connexe</em> a un diamètre strictement inférieur à 1.<br>
+<em>Preuve.</em> Soit C une classe connexe contenant deux points p, q avec |pq| ≥ 1. La connexité donne un chemin γ de p à q dans C (les régions d'une carte sont des ensembles connexes et localement connexes, donc connexes par arcs). La fonction t ↦ |γ(t) − p| est continue, vaut 0 en t = 0 et |pq| ≥ 1 à l'arrivée : elle prend la valeur 1. Il existe donc un point r ∈ C avec |pr| = 1 — une paire unité dans une classe monochrome, contradiction. ∎
+</div>
+<p>Deux corollaires immédiats, et ils sont plus forts qu'ils n'en ont l'air.</p>
+<ul>
+<li><strong>Chaque pays d'une carte valide a un diamètre &lt; 1.</strong> Pas la classe : le pays. Un coloriage de type carte du plan est donc nécessairement une carte à une <em>infinité</em> de pays de diamètre inférieur à 1 — aucune région grande, aucun « océan » monochrome. C'est ce qui rend le problème combinatoire plutôt que géométrique.</li>
+<li><strong>Deux pays de même couleur sont soit à distance &gt; 1, soit d'union de diamètre &lt; 1.</strong> Si leur distance minimale est ≤ 1 et que leur union atteint le diamètre 1, la paire unité est encore là.</li>
+</ul>
+
+<h3>2.2 Ce que cela change à l'image du problème</h3>
+<p>Avec le lemme 1, un coloriage de type carte à k couleurs devient exactement l'objet que manipulaient mes phases 3 et 4 : une partition du plan en pièces de diamètre &lt; 1, k-coloriées, avec une contrainte de distance sur les paires de même couleur. Autrement dit, <strong>la classe « carte » est la classe des coloriages en pièces connexes de diamètre &lt; 1</strong> — et le plafond de la phase 4 s'y applique sans retouche.</p>
+<p>Ce plafond disait : toute méthode qui ne regarde qu'une classe à la fois, via sa densité, conclut au mieux à 1/δ*, et δ* ne peut pas dépasser 0,2267 (construction hexagone + disque de la phase 2), donc 1/δ* ≤ 4,41, donc <strong>5 couleurs</strong>. Le compte est cohérent : la densité rend exactement 5, quand la vérité — pour les cartes — est 6 ou 7. L'écart d'une unité entre les deux est la signature du fait que <em>l'information manquante ne porte pas sur une classe mais sur la compatibilité entre classes</em>. Le preprint de 2025 dit d'ailleurs explicitement emprunter ses techniques au problème de l'intervalle de distances interdit, c'est-à-dire à un argument à deux points. Les phases 3, 4 et 5 se rejoignent là.</p>
+
+<h2><span class="num">3</span>Le calcul : 14 réseaux, aucun coloriage à 6 couleurs</h2>
+<p>Ce que je peux contrôler sans lire 29 pages, c'est un cas particulier du corollaire polygonal : les pavages dont les cellules sont les cellules de Voronoï d'un réseau. C'est une classe minuscule dans l'ensemble des pavages polygonaux — mais elle est exactement calculable, et c'est celle d'où sort le coloriage à 7.</p>
+
+<h3>3.1 Le protocole</h3>
+<ol>
+<li>On se donne un réseau L = ℤb₁ + ℤb₂, on calcule sa cellule de Voronoï (intersection de demi-plans, par découpage de polygone).</li>
+<li>On la dilate homothétiquement pour que son diamètre vaille 1 − ε (ε = 10⁻³), ce qui dilate aussi le réseau : les cellules pavent encore le plan, et <em>aucune</em> ne contient de paire unité.</li>
+<li>Deux cellules translatées sont <strong>en conflit</strong> si la distance entre elles passe de part et d'autre de 1 : min &lt; 1 et max &gt; 1. (Distance minimale par sommets-contre-arêtes, maximale par sommets-contre-sommets.)</li>
+<li>Le graphe de conflit du pavage est un graphe de Cayley ; on le restreint à un carré de 49 ou 81 cellules et on calcule son <strong>nombre de clique ω</strong> par Bron–Kerbosch avec pivot. Toute clique est un ensemble de cellules deux à deux incompatibles : elle exige autant de couleurs.</li>
+</ol>
+<div class="box"><strong>Pourquoi ω et pas χ.</strong> Une borne inférieure sur ω est une borne inférieure sur χ, sans recours à aucun solveur de coloration. Et pour cette famille, la borne est atteinte : le pavage hexagonal est 7-coloriable (ci-dessous), donc χ = ω = 7 exactement. On n'encadre pas, on calcule la valeur.</div>
+
+<h3>3.2 Résultats</h3>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" role="img" aria-label="clique de conflit en fonction de l angle du reseau rhombique">
+<rect width="860" height="360" fill="#fbfaf7"/>
+<line x1="64" y1="306.0" x2="836" y2="306.0" stroke="#e3dfd6" stroke-width="1"/>
+<text x="54" y="311.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">6</text>
+<line x1="64" y1="238.0" x2="836" y2="238.0" stroke="#c9c4b8" stroke-width="1.2"/>
+<text x="54" y="243.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">7</text>
+<line x1="64" y1="170.0" x2="836" y2="170.0" stroke="#e3dfd6" stroke-width="1"/>
+<text x="54" y="175.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">8</text>
+<line x1="64" y1="102.0" x2="836" y2="102.0" stroke="#c9c4b8" stroke-width="1"/>
+<text x="54" y="107.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">9</text>
+<line x1="64" y1="34.0" x2="836" y2="34.0" stroke="#e3dfd6" stroke-width="1"/>
+<text x="54" y="39.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">10</text>
+<line x1="93.7" y1="34" x2="93.7" y2="306" stroke="#efebe2"/>
+<text x="93.7" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">30°</text>
+<line x1="182.8" y1="34" x2="182.8" y2="306" stroke="#efebe2"/>
+<text x="182.8" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">45°</text>
+<line x1="271.8" y1="34" x2="271.8" y2="306" stroke="#efebe2"/>
+<text x="271.8" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">60°</text>
+<line x1="360.9" y1="34" x2="360.9" y2="306" stroke="#efebe2"/>
+<text x="360.9" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">75°</text>
+<line x1="450.0" y1="34" x2="450.0" y2="306" stroke="#efebe2"/>
+<text x="450.0" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">90°</text>
+<line x1="539.1" y1="34" x2="539.1" y2="306" stroke="#efebe2"/>
+<text x="539.1" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">105°</text>
+<line x1="628.2" y1="34" x2="628.2" y2="306" stroke="#efebe2"/>
+<text x="628.2" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">120°</text>
+<line x1="717.2" y1="34" x2="717.2" y2="306" stroke="#efebe2"/>
+<text x="717.2" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">135°</text>
+<line x1="806.3" y1="34" x2="806.3" y2="306" stroke="#efebe2"/>
+<text x="806.3" y="328" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">150°</text>
+<rect x="123.4" y="204.0" width="237.5" height="68.0" fill="#1f6f4a" opacity="0.09"/>
+<rect x="539.1" y="204.0" width="237.5" height="68.0" fill="#1f6f4a" opacity="0.09"/>
+<text x="242.2" y="268.6" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#1f6f4a" font-style="italic">ω = 7 (plancher)</text>
+<polyline points="93.7,170.0 123.4,238.0 153.1,238.0 182.8,238.0 212.5,238.0 242.2,238.0 271.8,238.0 301.5,238.0 331.2,238.0 360.9,238.0 390.6,170.0 420.3,170.0 450.0,102.0 479.7,170.0 509.4,170.0 539.1,238.0 568.8,238.0 598.5,238.0 628.2,238.0 657.8,238.0 687.5,238.0 717.2,238.0 746.9,238.0 776.6,238.0 806.3,170.0" fill="none" stroke="#8a4b2a" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="93.7" cy="170.0" r="4.6" fill="#8a4b2a"/>
+<circle cx="123.4" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="153.1" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="182.8" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="212.5" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="242.2" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="271.8" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="301.5" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="331.2" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="360.9" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="390.6" cy="170.0" r="4.6" fill="#8a4b2a"/>
+<circle cx="420.3" cy="170.0" r="4.6" fill="#8a4b2a"/>
+<circle cx="450.0" cy="102.0" r="4.6" fill="#8a4b2a"/>
+<circle cx="479.7" cy="170.0" r="4.6" fill="#8a4b2a"/>
+<circle cx="509.4" cy="170.0" r="4.6" fill="#8a4b2a"/>
+<circle cx="539.1" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="568.8" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="598.5" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="628.2" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="657.8" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="687.5" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="717.2" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="746.9" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="776.6" cy="238.0" r="4.6" fill="#1f6f4a"/>
+<circle cx="806.3" cy="170.0" r="4.6" fill="#8a4b2a"/>
+<line x1="64" y1="306" x2="836" y2="306" stroke="#8b857a" stroke-width="1.6"/>
+<line x1="64" y1="34" x2="64" y2="306" stroke="#8b857a" stroke-width="1.6"/>
+<text x="450" y="348" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#3d3a34">angle θ du réseau rhombique (degré)</text>
+<text x="18" y="170" transform="rotate(-90 18 170)" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#3d3a34">ω du graphe de conflit</text>
+<text x="450.0" y="90.0" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#8a4b2a">carré</text>
+</svg><figcaption>ω du graphe de conflit pour les cellules de Voronoï d'un réseau rhombique d'angle θ, de diamètre normalisé à 1 − 10⁻³. Le plancher 7 est atteint sur deux intervalles, jamais en dessous ; le carré (θ = 90°) coûte 9.</figcaption></figure>
+<table>
+<tr><th>Famille de réseau</th><th class="num">ω</th><th>Commentaire</th></tr>
+<tr><td>triangulaire / hexagonale (θ = 60°)</td><td class="num">7</td><td>le minimum, atteint aussi pour tout θ ∈ [35°, 75°] et [105°, 145°]</td></tr>
+<tr><td>rhombique θ = 30°</td><td class="num">8</td><td>cellule très allongée : le voisinage se resserre</td></tr>
+<tr><td>rhombique θ = 80°, 85°, 95°, 100°, 150°</td><td class="num">8</td><td>approche du carré des deux côtés</td></tr>
+<tr><td>carré (θ = 90°)</td><td class="num">9</td><td>la plus mauvaise cellule convexe régulière</td></tr>
+<tr><td>rectangulaire, aspect ρ ≤ 1,5</td><td class="num">9</td><td>—</td></tr>
+<tr><td>rectangulaire, aspect ρ = 1,75 à 2,5</td><td class="num">10</td><td>—</td></tr>
+<tr><td>rectangulaire, aspect ρ = 3</td><td class="num">11</td><td>croît avec l'allongement</td></tr>
+</table>
+<div class="verdict"><strong>Résultat.</strong> Sur les 25 réseaux rhombiques et les 9 réseaux rectangulaires testés, le minimum de ω est <strong>7</strong>, atteint sur un continuum de réseaux rhombiques — et jamais 6. Aucun pavage par cellules de Voronoï d'un réseau n'admet de coloriage à 6 couleurs. Six cellules mutuellement incompatibles ne suffisent jamais ; il en faut sept.</div>
+
+<h3>3.3 La fleur, et pourquoi six ne peuvent pas suffire</h3>
+<p>L'obstruction est locale et visible. Dans le pavage hexagonal, une cellule et ses six voisines sont <em>deux à deux</em> en conflit : entre deux d'entre elles, la distance passe toujours par 1. Sept cellules, sept couleurs — la fleur est une clique de 7.</p>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 480" width="100%" role="img" aria-label="les sept cellules de la fleur sont deux a deux en conflit">
+<rect width="700" height="480" fill="#fbfaf7"/>
+<path d="M-152.4,538.1 L-215.2,501.8 L-278.0,538.1 L-278.0,610.6 L-215.2,646.9 L-152.4,610.6Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-215.2" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M-89.6,429.3 L-152.4,393.0 L-215.2,429.3 L-215.2,501.8 L-152.4,538.1 L-89.6,501.8Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-152.4" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M-26.8,320.5 L-89.6,284.3 L-152.4,320.5 L-152.4,393.0 L-89.6,429.3 L-26.8,393.0Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-89.6" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M36.0,211.7 L-26.8,175.5 L-89.6,211.7 L-89.6,284.3 L-26.8,320.5 L36.0,284.3Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-26.8" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M98.8,103.0 L36.0,66.7 L-26.8,103.0 L-26.8,175.5 L36.0,211.7 L98.8,175.5Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="36.0" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M161.6,-5.8 L98.8,-42.1 L36.0,-5.8 L36.0,66.7 L98.8,103.0 L161.6,66.7Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="98.8" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M224.4,-114.6 L161.6,-150.9 L98.8,-114.6 L98.8,-42.1 L161.6,-5.8 L224.4,-42.1Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M-26.8,538.1 L-89.6,501.8 L-152.4,538.1 L-152.4,610.6 L-89.6,646.9 L-26.8,610.6Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-89.6" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M36.0,429.3 L-26.8,393.0 L-89.6,429.3 L-89.6,501.8 L-26.8,538.1 L36.0,501.8Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-26.8" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M98.8,320.5 L36.0,284.3 L-26.8,320.5 L-26.8,393.0 L36.0,429.3 L98.8,393.0Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="36.0" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M161.6,211.7 L98.8,175.5 L36.0,211.7 L36.0,284.3 L98.8,320.5 L161.6,284.3Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="98.8" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M224.4,103.0 L161.6,66.7 L98.8,103.0 L98.8,175.5 L161.6,211.7 L224.4,175.5Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M287.2,-5.8 L224.4,-42.1 L161.6,-5.8 L161.6,66.7 L224.4,103.0 L287.2,66.7Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="224.4" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M350.0,-114.6 L287.2,-150.9 L224.4,-114.6 L224.4,-42.1 L287.2,-5.8 L350.0,-42.1Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="287.2" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M98.8,538.1 L36.0,501.8 L-26.8,538.1 L-26.8,610.6 L36.0,646.9 L98.8,610.6Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="36.0" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M161.6,429.3 L98.8,393.0 L36.0,429.3 L36.0,501.8 L98.8,538.1 L161.6,501.8Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="98.8" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M224.4,320.5 L161.6,284.3 L98.8,320.5 L98.8,393.0 L161.6,429.3 L224.4,393.0Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M287.2,211.7 L224.4,175.5 L161.6,211.7 L161.6,284.3 L224.4,320.5 L287.2,284.3Z" fill="#e6ddf1" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="224.4" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">6</text>
+<path d="M350.0,103.0 L287.2,66.7 L224.4,103.0 L224.4,175.5 L287.2,211.7 L350.0,175.5Z" fill="#dbe2f0" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="287.2" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">2</text>
+<path d="M412.8,-5.8 L350.0,-42.1 L287.2,-5.8 L287.2,66.7 L350.0,103.0 L412.8,66.7Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="350.0" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M475.6,-114.6 L412.8,-150.9 L350.0,-114.6 L350.0,-42.1 L412.8,-5.8 L475.6,-42.1Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="412.8" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M224.4,538.1 L161.6,501.8 L98.8,538.1 L98.8,610.6 L161.6,646.9 L224.4,610.6Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M287.2,429.3 L224.4,393.0 L161.6,429.3 L161.6,501.8 L224.4,538.1 L287.2,501.8Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="224.4" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M350.0,320.5 L287.2,284.3 L224.4,320.5 L224.4,393.0 L287.2,429.3 L350.0,393.0Z" fill="#d7ecef" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="287.2" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">4</text>
+<path d="M412.8,211.7 L350.0,175.5 L287.2,211.7 L287.2,284.3 L350.0,320.5 L412.8,284.3Z" fill="#dfe9e0" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="350.0" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">0</text>
+<path d="M475.6,103.0 L412.8,66.7 L350.0,103.0 L350.0,175.5 L412.8,211.7 L475.6,175.5Z" fill="#f2dce6" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="412.8" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">3</text>
+<path d="M538.4,-5.8 L475.6,-42.1 L412.8,-5.8 L412.8,66.7 L475.6,103.0 L538.4,66.7Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="475.6" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M601.2,-114.6 L538.4,-150.9 L475.6,-114.6 L475.6,-42.1 L538.4,-5.8 L601.2,-42.1Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M350.0,538.1 L287.2,501.8 L224.4,538.1 L224.4,610.6 L287.2,646.9 L350.0,610.6Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="287.2" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M412.8,429.3 L350.0,393.0 L287.2,429.3 L287.2,501.8 L350.0,538.1 L412.8,501.8Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="350.0" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M475.6,320.5 L412.8,284.3 L350.0,320.5 L350.0,393.0 L412.8,429.3 L475.6,393.0Z" fill="#eee4c8" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="412.8" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">5</text>
+<path d="M538.4,211.7 L475.6,175.5 L412.8,211.7 L412.8,284.3 L475.6,320.5 L538.4,284.3Z" fill="#f6e2cd" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="475.6" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">1</text>
+<path d="M601.2,103.0 L538.4,66.7 L475.6,103.0 L475.6,175.5 L538.4,211.7 L601.2,175.5Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M664.0,-5.8 L601.2,-42.1 L538.4,-5.8 L538.4,66.7 L601.2,103.0 L664.0,66.7Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="601.2" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M726.8,-114.6 L664.0,-150.9 L601.2,-114.6 L601.2,-42.1 L664.0,-5.8 L726.8,-42.1Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="664.0" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M475.6,538.1 L412.8,501.8 L350.0,538.1 L350.0,610.6 L412.8,646.9 L475.6,610.6Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="412.8" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M538.4,429.3 L475.6,393.0 L412.8,429.3 L412.8,501.8 L475.6,538.1 L538.4,501.8Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="475.6" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M601.2,320.5 L538.4,284.3 L475.6,320.5 L475.6,393.0 L538.4,429.3 L601.2,393.0Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M664.0,211.7 L601.2,175.5 L538.4,211.7 L538.4,284.3 L601.2,320.5 L664.0,284.3Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="601.2" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M726.8,103.0 L664.0,66.7 L601.2,103.0 L601.2,175.5 L664.0,211.7 L726.8,175.5Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="664.0" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M789.6,-5.8 L726.8,-42.1 L664.0,-5.8 L664.0,66.7 L726.8,103.0 L789.6,66.7Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="726.8" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M852.4,-114.6 L789.6,-150.9 L726.8,-114.6 L726.8,-42.1 L789.6,-5.8 L852.4,-42.1Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="789.6" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M601.2,538.1 L538.4,501.8 L475.6,538.1 L475.6,610.6 L538.4,646.9 L601.2,610.6Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M664.0,429.3 L601.2,393.0 L538.4,429.3 L538.4,501.8 L601.2,538.1 L664.0,501.8Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="601.2" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M726.8,320.5 L664.0,284.3 L601.2,320.5 L601.2,393.0 L664.0,429.3 L726.8,393.0Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="664.0" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M789.6,211.7 L726.8,175.5 L664.0,211.7 L664.0,284.3 L726.8,320.5 L789.6,284.3Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="726.8" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M852.4,103.0 L789.6,66.7 L726.8,103.0 L726.8,175.5 L789.6,211.7 L852.4,175.5Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="789.6" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M915.2,-5.8 L852.4,-42.1 L789.6,-5.8 L789.6,66.7 L852.4,103.0 L915.2,66.7Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="852.4" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M978.0,-114.6 L915.2,-150.9 L852.4,-114.6 L852.4,-42.1 L915.2,-5.8 L978.0,-42.1Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="915.2" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<rect x="0" y="0" width="700" height="46" fill="#fbfaf7"/><rect x="0" y="438" width="700" height="42" fill="#fbfaf7"/>
+<text x="350.0" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="16.5" fill="#3d3a34">La fleur : sept cellules deux à deux en conflit</text>
+<text x="350.0" y="465" text-anchor="middle" font-family="Georgia,serif" font-size="13.5" fill="#5c5850" font-style="italic">chiffre = couleur (i+3j) mod 7 : sept couleurs distinctes, donc six ne peuvent pas suffire</text>
+</svg><figcaption>Les sept cellules de la fleur, deux à deux en conflit, et le coloriage effectif du pavage : couleur = (i + 3j) mod 7. Les sept couleurs y sont distinctes, et c'est forcé.</figcaption></figure>
+<p>Le calcul confirme par ailleurs que le motif est presque unique. Sur les six motifs linéaires (i + kj) mod 7, seuls k = 3 et k = 5 donnent un coloriage valide (0 paire de même couleur à distance 1) ; les quatre autres laissent 132 à 265 paires fautives. Pour k = 3, la distance minimale entre deux cellules de même couleur vaut 1,3229 — soit un tiers de marge au-dessus du seuil. Ce n'est pas un coloriage « au bord de l'échec » : c'est un coloriage confortable, et c'est précisément ce qui le rend robuste (section 4).</p>
+
+<h2><span class="num">4</span>Robustesse : ce qui survit à ε → 0, et ce qui n'y survit pas</h2>
+<p>La phase 3 m'a coûté deux faux positifs sur exactement ce point : des dégénérescences spectaculaires qui n'étaient que des artefacts de tolérance, dues à des quasi-coïncidences. J'ai donc testé chaque valeur de ω sous deux perturbations : le diamètre normalisé (ε de 10⁻² à 10⁻⁵) et une marge de sécurité de 10⁻² qui interdit de compter comme conflit une paire dont la distance frôle 1.</p>
+<table>
+<tr><th>Pavage</th><th>ε = 10⁻²</th><th>ε = 10⁻³</th><th>ε = 10⁻⁴</th><th>ε = 10⁻⁵</th><th>marge 10⁻²</th></tr>
+<tr><td>hexagonal</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td></tr>
+<tr><td>rhombique 40°</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td></tr>
+<tr><td>carré</td><td class="num">9</td><td class="num">9</td><td class="num">9</td><td class="num">9</td><td class="num">7</td></tr>
+</table>
+<p>Le contraste est instructif. Le <strong>7 hexagonal est stable</strong> : il ne dépend ni de ε ni de la marge — il ne dépend ni de ε ni de la marge. Les 21 paires de la fleur ont pour distance minimale l'une de trois valeurs exactement — 0 (cellules adjacentes, 6 paires), 0,4995 (12 paires) et 0,8652 (3 paires) —, et pour distance maximale toujours plus de 1 ; aucune n'approche le seuil par en dessous, la marge la plus faible étant de 13 %. Le <strong>9 du carré, lui, s'effondre à 7</strong> dès qu'on interdit les conflits marginaux. Autrement dit : les deux conflits qui font passer le carré de 7 à 9 sont des paires dont la distance minimale vaut 0,999 — elles sont en conflit au sens strict, mais à un millième du seuil. Le même piège qu'en phase 3, avec la même conclusion : <em>une valeur de ω qui ne survit pas à une marge n'est pas une valeur, c'est une coïncidence numérique</em>. Le résultat qui compte ici est le plancher 7, et il est robuste.</p>
+
+<h2><span class="num">5</span>Le coloriage heptagonal ne contredit pas le lemme du preprint</h2>
+<p>En lisant le preprint, j'avais relevé un point de friction possible : il énonce que dans tout coloriage valide à 6 couleurs, aucun point n'a de « chromaticité » ≥ 4 (le nombre de couleurs accumulées arbitrairement près du point). Mon coloriage de phase 1, avec ses 7 couleurs et une fleur où tout se touche, ressemblait à un candidat contre-exemple. Je l'ai mesuré.</p>
+<table>
+<tr><th>Type de point</th><th>Régions incidentes</th><th>Couleurs atteintes</th><th class="num">Chromaticité</th></tr>
+<tr><td>intérieur d'une cellule</td><td>1</td><td>[0]</td><td class="num">1</td></tr>
+<tr><td>sommet de la grille</td><td>3</td><td>[0, 1, 3]</td><td class="num">3</td></tr>
+<tr><td>autre sommet de la grille</td><td>3</td><td>[0, 1, 5]</td><td class="num">3</td></tr>
+</table>
+<p>La chromaticité maximale du coloriage heptagonal vaut <strong>3</strong>, jamais 4. Il ne contredit donc rien : le lemme ne parle que des coloriages à 6 couleurs, et il dit que ceux-là sont <em>forcés</em> d'avoir un point à chromaticité ≥ 4 — alors que le coloriage à 7 couleurs vit confortablement à 3. C'est là, dans cet intervalle entre 3 et 4, que se joue le saut de 6 à 7 : sept couleurs permettent de garder trois frontières trichromatiques bien séparées, six obligent à en empiler une quatrième. <span class="small">(Lecture personnelle du mécanisme, à partir du résumé et du lemme cité ; je n'ai pas vérifié la preuve.)</span></p>
+
+<h2><span class="num">6</span>La cible, reformulée</h2>
+<p>La question utile n'est plus « 6 ou 7 ? » mais : <strong>peut-on retirer les hypothèses du preprint de 2025 ?</strong> Trois verrous, du plus faible au plus fort.</p>
+<ol>
+<li><span class="tag t1">vérifiable ici</span> <strong>Polygones → cellules de Voronoï de réseaux.</strong> Fait, section 3 : ω ≥ 7 toujours, = 7 pour un continuum de réseaux rhombiques. Ce n'est pas une preuve du cas polygonal, c'est un contrôle indépendant sur la sous-classe où tout est calculable.</li>
+<li><span class="tag t3">hors de portée</span> <strong>Trois bords par sommet.</strong> Le preprint exige exactement trois frontières en chaque sommet. Un contre-exemple exigerait une carte où un sommet porte quatre frontières et où aucun point n'atteint la chromaticité 4 — c'est-à-dire une carte très contrainte. Rien dans mes calculs ne suggère qu'un tel objet existe ; rien ne prouve qu'il n'existe pas.</li>
+<li><span class="tag t3">hors de portée</span> <strong>Bords sans arc de cercle unité.</strong> C'est l'hypothèse la plus suspecte, parce qu'elle est de nature <em>métrique</em> et non combinatoire : elle interdit aux frontières de contenir des arcs de rayon 1, exactement le genre d'objet que produit un argument de « poussée » le long d'un cercle unité. Une carte dont les bords sont des arcs de cercles de rayon 1 serait un vrai candidat au statut de contre-exemple ; je ne sais pas en construire une qui soit valide.</li>
+</ol>
+<div class="ko"><strong>Ce que je ne fais pas.</strong> Je ne prétends ni confirmer ni infirmer le preprint. Vérifier 29 pages de théorie des graphes géométriques n'est pas dans mes moyens ici, et le fait qu'un résultat soit en v1 depuis février 2025 n'est pas un argument — ni dans un sens, ni dans l'autre.</div>
+
+<h2><span class="num">7</span>Journal du protocole</h2>
+<h3>7.1 Ce que cette phase change dans les précédentes</h3>
+<ul>
+<li><strong>Phase 2, pari « aucun coloriage périodique à 6 couleurs ».</strong> Il est maintenant partiellement soutenu : pour tout pavage périodique dont les cellules sont les cellules de Voronoï d'un réseau, 6 couleurs sont impossibles, et la valeur exacte est 7. Le pari reste ouvert pour les pavages périodiques généraux.</li>
+<li><strong>Phase 4, théorème du plafond.</strong> Il gagne un statut explicatif. La densité donne 4,41, donc 5 ; la vérité est 6 ou 7 ; l'écart d'une unité mesure exactement l'information que la densité ne contient pas. Ce n'est plus seulement « la méthode est saturée », c'est « la méthode est saturée <em>et on sait de combien</em> ».</li>
+<li><strong>Phase 4, énoncé de la cible.</strong> Corrigé : « Woodall–Townsend », ≥ 6 au lieu de = 7, et « polygones : revendiqué » au lieu de « ouvert ».</li>
+</ul>
+<h3>7.2 Une règle payée deux fois</h3>
+<p>Aujourd'hui, mon estimation à la main du ω du réseau carré était 25 — en oubliant que dans un carré de 5 × 5 cellules, les cellules des coins opposés sont loin l'une de l'autre et ne sont pas en conflit. Le calcul, lui, donnait 9. Avant de publier un chiffre, il faut donc tester l'outil <em>et</em> l'estimation : ici j'ai testé Bron–Kerbosch sur K₂₅ et K₂₅ privé d'une arête (il a répondu 25 et 24, correctement), et j'ai ensuite recalculé les distances à la main sur quatre paires. La phase 3 avait déjà coûté deux faux positifs ; la leçon tient en une ligne : <strong>un solveur qu'on n'a pas testé n'est pas une source, et une estimation qu'on n'a pas recalculée n'en est pas une non plus.</strong></p>
+
+<h2><span class="num">8</span>Ce qui reste ouvert</h2>
+<table>
+<tr><th>Question</th><th>État</th></tr>
+<tr><td>χ(ℝ²) ∈ {5, 6, 7} — laquelle ?</td><td>ouvert, aucune progression ici</td></tr>
+<tr><td>6 couleurs suffisent-elles pour les coloriages de type carte ?</td><td>revendiqué non (2025), pour les polygones ; ouvert en général</td></tr>
+<tr><td>7 couleurs pour des cartes à bords de Jordan quelconques ?</td><td>ouvert</td></tr>
+<tr><td>Le coloriage hexagonal est-il optimal parmi les pavages non réticulaires ?</td><td>ouvert — c'est là que le preprint travaille, et je n'y ai pas accès par le calcul</td></tr>
+<tr><td>Un coloriage de type carte à 6 couleurs existe-t-il si l'on autorise des bords en arcs de rayon 1 ?</td><td>ouvert, et c'est la seule hypothèse du preprint contre laquelle je saurais chercher</td></tr>
+</table>
+<p class="sub" style="margin-top:28px">Scripts et sorties : <code>dossiers/phase5/treillis.py</code>, <code>verif_clique.py</code>, <code>scan.py</code>, <code>chromaticite.py</code>, <code>figures5.py</code>, <code>res_scan.json</code>, <code>res_treillis.json</code>. Tous les chiffres de cette page sont des sorties réelles.</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,268 @@
+{
+ "feuilles": 10,
+ "essais": 18,
+ "hors": 0,
+ "limite_prof": 0,
+ "budget": false,
+ "boites": [
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "1",
+    "17/16"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2289353228410225,
+   "diam_haut": 3.45771162107111,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "17/16",
+    "9/8"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.345089257138274,
+   "diam_haut": 3.5791286064181507,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "9/8",
+    "5/4"
+   ],
+   "ech": "99/100",
+   "diam_bas": 0.97355540381625,
+   "diam_haut": 5.952840310415281,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "5/4",
+    "3/2"
+   ],
+   "ech": "99/100",
+   "diam_bas": 0.5950253287060852,
+   "diam_haut": 13.97441276411904,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "3/2",
+    "2"
+   ],
+   "ech": "99/100",
+   "diam_bas": 0.3249665222167969,
+   "diam_haut": 49.94361614631916,
+   "clique_prouvee": 8,
+   "paires_non_prouvees": 2
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "1",
+    "17/16"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2289353228410225,
+   "diam_haut": 3.45771162107111,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "17/16",
+    "9/8"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.345089257138274,
+   "diam_haut": 3.5791286064181507,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "9/8",
+    "5/4"
+   ],
+   "ech": "99/100",
+   "diam_bas": 0.97355540381625,
+   "diam_haut": 5.952840310415281,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "5/4",
+    "3/2"
+   ],
+   "ech": "99/100",
+   "diam_bas": 0.5950253287060852,
+   "diam_haut": 13.97441276411904,
+   "clique_prouvee": 9,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "3/2",
+    "2"
+   ],
+   "ech": "99/100",
+   "diam_bas": 0.3249665222167969,
+   "diam_haut": 49.94361614631916,
+   "clique_prouvee": 8,
+   "paires_non_prouvees": 2
+  }
+ ],
+ "echecs": [
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "1",
+    "2"
+   ],
+   "raison": "omega = 6 < 7 au centre",
+   "prof": 0,
+   "n": 0
+  },
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "1",
+    "3/2"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 1,
+   "n": 1
+  },
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "1",
+    "5/4"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 2
+  },
+  {
+   "g": [
+    "-1/500",
+    "0"
+   ],
+   "h": [
+    "1",
+    "9/8"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (26 paires non prouv\u00e9es sur 36)",
+   "prof": 3,
+   "n": 3
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "1",
+    "2"
+   ],
+   "raison": "omega = 6 < 7 au centre",
+   "prof": 0,
+   "n": 0
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "1",
+    "3/2"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 1,
+   "n": 1
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "1",
+    "5/4"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 2
+  },
+  {
+   "g": [
+    "0",
+    "1/500"
+   ],
+   "h": [
+    "1",
+    "9/8"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (26 paires non prouv\u00e9es sur 36)",
+   "prof": 3,
+   "n": 3
+  }
+ ],
+ "par_ech": {
+  "99/100": 10
+ }
+}

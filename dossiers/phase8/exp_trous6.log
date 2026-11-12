@@ -1,0 +1,19 @@
+  reference, aucune cellule trouee         n=196 omega=7  6 couleurs -> impossible
+  toutes les cellules trouees, rho=0.3     n=392 omega=7  6 couleurs -> impossible
+  toutes les cellules trouees, rho=0.5     n=392 omega=7  6 couleurs -> impossible
+  toutes les cellules trouees, rho=0.7     n=392 omega=7  6 couleurs -> impossible
+  clique seule trouee, rho=0.3             n=203 omega=7  6 couleurs -> impossible
+  clique seule trouee, rho=0.5             n=203 omega=7  6 couleurs -> impossible
+  clique seule trouee, rho=0.7             n=203 omega=7  6 couleurs -> impossible
+  une classe de couleur sur 7, rho=0.5     n=224 omega=7  6 couleurs -> impossible
+  moitie aleatoire, rho=0.5                n=294 omega=7  6 couleurs -> impossible
+  reference, aucune cellule trouee         n=196 omega=7  6 couleurs -> impossible
+  toutes les cellules trouees, rho=0.3     n=392 omega=7  6 couleurs -> impossible
+  toutes les cellules trouees, rho=0.5     n=392 omega=7  6 couleurs -> impossible
+  toutes les cellules trouees, rho=0.7     n=392 omega=7  6 couleurs -> impossible
+  clique seule trouee, rho=0.3             n=203 omega=7  6 couleurs -> impossible
+  clique seule trouee, rho=0.5             n=203 omega=7  6 couleurs -> impossible
+  clique seule trouee, rho=0.7             n=203 omega=7  6 couleurs -> impossible
+  une classe de couleur sur 7, rho=0.5     n=224 omega=7  6 couleurs -> impossible
+  moitie aleatoire, rho=0.5                n=294 omega=7  6 couleurs -> impossible
+issues : {'TROUVE': 0, 'impossible': 18, 'budget': 0}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit des faiblesses — étape par étape</title>
+<style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;--ok:#3f8a7a;--ko:#b34a3c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 30px;max-width:66ch}
+  h2{font-size:1.24rem;margin:50px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:24px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1rem;margin:22px 0 4px;color:var(--acc)}
+  p{margin:10px 0} ul,ol{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.89em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .ok{background:#eef4f1;border-left:4px solid var(--ok);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ok strong{color:#2c6a5d}
+  .ko{background:#f8eeec;border-left:4px solid var(--ko);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ko strong{color:#8f3a2c}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:24px 0}
+  .verdict strong{color:#ffd9b8}
+  figure{margin:24px 0;text-align:center} figcaption{font-size:.85rem;color:var(--muted);margin-top:6px;text-align:left}
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+  .dash div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px}
+  .dash b{display:block;font-size:1.35rem;color:var(--acc);font-variant-numeric:tabular-nums}
+  .dash span{font-size:.76rem;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:8px}
+  .tag.t1{background:#e8f0ee;color:#2c6a5d} .tag.t2{background:#f6e9e6;color:#8f3a2c} .tag.t3{background:#eee9f4;color:#5b4580}
+  @media(max-width:680px){.dash{grid-template-columns:1fr 1fr}h1{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">audit · 3 novembre 2026 · les faiblesses de ce que nous avons produit</div>
+<h1>Audit des faiblesses, étape par étape</h1>
+<p class="sub"><em>Version corrigée le 3 novembre 2026 : les constats 1 et 7 ont été rectifiés après vérification, et la section 7 récapitule les dix corrections apportées.</em> Un audit n'est pas un résumé. Pour chacune des douze étapes: ce qui est revendiqué, ce qui a été réellement fait, la faiblesse qui reste, et sa gravité. Plus neuf constats que je n'avais pas en écrivant ces documents — dont deux qui contredisent mes propres artefacts, et un qui touche la mesure centrale de T8.</p>
+
+<div class="dash">
+  <div><b>12</b><span>étapes auditées</span></div>
+  <div><b>9</b><span>faiblesses nouvelles, trouvées pendant l'audit</span></div>
+  <div><b>11</b><span>corrections apportées le 3 novembre (section 7)</span></div>
+  <div><b>2</b><span>constats d'audit eux-mêmes corrigés après vérification</span></div>
+</div>
+
+<h2><span class="num">0</span>Ce que j'ai fait pour auditer, et ce que je n'ai pas fait</h2>
+<p>J'ai relu les douze artefacts, relu le code (pas seulement les résultats), recoupé les chiffres des artefacts avec les fichiers de résultats JSON, et surtout <em>réexécuté des contrôles indépendants</em>: trois cent graphes aléatoires pour chaque moteur de coloration contre la force brute, trois cent pour la recherche de clique, un recalcul de ω par distances de polygones sans aucun raccourci de centre, et une variation systématique de la tolérance de tangence.</p>
+<p><strong>Ce que l'audit ne couvre pas.</strong> Je n'ai pas rouvert la littérature (le préprint de 2025, Woodall–Townsend, la borne de Coulson) : tous ces faits sont <em>cités</em>, aucun n'est vérifié ici. Je n'ai pas relancé le certificat (713 s) ni refait les preuves à la main. Et je n'ai pas de relecteur : chaque étiquette « prouvé » ci-dessous signifie « preuve que j'ai écrite et que personne n'a contrôlée ».</p>
+
+<h2><span class="num">1</span>La faiblesse qui domine toutes les autres : nous prouvons des choses sur un modèle</h2>
+<div class="ko"><strong>Le lien entre tout notre édifice et χ(ℝ²) n'est pas établi.</strong> Les phases 5 à 8, la note et le certificat portent sur une classe restreinte : les coloriages dont chaque classe de couleur est une <em>cellule</em> d'une partition du plan, de diamètre &lt; 1. Un 6-coloriage du plan, s'il existe, n'a aucune raison d'être de cette forme : ses classes peuvent être arbitrairement grandes, fractales, denses dans le plan. Tout ce que nous avons calculé est donc une <em>sonde</em> sur un modèle, pas une attaque du problème.</div>
+<p><strong>Correction du 3 novembre 2026 :</strong> j'avais écrit ici que le statut restait « 6 ≤ χ(ℝ²) ≤ 7 ». C'est vrai mais insuffisamment précis, et la suite du travail en dépend. L'objet que nous mesurons a un nom dans la littérature : <b>χ_poly</b>, le nombre chromatique des coloriages dont les classes sont des polygones. Il est <em>déjà</em> minoré par 6 (Coulson 2004, polygones convexes d'aire minorée — nos cellules de Voronoï y satisfont), et minoré par 7 dès qu'un sommet de la carte est de degré ≥ 5 (Manta 2021). Le cas trivalent est revendiqué à 7 par Sokolov–Voronov (publié, <em>Discrete Math.</em> <b>349</b>(12), 2026, art.&nbsp;115321 ; preuve contestée, non vérifiée par nous). Nos calculs attaquent donc <em>ce</em> cas ouvert : ils ne sont pas une sonde dans le vide, mais une attaque numérique sur une frontière connue, et le « 7 » que nous certifions pour les pavages de réseaux ne serait nouveau que par son statut (certifié) et son domaine (tous les réseaux à l'échelle maximale), pas par la valeur. La distinction avec χ(ℝ²) reste entière : 6 ≤ χ(ℝ²) ≤ 7, la borne basse venant de la prépublication d'OpenAI du 23 septembre 2026 (non référée, vérifiée en Lean par des tiers), et la valeur 6 ou 7 restant ouverte.</p>
+
+<h2><span class="num">2</span>Les douze étapes</h2>
+<table>
+<tr><th style="width:11%">étape</th><th style="width:26%">revendiqué</th><th style="width:28%">réellement fait</th><th style="width:27%">faiblesse principale</th><th style="width:8%">gravité</th></tr>
+<tr><td><b>Phase 0</b></td><td>dossier d'attaque, 5 ≤ χ ≤ 7, mur localisé</td><td>reformulations, historique, inventaire des méthodes</td><td>l'artefact affiche 5 ≤ χ ≤ 7 sans mentionner que la borne inférieure a été portée à 6 par la prépublication d'OpenAI du 23 septembre 2026 (non référée) — et surtout sans distinguer χ(ℝ²) de χ_poly, alors que tout le dossier travaille sur χ_poly, déjà ≥ 6 par Coulson (2004). <em>Corrigé le 3 novembre</em> : encadré daté ajouté dans l'artefact</td><td>sérieux</td></tr>
+<tr><td><b>Phase 1</b></td><td>falsifier ; χ(fuseau de Moser) = 4, 16 coloriages à renommage près</td><td>énumération exhaustive des coloriages, k = 2 à 5</td><td>solide, mais le « 3 hypothèses réfutées » repose sur des familles finies choisies par moi ; réfuter une famille n'est pas réfuter une idée</td><td>faible</td></tr>
+<tr><td><b>Phase 2</b></td><td>prédiction n₆ ≈ 10⁵ ; 4 paris falsifiables</td><td>extrapolation sur 4 points (2, 3, 7, 509) ; trois modèles</td><td>la prédiction est inutilisable en pratique (10⁵ sommets) : elle est falsifiable en théorie, pas en fait. Les trois modèles divergent de deux ordres de grandeur — c'est avoué, mais alors la prédiction ne porte rien</td><td>sérieux</td></tr>
+<tr><td><b>Phase 3</b></td><td>dégénérescence non plafonnée à 4 ; 4-core de 97 sommets / 273 arêtes</td><td>trois étages (flottant, ℚ(√3) exact, 45 chiffres) qui se corrigent l'un l'autre</td><td>« aucun 5-core trouvé » est une négation sur des familles non exhaustives ; le 4-core est une construction numérique, sans certificat</td><td>sérieux</td></tr>
+<tr><td><b>Phase 4</b></td><td>théorème du plafond : aucun noyau unique ne peut donner 6</td><td>argument en trois lignes + δ* = 0,2267 → 1/δ* = 4,41 &lt; 6</td><td>c'est un théorème sur une <em>méthode</em> (bornes de type Delsarte sur une classe mesurable), pas sur la valeur ; et il emprunte son nombre central (0,2267) à un résultat extérieur non revérifié. Il tue une méthode, pas une valeur — la distinction est faite, mais elle est fragile si 0,2267 bouge</td><td>moyen</td></tr>
+<tr><td><b>Phase 5</b></td><td>7 plancher de ω sur les pavages de réseaux ; 0 pavage 6-coloriable ; 14 réseaux</td><td>scan de réseaux, cliques maximales, vérification de la littérature</td><td>une seule échelle (δ ≈ 1 − 10⁻³) ; 14 réseaux choisis, pas une grille ; et la confusion ω/χ est évitée de justesse (ω = 7 ⇒ pas de 6-coloriage, ce qui est vrai, mais le mot « pavage » suggère plus)</td><td>moyen</td></tr>
+<tr><td><b>Phase 6</b></td><td>16/16 partitions aléatoires exigent ≥ 7 couleurs</td><td>Voronoï sur tore, 16 partitions, DSATUR + contrôle des arêtes monochromes</td><td>« aléatoire » veut dire <em>une</em> famille : germes de Voronoï sur un tore avec gigue uniforme. Ce n'est pas l'espace des partitions. Et les coloriages testés sont <em>périodiques</em> (voir constat 5)</td><td>sérieux</td></tr>
+<tr><td><b>Phase 7</b></td><td>bords courbes : 21 configurations, ω jamais sous 7</td><td>partitions dont chaque bord est un arc de rayon 1 ; invariant de partition à 10⁻¹³</td><td>21 configurations issues d'une seule déformation du pavage hexagonal ; la classe testée est un voisinage du cas connu, pas l'hypothèse du préprint en général</td><td>sérieux</td></tr>
+<tr><td><b>Phase 8</b></td><td>cellules trouées : 18 configurations, ω = 7 partout</td><td>trous dans des cellules, y compris la clique maximale</td><td>le test de 6-coloration n'a jamais été exécuté dans ces 18 cas (voir constat 3) ; la conclusion tient, mais par ω, pas par recherche</td><td>moyen</td></tr>
+<tr><td><b>Note</b></td><td>48 441 réseaux, 89 partitions, L1–L5</td><td>balayages, frontières par bissection, synthèse</td><td>le balayage à fenêtre 5×5 sous-estime ω dès δ &lt; 0,9 ; L5 en est issue et était fausse ; les 89 « partitions » sont 5 familles</td><td>sérieux (corrigé pour L5)</td></tr>
+<tr><td><b>Certificat T7</b></td><td>26 423 boîtes, 100 %, 0 échec : ω ≥ 7 sur le domaine réduit</td><td>arithmétique d'intervalles mpmath, témoins par paire, contrôles négatifs</td><td>certifie diamètre 1 − 10⁻³ (pas 1) ; uniquement les pavages de <em>réseaux</em> ; vérification « indépendante » qui utilise la même bibliothèque (mpmath) ; 5 % des boîtes seulement ; marges jusqu'à 7·10⁻⁶</td><td>faible (dans son domaine)</td></tr>
+<tr><td><b>T8</b></td><td>ω(δ) exact, paysage, 0/55 six-coloriages</td><td>graphe de Cayley, Bron–Kerbosch contraint, quotients de sous-réseaux</td><td>la mesure centrale dépend d'une convention de tangence (constat 1) ; les coloriages testés sont périodiques, indice ≤ 24 ; et un des trois bugs annoncés n'est pas établi (constat 2)</td><td>sérieux</td></tr>
+</table>
+
+<h2><span class="num">3</span>Neuf constats trouvés pendant l'audit</h2>
+
+<h3>1. La mesure centrale de T8 : mon diagnostic d'audit était faux, la mesure était juste</h3><p>J'avais relevé qu'en faisant varier la tolérance de −10⁻⁶ à +10⁻⁶, ω sautait de 3 unités à δ = 0,5. Le fait est exact, l'interprétation ne l'était pas : l'instabilité venait de tolérances <em>trop serrées</em> (0 et −10⁻⁶, en dessous de l'erreur d'arrondi de 10⁻¹⁶), pas d'une ambiguïté de fond. J'ai tenté de trancher à 60 chiffres : deuxième erreur, les coordonnées étaient flottantes, donc l'erreur de 10⁻¹⁷ était relue comme un écart à la tangence, et j'ai obtenu 5 au lieu de 7.</p><p>La bonne méthode était l'arithmétique <em>exacte</em> : <code>note/exact_tangence.py</code> refait tout dans le corps ℚ(√d) (d = 3, 2, 5 pour l'hexagonal, le carré, le rectangle 2:1), sans un seul flottant. Résultat : <strong>15 valeurs sur 15 conforment aux valeurs publiées</strong> (hexagonal 4, 7, 9, 7, 7 ; carré 4, 8, 12, 9, 9 ; rectangle 6, 8, 8, 10, 10). Ce qui subsiste est plus étroit et plus intéressant : à 5 des 55 cas, la convention « une tangence exacte compte-t-elle comme un conflit ? » change la valeur de ω (7 → 4 pour l'hexagonal à δ = 0,5, 8 → 4 pour le carré à δ = 0,5). Les deux conventions ont été recalculées partout : <strong>0 6-coloriage sur 55 dans l'une comme dans l'autre</strong>, et δ* ne bouge qu'en trois points de la grille (0,48 → 0,50). La conclusion ne dépend donc pas de la convention — mais il fallait le montrer, et c'est maintenant montré.</p><h3>2. Le « deuxième bug » que j'ai annoncé hier n'est pas établi — et je dois corriger mon propre artefact</h3>
+<p>J'ai écrit dans <code>note-echelle.html</code> que mon premier retour arrière ne défaisait pas ses affectations en cas d'échec. Je ne peux pas le vérifier : le fichier a été écrasé et il n'y a aucun contrôle de version dans ce workspace. Ce que je peux tester, c'est le code actuel : les deux moteurs (<code>coloriage.coloriable</code> et <code>partition2.k_color</code>) donnent, sur 300 graphes aléatoires, exactement la réponse de la force brute, avec zéro coloriage invalide. Et le coloriage invalide qui m'avait alerté s'explique entièrement par le troisième bug (l'ensemble des conflits incomplet). Donc : la version corrigée est bonne, l'affirmation sur la ligne manquante est <em>non établie</em>, et je la retire.</p>
+<div class="box"><strong>Le vrai problème derrière :</strong> aucun de mes scripts n'est versionné. Sur les quatre corrections de cette session, une seule (les boucles du quotient) est documentée par un fichier de test ; les autres ne sont plus vérifiables. Un audit qui ne peut pas remonter l'historique ne peut pas distinguer « corrigé » de « réécrit ».</div>
+
+<h3>3. En phase 8, la recherche de 6-coloriage n'a jamais tourné</h3>
+<p>Le code n'exécute <code>k_color(adj,6)</code> que si ω ≤ 6. Or les 18 configurations trouées ont toutes ω = 7 : le champ <code>six</code> vaut <code>None</code> dans les 18 entrées de <code>res_trous.json</code>. La conclusion « aucun 6-coloriage » est <em>correcte</em> — ω = 7 l'interdit — mais ce n'est pas un résultat de recherche, c'est un corollaire de la clique. Ne pas citer ce champ comme une expérience.</p>
+
+<h3>4. En phase 6, on a sous-revendiqué</h3>
+<p>Toujours d'après <code>res_expA.json</code> : pour 14 des 16 partitions, la recherche de <strong>7</strong>-coloriage a échoué (<code>chi7 = impossible</code>), c'est-à-dire que le graphe du tore exige au moins 8 couleurs. L'artefact n'annonce que « ≥ 7 ». La prudence était justifiée (il s'agit de coloriages périodiques), mais le chiffre méritait d'être dit.</p>
+
+<h3>5. Tous nos « coloriages impossibles » sont des coloriages périodiques</h3>
+<p>Les phases 6 à 8 et T8 calculent sur un tore (ou un quotient par un sous-réseau). Un graphe quotient est <em>plus difficile</em> à colorier que le graphe du plan : « pas de 6-coloriage sur le tore » n'implique pas « pas de 6-coloriage du plan ». La seule chose qui se transfère est la clique : ω ≥ 7 tue <em>tout</em> coloriage. C'est pourquoi nos conclusions tiennent — mais toujours par la clique, jamais par le coloriage. La partie coloriage de T8 ne prouve donc rien sur χ(ℝ²), et c'est écrit dans T8, mais il faut le répéter ici : elle mesure la difficulté des coloriages périodiques.</p>
+
+<h3>6. Phase 3 : « aucun 5-core » est une négation sur une famille choisie</h3>
+<p>Le résultat solide est le 4-core de 97 sommets et 273 arêtes (vérifié : les fichiers TSV ont bien 97 et 273 lignes utiles). Le reste — l'absence de 5-core — vaut pour les graphes construits, à 45 chiffres, sans certificat. Un 5-core dans une autre famille ne serait pas contredit par nos calculs.</p>
+
+<h3>7. Les faits extérieurs sont cités, aucun n'est vérifié ici</h3>
+<p>La borne χ ≥ 6 (revendiquée par plusieurs travaux depuis 2018, dont un de 2025), le graphe à 509 sommets, δ* = 0,2267, Woodall–Townsend, le préprint de 2025 : tout cela entre dans nos raisonnements comme des données. L'audit ne les a pas rouverts. Si l'un d'eux est mal cité, plusieurs de nos conclusions de cadrage tombent.</p>
+
+<h3>8. Le certificat est solide, dans un domaine plus étroit qu'il n'y paraît</h3>
+<p>Quatre restrictions à garder en tête : diamètre 1 − 10⁻³ et non 1 ; pavages de <em>réseaux</em> seulement ; domaine réduit (θ ∈ [60°, 120°], ρ ∈ [1, 2]) ; et la vérification dite indépendante tourne sur la même bibliothèque (mpmath), donc un bug de mpmath passerait les deux. Elle ne couvre par ailleurs que 5 % des boîtes. Les marges descendent à 7·10⁻⁶ : le certificat n'est pas mince par hasard, il est mince à la limite.</p>
+
+<h3>9. Aucune preuve formelle, aucun relecteur</h3>
+<p>Les trois « théorèmes » (plafond, lemme du diamètre, théorème A) sont des preuves écrites en français dans des fichiers HTML. Aucune n'est formalisée, aucune n'a été lue par un tiers. Le mot « prouvé » dans ces documents signifie « argument que je crois correct ».</p>
+
+<h2><span class="num">4</span>Ce qui a résisté à l'audit</h2>
+<div class="ok"><strong>Contrôles réexécutés pendant cet audit, tous passés :</strong> 300 graphes aléatoires — <code>k_color</code> et <code>coloriage.coloriable</code> retrouvent exactement la réponse de la force brute (0 désaccord, 0 coloriage invalide) ; 300 graphes aléatoires — <code>clique_max</code> retrouve exactement la clique maximum (0 désaccord) ; 8 réseaux — le balayage historique et le calcul exact donnent le même ω à δ ≈ 1 (7, 9, 8, 7, 8, 7, 10, 9) ; les compteurs des artefacts correspondent aux fichiers de résultats (16 partitions, 21 configurations courbes, 18 trouées, 26 423 boîtes, 97 sommets et 273 arêtes pour le 4-core).</div>
+
+<h2><span class="num">5</span>Ce que je ne laisserais pas citer</h2>
+<table>
+<tr><th>Formulation</th><th>Pourquoi</th><th>Formulation défendable</th></tr>
+<tr><td>« χ(ℝ²) ≥ 7 »</td><td>le lien modèle → plan n'existe pas</td><td>« les pavages de réseaux à l'échelle maximale exigent 7 couleurs (certifié) »</td></tr>
+<tr><td>« aucune partition cellulaire n'est 6-coloriable »</td><td>89 partitions = 5 familles, et les coloriages testés sont périodiques</td><td>« dans les familles testées, aucun coloriage périodique à 6 couleurs »</td></tr>
+<tr><td>« ω(δ) est exact »</td><td>exact à la convention de tangence près</td><td>« ω(δ) exact avec toutes les tangences comptées ; stable au pic, instable dans les creux »</td></tr>
+<tr><td>« le paysage montre qu'un 6-coloriage est impossible »</td><td>il montre le contraire : ω ≤ 6 y est fréquent</td><td>« le paysage montre où l'obstruction de clique disparaît — et qu'elle ne suffit pas »</td></tr>
+<tr><td>« 0 partition admettant un 6-coloriage (phase 8) »</td><td>vrai, mais longtemps sans expérience à l'appui ; la recherche a depuis été lancée (18/18 « impossible »), et la raison reste ω = 7</td><td>« ω = 7 dans les 18 cas, et recherche de 6-coloriage épuisée dans les 18 »</td></tr>
+</table>
+
+<h2><span class="num">6</span>Ce qu'il faudrait pour lever chaque faiblesse</h2>
+<table>
+<tr><th>Faiblesse</th><th>Ce qui la lèverait</th><th>Coût</th></tr>
+<tr><td>le lien modèle ↔ plan (§1)</td><td>rien de connu ; c'est le problème lui-même</td><td>hors d'atteinte</td></tr>
+<tr><td>instabilité de tangence (constat 1)</td><td>arithmétique exacte sur les distances de polygones, ou décision explicite de convention + recalcul des 55 cas et de la carte δ* dans les deux conventions</td><td>faible — quelques heures</td></tr>
+<tr><td>« second bug » non établi (constat 2)</td><td>versionner les scripts ; c'est fait pour rien après coup, mais ça évite le prochain</td><td>trivial</td></tr>
+<tr><td>coloriages seulement périodiques (constat 5)</td><td>argument de compacité pour passer des coloriages périodiques aux coloriages quelconques — je ne sais pas le faire</td><td>recherche</td></tr>
+<tr><td>négations sur familles choisies (§2, phase 3 et 7)</td><td>énumération exhaustive d'une famille définie, ou énoncé restreint explicitement</td><td>moyen</td></tr>
+<tr><td>certificat : diamètre 1 − 10⁻³</td><td>pousser EPS vers 10⁻⁶ ; les marges à 7·10⁻⁶ disent que ce sera dur</td><td>moyen</td></tr>
+<tr><td>faits extérieurs non vérifiés (constat 7)</td><td>relire les sources, une par une, et dater chaque citation</td><td>faible</td></tr>
+<tr><td>absence de preuve formelle (constat 9)</td><td><em>fait</em> pour le plafond, la borne de clique, le recentrage et la géométrie des cellules (25 théorèmes, deux projets Lean). Reste : arithmétique d'intervalles formelle, énumération finie des cliques, mesure</td><td>élevé</td></tr>
+</table>
+
+<h2><span class="num">7</span>Corrections apportées le 3 novembre 2026</h2>
+<p>Chaque ligne dit ce qui a été fait, et ce qui reste. Les corrections ne sont pas des promesses : les scripts sont dans le workspace et les résultats sont chiffrés.</p>
+<table>
+<tr><th style="width:30%">Faiblesse</th><th style="width:44%">Ce qui a été fait</th><th style="width:26%">Ce qui reste</th></tr>
+<tr><td>Tangence (constat 1) — <em>mal diagnostiquée</em></td><td>tolérance calibrée à 10⁻¹² ; <code>exact_tangence.py</code> : juge exact en ℚ(√d), 15 valeurs sur 15 conformes ; les deux conventions recalculées sur les 55 cas et sur la carte</td><td>rien sur ce point. 0/55 6-coloriages dans les deux conventions ; δ* ne bouge qu'en 3 points (0,48 ↔ 0,50)</td></tr>
+<tr><td>« Second bug » non établi (constat 2)</td><td>affirmation retirée de <code>note-echelle.html</code> ; <code>tests_moteurs.py</code> : 600 graphes aléatoires contre la force brute + les 15 valeurs exactes ; <code>note/historique/2026-11-03/</code> et <code>CHANGELOG.md</code></td><td>pas de versionnement automatique ; l'historique des corrections d'avant le 3 novembre est perdu</td></tr>
+<tr><td>Phase 8 : test de 6-coloration jamais lancé (constat 3)</td><td><code>phase8/exp_trous6.py</code> lancé sur les 18 configurations : <strong>18 « impossible », 0 « budget »</strong> ; encadré ajouté dans l'artefact</td><td>rien</td></tr>
+<tr><td>Phase 6 sous-revendiquée (constat 4)</td><td>tableau de bord corrigé : 14/16 exigent 8 couleurs en périodique</td><td>rien</td></tr>
+<tr><td>« Coloriages impossibles » = périodiques (constat 5)</td><td>qualificatif explicite ajouté en phase 7 et dans T8 §6</td><td>le passage du périodique au général reste sans méthode : c'est de la recherche</td></tr>
+<tr><td>Phase 3 : négation sur familles choisies (constat 6)</td><td>tableau de bord reformulé (« dans les familles testées seulement »)</td><td>une énumération exhaustive d'une famille définie reste à faire</td></tr>
+<tr><td>Faits extérieurs non vérifiés (constat 7)</td><td>vérifiés et datés : prépublication OpenAI du 23/09/2026 (Lean, non référée, audit tiers du 13/10) ; Coulson 2004 (χ_poly ≥ 6) ; Manta 2021 (sommet de degré ≥ 4 ⇒ 7 ; la preuve discute un moment le degré 5) ; Sokolov–Voronov, <em>Discrete Math.</em> 349(12) 2026, art. 115321 (publié ; thm 2 : χ<sub>poly</sub> = 7). <strong>Erreur trouvée dans la note</strong> : elle attribuait à Manta le seuil « quatre frontières » ; c'est cinq. Corrigé, et phase 0 reçoit un encadré daté distinguant χ(ℝ²) de χ_poly</td><td>les préprints restent des préprints : leur statut peut changer</td></tr>
+<tr><td>Certificat : domaine étroit (constat 8)</td><td>ajout de trois cas à δ = 999/1000 prouvés <em>exactement</em>, sans arithmétique d'intervalles (hexagonal ω = 7, carré 9, rectangle 10)</td><td>couverture de vérification toujours à 5 % ; bibliothèque toujours mpmath ; diamètre toujours 1 − 10⁻³ ; pavages de réseaux seulement</td></tr>
+<tr><td>Aucune preuve formelle (constat 9)</td><td><strong>corrigé en partie</strong>, en deux couches. (a) <em>Arithmétique</em>, noyau pur : <code>dossiers/lean/Plafond.lean</code> et <code>T8.lean</code>, <strong>9 théorèmes</strong> sans <code>sorry</code> ni Mathlib (borne de clique χ ≥ ω ; théorème du plafond ; recentrage qui rend T8 exact). (b) <em>Géométrique</em>, avec Mathlib (<code>lake update</code> + <code>lake exe cache get</code>, 2 min 30) : <code>dossiers/geom/Geometrie.lean</code>, <strong>16 théorèmes</strong>, 0 <code>sorry</code>, axiomes standard seulement — cellule de Voronoï convexe (intersection de demi-espaces), cellule translatée avec son point, <strong>invariance du conflit</strong> (le graphe de conflit est un graphe de Cayley : la condition de validité de T8 est désormais prouvée sur les cellules réelles), et « distances réalisées entre deux convexes = un intervalle », donc tangence ⟺ encadrement (la justification de <code>exact_tangence.py</code>). Contrôles positif et négatif sur ℤ ⊂ ℝ : conflit réel entre 0 et 1, absence réelle de conflit entre 0 et 3. Voir <code>formalisation-lean.html</code>.</td><td>toujours dehors : théorie de la mesure, borne δ* = 0,2267 (hypothèse), densité des familles de réseaux calculées, argument de partition, certificat T7, et <em>tous les nombres</em> (ω, δ*, 0/55). <strong>Aucun énoncé sur χ(ℝ²)</strong> n'existe dans les fichiers — la géométrie formalisée ne rapproche pas d'un pouce du nombre chromatique du plan</td></tr>
+<tr><td>Modèle ≠ plan (§1)</td><td>reformulé exactement : l'objet s'appelle χ_poly, il est déjà ≥ 6 (Coulson) et son 7 est revendiqué (2025). Nos calculs attaquent ce cas ouvert-là</td><td><strong>non corrigeable</strong> : le lien avec χ(ℝ²) est le problème lui-même</td></tr>
+</table>
+<div class="ok"><strong>Trois choses que ces corrections ont apprises sur la méthode.</strong> (a) Une tolérance arbitraire n'est pas une convention : c'est un paramètre caché qui décide du résultat — il faut la calibrer contre un juge indépendant, ici l'arithmétique exacte. (b) Le calcul à 60 chiffres ne rachète pas des entrées fausses à la 17ᵉ décimale ; la précision ne remplace pas l'exactitude. (c) Un audit se trompe aussi : deux de mes neuf constats étaient mal diagnostiqués, et c'est la vérification indépendante — pas la relecture — qui l'a montré.</div>
+
+<div class="verdict"><strong>Bilan.</strong> Ce que nous avons produit est solide là où c'est calculé et vérifiable — un certificat à 26 423 boîtes, des moteurs testés contre la force brute, des compteurs qui tombent juste — et faible partout où il faut passer du calcul à l'énoncé. La faiblesse dominante n'est pas numérique : nous avons mesuré avec soin un objet qui n'est pas le plan. La deuxième est une convention de tangence qui décide, à certaines échelles, de trois unités de ω. La troisième est que rien n'est versionné, donc mes propres corrections ne sont pas auditables. Les trois se corrigent — au moins en partie — et aucune ne se corrige en ajoutant un calcul de plus.</div>
+
+<p class="small">Contrôles de cet audit : <code>phase6/test_color.py</code> réexécuté, comparaisons force brute sur 300 graphes (deux moteurs de coloration, un de clique), recalcul indépendant de ω par distances de polygones sur 8 cas, balayage de tolérance sur 12 cas. Correction à apporter : <code>note-echelle.html</code>, §3, ligne du « retour arrière » — à retirer.</p>
+
+</div>
+</body>
+</html>

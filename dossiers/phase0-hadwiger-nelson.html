@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 0 — Hadwiger–Nelson : dossier d'attaque</title>
+<style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:860px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2.05rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 34px;max-width:64ch}
+  h2{font-size:1.28rem;margin:52px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:26px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1.03rem;margin:26px 0 6px}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0 10px 0;padding-left:22px}
+  li{margin:6px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.93rem}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:16px 18px;margin:22px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:26px 0}
+  .verdict strong{color:#ffd9b8}
+  .status{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 6px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.88rem}
+  .chip b{color:var(--acc)}
+  figure{margin:26px 0;text-align:center}
+  figcaption{font-size:.85rem;color:var(--muted);margin-top:8px}
+  .lead{font-size:1.06rem;color:#39415a}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+  .card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
+  .card h4{margin:0 0 6px;font-size:.95rem;color:var(--acc)}
+  .card p{margin:0;font-size:.9rem;color:#3c4459}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">Dossier d'attaque · Phase 0 du protocole</div>
+<h1>Le nombre chromatique du plan<br><span style="color:var(--muted);font-weight:400">problème de Hadwiger–Nelson</span></h1>
+<p class="sub">Combien de couleurs faut-il pour colorier le plan sans que deux points à distance exactement 1 partagent une couleur ? Réponse inconnue depuis 1950. Ce dossier ne cherche pas à résoudre le problème : il fait le travail préalable — reformuler, cartographier, et localiser précisément le mur.</p>
+
+<div class="status">
+  <div class="chip">Statut : <b>5 ≤ χ(ℝ²) ≤ 7</b> (classique) — voir la note du 3 novembre 2026 ci-dessous</div>
+  <div class="chip">Ouvert depuis <b>1950</b> (Nelson)</div>
+  <div class="chip">Plus petit graphe 5-chromatique connu : <b>509 sommets</b></div>
+  <div class="chip">7-coloriage hexagonal : <b>Isbell</b></div>
+</div>
+
+<div class="box"><strong>Mise à jour du 3 novembre 2026 (audit).</strong> Trois énoncés différents ont circulé dans ces documents sous le même symbole χ. Il faut les séparer :<br>&bull; <b>χ(ℝ²)</b> — classique : 5 ≤ χ ≤ 7 (de Grey 2018 pour la borne basse, Isbell 1950 pour la haute). Une prépublication d'OpenAI datée du 23 septembre 2026 (diffusée le 6 octobre, <em>non référée</em>) revendique l'impossibilité de tout 5-coloriage sans hypothèse de régularité, avec une formalisation Lean rejouée par des tiers ; si elle tient, χ(ℝ²) ∈ {6, 7}. Aucun graphe fini 6-chromatique n'est connu : la preuve est existentielle.<br>&bull; <b>χ_poly</b> — coloriages dont les classes sont des polygones : <b>≥ 6</b> (Coulson 2004, polygones convexes d'aire minorée), et <b>≥ 7 dès qu'un sommet de la carte est de degré ≥ 5</b> (Manta 2019). Le cas trivalent est revendiqué à 7 par Sokolov–Voronov (<em>Discrete Mathematics</em> <b>349</b>(12), 2026, art.&nbsp;115321&nbsp;; thm&nbsp;2&nbsp;: χ<sub>poly</sub>(ℝ²)&nbsp;=&nbsp;7 — publié, mais preuve contestée par une revue automatique et non vérifiée par nous).<br>&bull; <b>χ des pavages de réseaux</b> — l'objet de ce dossier : c'est un sous-cas de χ_poly, donc déjà ≥ 6 par Coulson. Ce que ce travail y ajoute est une minoration <em>certifiée</em> à 7 pour l'échelle maximale, pas la découverte du 6.</div>
+
+<h2><span class="num">1</span>Reformuler : les sept visages de la conjecture</h2>
+<p class="lead">Une conjecture est un objet à plusieurs formulations ; le travail commence par trouver celle qui se laisse manipuler.</p>
+
+<table>
+<tr><th style="width:5%">#</th><th style="width:47%">Formulation</th><th>Ce qu'elle apporte (ou coûte)</th></tr>
+<tr><td>F1</td><td>Nombre chromatique du graphe <span class="mono">G</span> de sommets les points de ℝ², arêtes = couples à distance 1.</td><td>Langage standard, mais formulation « objet infini » : rien de manipulable directement.</td></tr>
+<tr><td>F2</td><td>Plus petit <span class="mono">k</span> tel que ℝ² = S₁ ∪ … ∪ S<sub>k</sub> avec, dans chaque S<sub>i</sub>, <em>aucun</em> couple à distance exactement 1.</td><td>Révèle le point crucial : « exactement 1 » et non « ≤ 1 ». Une classe de couleur peut contenir des points à distance 2, 10, 1000.</td></tr>
+<tr><td>F3</td><td><strong>de Bruijn–Erdős (1951)</strong> : χ(G) = sup { χ(H) : H sous-graphe fini de G }.</td><td><strong>La formulation de travail.</strong> Elle élimine l'infini : « χ ≥ 6 » ⇔ il existe un graphe fini, à distance unité, 6-chromatique.</td></tr>
+<tr><td>F4</td><td>χ du graphe de Cayley du groupe additif (ℝ², +) de ensemble de connexion le cercle unité S¹.</td><td>Donne accès à l'outillage « graphe de Cayley »… qui se révèle inopérant (voir verrou W3).</td></tr>
+<tr><td>F5</td><td>Variante « distances interdites » : χ(ℝ², D) pour D ⊂ ℝ₊, avec D = {1} ici.</td><td>Situe le problème dans une famille ; certaines valeurs de D sont calculables, ce qui donne des points de comparaison.</td></tr>
+<tr><td>F6</td><td>Variantes restreintes : classes mesurables (Falconer 1981), classes bornées par des courbes de Jordan → ≥ 6 (Woodall 1973), recouvrement par 5 fermés congruents → contient une distance unité (Hadwiger 1945).</td><td><strong>Les intermédiaires prouvables.</strong> Ce sont les seuls endroits où l'on sait gagner des couleurs.</td></tr>
+<tr><td>F7</td><td>Variantes arithmétiques : χ(ℚ²) = 2 (Woodall 1973) ; plans sur des corps de nombres divers.</td><td>Localise la difficulté : elle n'est <em>pas</em> dans la structure du plan, mais dans la clôture algébrique réelle et l'irrationnel.</td></tr>
+</table>
+
+<div class="box">
+<strong>Sortie de l'étape 1 —</strong> On travaille avec <strong>F3</strong>, et le problème se scinde en deux énoncés de nature radicalement différente :
+<ul style="margin-bottom:0">
+<li><strong>« χ ≥ 6 »</strong> est une affirmation <em>existentielle finie</em> : un graphe à exhiber. Elle est vérifiable, certifiable (SAT/DRAT), et c'est pourquoi elle progresse par l'informatique.</li>
+<li><strong>« χ ≤ 6 »</strong> est une affirmation <em>universelle sur le continu</em> : un coloriage du plan. Aucun certificat fini n'existe. Sa difficulté est d'une autre espèce.</li>
+</ul>
+C'est cette asymétrie, invisible dans l'énoncé d'origine, qui explique tout le reste du dossier.
+</div>
+
+<h2><span class="num">2</span>Cartographier : le terrain et ses bornes</h2>
+
+<figure>
+<svg viewBox="0 0 660 420" width="100%" role="img" aria-label="Moser spindle">
+<rect width="660" height="420" fill="#fbf8f3"/>
+<g><line x1="130.8" y1="240.0" x2="330.0" y2="125.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="130.8" y1="240.0" x2="330.0" y2="355.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="330.0" y2="125.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="330.0" y2="355.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="330.0" y1="125.0" x2="330.0" y2="355.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="299.6" y2="254.3" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="426.8" y2="445.9" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="197.2" y1="460.2" x2="299.6" y2="254.3" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="197.2" y1="460.2" x2="426.8" y2="445.9" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="299.6" y1="254.3" x2="426.8" y2="445.9" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="130.8" y1="240.0" x2="197.2" y2="460.2" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="130.8" cy="240.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="140.8" y="232.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">A</text>
+<circle cx="529.2" cy="240.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="539.2" y="232.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">B</text>
+<circle cx="330.0" cy="125.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="340.0" y="117.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">C</text>
+<circle cx="330.0" cy="355.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="340.0" y="347.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">D</text>
+<circle cx="197.2" cy="460.2" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="207.2" y="452.2" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">E</text>
+<circle cx="299.6" cy="254.3" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="309.6" y="246.3" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">F</text>
+<circle cx="426.8" cy="445.9" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="436.8" y="437.9" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">G</text>
+</g>
+<text x="330" y="400" text-anchor="middle" font-size="13" fill="#6b7280" font-family="system-ui,sans-serif">
+Fuseau de Moser — 7 sommets, 11 arêtes de longueur 1, chromatique 4</text>
+</svg>
+<figcaption>Le seul objet à connaître par cœur : deux « diamants » (deux triangles équilatéraux collés, soit K₄ moins une arête). Un diamant <em>force</em> ses deux pointes (à distance √3) à recevoir la même couleur. En partageant une pointe entre deux diamants dont les autres pointes sont à distance 1, on crée une contradiction ⇒ 4 couleurs sont nécessaires.</figcaption>
+</figure>
+
+<h3>Frise</h3>
+<ul>
+<li><strong>1945 — Hadwiger</strong> : tout recouvrement du plan par 5 fermés congruents contient une distance unité dans l'un d'eux (⇒ χ ≥ 6 pour des classes fermées congruentes).</li>
+<li><strong>1950 — Nelson</strong> pose la question ; publiée par <strong>Gardner en 1960</strong>.</li>
+<li><strong>1961 — Moser</strong> : le fuseau à 7 sommets, 4-chromatique ⇒ χ ≥ 4. Golomb trouve un autre témoin à 10 sommets.</li>
+<li><strong>1973 — Woodall</strong> : χ(ℚ²) = 2 (le plan rationnel se colorie à 2 couleurs !) ; et un coloriage dont les classes sont des régions bordées par des courbes de Jordan exige ≥ 6 couleurs.</li>
+<li><strong>1981 — Frankl–Wilson</strong> : borne inférieure exponentielle en dimension n. <strong>Falconer</strong> : version mesurable.</li>
+<li><strong>2003 — Shelah–Soifer</strong> : la valeur peut dépendre des axiomes de la théorie des ensembles.</li>
+<li><strong>2018 — de Grey</strong> : un graphe à distance unité de <strong>1581 sommets</strong>, non 4-coloriable, découvert avec un solveur SAT et vérifié indépendamment (Aaronson, Heule) ⇒ <strong>χ ≥ 5</strong>. Immense surprise : le dernier progrès datait de 1961.</li>
+<li><strong>2018–2021 — Polymath16</strong> : compression systématique du témoin ; le plus petit graphe 5-chromatique connu a <strong>509 sommets</strong>.</li>
+</ul>
+
+<h3>Tableau des bornes</h3>
+<table>
+<tr><th>Objet</th><th>Borne inférieure</th><th>Borne supérieure</th></tr>
+<tr><td>χ(ℝ²)</td><td>5 (de Grey 2018)</td><td>7 (coloriage hexagonal, Isbell)</td></tr>
+<tr><td>χ(ℝ³)</td><td>6</td><td>15</td></tr>
+<tr><td>χ(ℚ²)</td><td colspan="2">= 2 (exactement connu)</td></tr>
+<tr><td>Coloriages mesurables du plan</td><td>≥ 5 (Falconer)</td><td>≤ 7</td></tr>
+<tr><td>Coloriages à classes « régulières » (Jordan)</td><td>≥ 6 (Woodall)</td><td>≤ 7</td></tr>
+<tr><td>Plus petit graphe unité 4-chromatique</td><td colspan="2">7 sommets (Moser)</td></tr>
+<tr><td>Plus petit graphe unité 5-chromatique connu</td><td colspan="2">509 sommets</td></tr>
+</table>
+
+<div class="grid">
+<div class="card"><h4>Ce qui marche (et pourquoi)</h4><p>Le mécanisme des <em>gadgets</em> : de petites configurations forcent une égalité ou une inégalité de couleurs. Assembler des gadgets transforme la géométrie en un système de contraintes, puis en une instance SAT.</p></div>
+<div class="card"><h4>Ce qui ne mord pas</h4><p>Mesure, topologie, géométrie convexe, bornes spectrales, découpage en cellules : tous ces outils supposent une régularité que le problème n'a pas, ou un groupe fini que (ℝ²,+) n'a pas.</p></div>
+</div>
+
+<h2><span class="num">3</span>Localiser le mur : cinq verrous</h2>
+
+<h3>W1 — L'asymétrie des certificats</h3>
+<p>Voir encadré plus haut. Le camp « ≥ 6 » avance par objets finis ; le camp « ≤ 6 » n'a aucun objet fini à exhiber. Un même problème réunit donc <em>deux</em> difficultés de natures incompatibles : une recherche combinatoire géante, et une construction globale sur le continu.</p>
+
+<h3>W2 — Aucune théorie des gadgets</h3>
+<p>Tous les graphes 5-chromatiques connus sont des <em>assemblages</em> de diamants et de fuseaux, optimisés par recherche. Mais rien ne prédit <em>où</em> chercher un 6-chromatique : il n'existe aucun principe du type « un graphe 6-chromatique doit contenir tel motif ». Le progrès 1581 → 509 est de l'optimisation, pas de la compréhension. C'est le signe d'un domaine sans structure théorique.</p>
+
+<h3>W3 — L'outillage algébrique est structurellement aveugle</h3>
+<p>Les bornes puissantes sur les graphes de distances reposent sur des <strong>quotients finis</strong> : tores, sphères, cubes binaires, groupes finis (Delsarte, LP/SDP, Hoffman, clique-coclique). Or (ℝ², +) est sans torsion et divisible : ses seuls quotients sont triviaux. On ne peut pas « réduire modulo n » pour descendre une borne. L'analyse harmonique du cercle ne dit rien du graphe, car la connexion S¹ n'est pas une réunion finie de sous-groupes.</p>
+
+<h3>W4 — Les classes de couleurs sont « sauvages »</h3>
+<p>Par F2, une classe de couleur peut être un ensemble pathologique non mesurable, non borné, dense partout. Et c'est exactement là que vit le problème : dès qu'on impose de la régularité (mesurable, régions de Jordan), on obtient ≥ 6 — mais l'implication inverse est hors de portée. Le cœur du problème est donc dans le <em>continu non régulier</em>, là où aucun outil standard ne mord.</p>
+
+<h3>W5 — Risque d'indépendance</h3>
+<p>Shelah–Soifer (2003) ont montré que la réponse peut dépendre des axiomes retenus. Il est donc possible qu'aucune preuve « ordinaire » n'existe — ce qui change complètement la stratégie : on chercherait alors des résultats de consistance, pas une démonstration.</p>
+
+<div class="verdict">
+<strong>Diagnostic de phase 0 :</strong> le mur n'est pas « il manque une idée ingénieuse ». C'est <strong>l'absence de pont entre le monde fini-combinatoire</strong> (gadgets + SAT, qui produit des bornes inférieures) <strong>et le monde global du continu</strong> (où vit tout coloriage). Toute attaque sérieuse doit soit renforcer un côté, soit construire ce pont.
+</div>
+
+<h2><span class="num">4</span>Sortie de phase 0 : trois routes, et ce qu'on teste en premier</h2>
+
+<h3>Route A — Renforcer le côté fini (viser χ ≥ 6)</h3>
+<ul>
+<li>Recenser tous les gadgets connus (diamant, fuseau, gadgets Polymath16) et mesurer leur « pouvoir contraignant » par sommet.</li>
+<li>Chercher des familles infinies de graphes 5-chromatiques à coordonnées dans un corps fixé : si une famille est <em>close</em>, on peut y injecter une contrainte supplémentaire.</li>
+<li>Certifier les résultats par DRAT/Lean plutôt que par confiance dans le solveur.</li>
+<li><em>Test de faisabilité :</em> descendre sous 509 sommets, ou trouver une famille paramétrée au lieu d'un objet isolé.</li>
+</ul>
+
+<h3>Route B — Renforcer le côté régulier (viser χ ≤ 6, ou χ<sub>mesurable</sub> ≥ 6)</h3>
+<ul>
+<li>Exploiter le fait que le 7-coloriage hexagonal est le meilleur des coloriages <em>périodiques</em> : tout 6-coloriage devrait donc être non périodique et très irrégulier.</li>
+<li>Objectif réaliste (publiable) : fermer l'écart dans la classe mesurable en prouvant ≥ 6, en partant de Woodall/Falconer.</li>
+</ul>
+
+<h3>Route C — Affaiblir ou déplacer (les résultats partiels qui existent vraiment)</h3>
+<ul>
+<li>χ ≥ 6 pour un sous-ensemble du plan ou un plan sur un corps particulier.</li>
+<li>Variante « distance impaire », analogues en dimension ≥ 3 (l'écart 6–15 est énorme).</li>
+<li>Renforcer F3 : pour quelle classe de graphes le sup est-il atteint ?</li>
+</ul>
+
+<h3>Le protocole de la première semaine</h3>
+<ol>
+<li><strong>J1 — Refaire le fuseau de Moser à la main.</strong> Vérifier soi-même l'argument d'égalité forcée : c'est le cœur de toutes les preuves connues.</li>
+<li><strong>J2 — Écrire le problème du fuseau en SAT</strong> (7 variables, 11 contraintes) puis en 3-SAT, et constater qu'il est insatisfiable avec 3 couleurs.</li>
+<li><strong>J3 — Récupérer les graphes Polymath16</strong> et reproduire la vérification de non-4-coloriabilité du graphe de 509 sommets.</li>
+<li><strong>J4 — Chercher la contrainte minimale</strong> : quel est le plus petit ajout de gadgets qui « casse » un 5-coloriage ?</li>
+<li><strong>J5 — Lire Woodall 1973 et Falconer 1981</strong> : comprendre exactement où la régularité fait gagner la 6ᵉ couleur.</li>
+</ol>
+
+<h2><span class="num">5</span>Falsification : chercher à avoir tort</h2>
+<p>Avant toute preuve, essayer de tuer les deux camps :</p>
+<ul>
+<li><strong>Attaquer χ ≤ 6 :</strong> tenter un 6-coloriage non périodique, par exemple un coloriage « algébrique » construit à partir d'une fonction du corps engendré par les coordonnées. L'échec systématique est une information (il indique que la non-régularité est indispensable).</li>
+<li><strong>Attaquer χ ≥ 6 :</strong> chercher un graphe 6-chromatique par SAT en relaxant les coordonnées, en partant des structures à forte symétrie (les témoins à 5 couleurs ont souvent une symétrie d'ordre 5).</li>
+<li><strong>Attaquer l'énoncé lui-même :</strong> vérifier si une variante naturelle (par exemple sur un corps de nombres fixé) a une réponse <em>différente</em>. Si oui, la version réelle est mal posée comme problème unique.</li>
+</ul>
+
+<div class="box">
+<strong>Critères de sortie de phase 0 (atteints ?) —</strong> On doit savoir énoncer : (a) le point exact où meurent les techniques connues ✔ (W1–W4) ; (b) le premier objet concret à calculer ✔ (le fuseau en SAT, puis 509 sommets) ; (c) le test de falsification ✔ (section 5). Si les trois sont remplis, on passe en phase 1 — expérimentation — où l'on cherche d'abord des données, pas des idées.
+</div>
+
+<h2><span class="num">6</span>Honnêteté finale</h2>
+<p>Ce problème est un cas rare : il est <em>réellement</em> attaquable par un non-spécialiste équipé d'un ordinateur — de Grey est biologiste du vieillissement, et le dernier progrès majeur est venu d'un solveur SAT, pas d'une théorie. Mais l'étape 5 → 6 est d'une autre nature : elle demande soit un objet à quelques milliers de sommets que personne n'a trouvé en huit ans de recherche intensive, soit un argument global qui n'existe pas encore. Un travail de phase 0 réussi ne prouve rien — il évite seulement de chercher au mauvais endroit.</p>
+
+<h2><span class="num">7</span>Bibliographie minimale</h2>
+<ul class="small">
+<li>A. de Grey, <em>The chromatic number of the plane is at least 5</em>, arXiv:1804.02385 (2018) — le témoin à 1581 sommets.</li>
+<li>Polymath16, <em>Hadwiger–Nelson problem</em> (wiki du projet) — compression des témoins jusqu'à 509 sommets, données et certificats.</li>
+<li>A. Soifer, <em>The Mathematical Coloring Book</em>, Springer (2008) — l'histoire complète et les variantes.</li>
+<li>D. R. Woodall, <em>Distances realized by sets covering the plane</em>, J. Combin. Theory A (1973) — χ(ℚ²) = 2 et le résultat « Jordan ⇒ ≥ 6 ».</li>
+<li>K. J. Falconer, résultats sur les coloriages mesurables du plan (1981).</li>
+<li>S. Shelah, A. Soifer, <em>Axiom of choice and chromatic number of the plane</em> (2003) — dépendance axiomatique.</li>
+<li>M. J. H. Heule, vérifications SAT/certificats des graphes de de Grey.</li>
+<li>N. de Bruijn, P. Erdős (1951) — le théorème qui rend le problème fini.</li>
+</ul>
+
+<p class="small" style="margin-top:40px;border-top:1px solid var(--line);padding-top:18px">
+Dossier préparé le 2 novembre 2026 · Phase 0 du protocole « résoudre une conjecture » · Les figures sont générées analytiquement (coordonnées vérifiées : 11 arêtes de longueur 1 à 10⁻⁹ près).
+</p>
+
+</div>
+</body>
+</html>

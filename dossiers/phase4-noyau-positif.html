@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La cible du noyau positif est impossible</title><style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;--ok:#3f8a7a;--ko:#b34a3c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 30px;max-width:66ch}
+  h2{font-size:1.24rem;margin:50px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:24px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1rem;margin:22px 0 4px;color:var(--acc)}
+  p{margin:10px 0} ul,ol{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.89em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .ok{background:#eef4f1;border-left:4px solid var(--ok);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ok strong{color:#2c6a5d}
+  .ko{background:#f8eeec;border-left:4px solid var(--ko);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ko strong{color:#8f3a2c}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:24px 0}
+  .verdict strong{color:#ffd9b8}
+  figure{margin:24px 0;text-align:center} figcaption{font-size:.85rem;color:var(--muted);margin-top:6px;text-align:left}
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+  .dash div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px}
+  .dash b{display:block;font-size:1.35rem;color:var(--acc);font-variant-numeric:tabular-nums}
+  .dash span{font-size:.76rem;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:8px}
+  .tag.t1{background:#e8f0ee;color:#2c6a5d} .tag.t2{background:#f6e9e6;color:#8f3a2c} .tag.t3{background:#eee9f4;color:#5b4580}
+  @media(max-width:680px){.dash{grid-template-columns:1fr 1fr}h1{font-size:1.55rem}}
+
+.thm{background:#f4f1ea;border:1px solid #d9d2c4;border-left:5px solid #2b3a55;padding:16px 20px;margin:22px 0;border-radius:0 8px 8px 0}
+.thm .lab{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#8f4c22;font-weight:700;margin-bottom:6px}
+.proof{font-size:.9rem;color:#4a5266;border-top:1px dashed #cfc7b8;margin-top:10px;padding-top:8px}
+.dead{background:#f8eeec;border-left:4px solid #b34a3c;padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+.dead strong{color:#8f3a2c}
+.alive{background:#eef4f1;border-left:4px solid #3f8a7a;padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+.alive strong{color:#2c6a5d}
+</style></head><body><div class="wrap">
+
+<div class="kicker">Phase 3 · option (a) — la cible du noyau positif</div>
+<h1>La cible de la phase 2 est impossible</h1>
+<p class="sub">J'avais proposé, en phase 2, de chercher un noyau défini-positif K tel que la borne de programmation linéaire donne 6 couleurs. Cet atelier devait le chercher numériquement. Il a d'abord montré qu'aucun noyau de ce type ne peut marcher — pour une raison de fond, en trois lignes.</p>
+
+<div class="dash">
+  <div><b>5</b><span>plafond démontré de toute la méthode</span></div>
+  <div><b>0,2267</b><span>densité d'une classe sans distance 1 (obstacle)</span></div>
+  <div><b>0,1667</b><span>seuil qu'il aurait fallu atteindre</span></div>
+  <div><b>0</b><span>noyau à chercher (la piste est close)</span></div>
+</div>
+
+<h2><span class="num">1</span>Ce qu'un noyau unique peut, et ne peut pas, produire</h2>
+<p>Un argument « à un seul point » — c'est exactement ce que donne un noyau K ≥ 0 de type Delsarte / Falconer — utilise d'une classe de couleur S deux choses seulement : S est mesurable, et S ne contient aucun couple à distance 1. Sa conclusion est donc nécessairement de la forme :</p>
+<p style="text-align:center"><em>« toute partie mesurable sans distance 1 a une densité ≤ δ* »</em>.</p>
+<p>Or dans un coloriage à k classes, les classes partitionnent le plan : la somme de leurs densités vaut 1, donc au moins une classe a une densité ≥ 1/k. Combiner les deux donne k ≥ 1/δ*. Tout le pouvoir d'un tel argument tient donc dans le seul nombre δ*.</p>
+
+<h2><span class="num">2</span>Le théorème du plafond</h2>
+<div class="thm">
+<div class="lab">Théorème</div>
+<p><strong>Aucun argument de type « densité d'une classe » — donc aucun noyau unique — ne peut démontrer χ(ℝ²) ≥ 6 dans le cas mesurable.</strong></p>
+<div class="proof">
+Pour conclure k ≥ 6, il faut 1/δ* ≥ 6, c'est-à-dire δ* ≤ 1/6 = 0,1667. Mais δ* est une borne supérieure <em>valide</em>, donc δ* ≥ δ<sub>max</sub><sup>réel</sup>, la densité réellement atteignable. Et la phase 2 a exhibé une partie mesurable sans aucune distance 1 — des disques de rayon r &lt; 1/2 aux sommets d'un réseau hexagonal de pas 1 + 2r — dont la densité vaut π/(8√3) = <strong>0,2267</strong>. Comme 0,2267 &gt; 0,1667, aucun δ* valide n'est ≤ 1/6. ∎
+</div>
+</div>
+<p>Autrement dit : la méthode est plafonnée à 1/0,2267 = <strong>4,41</strong>, donc à « χ ≥ 5 » et rien de plus. Le noyau que je cherchais ne pouvait pas exister — non par manque d'habileté, mais par arithmétique.</p>
+
+<h2><span class="num">3</span>Cette construction est-elle optimale ?</h2>
+<figure><svg viewBox="0 0 680 340" width="100%" role="img" aria-label="densité"><rect width="680" height="340" fill="#fbf8f3"/><line x1="70" y1="284.0" x2="530" y2="284.0" stroke="#eae5db"/><text x="61" y="288.0" text-anchor="end" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.00</text><line x1="70" y1="236.3" x2="530" y2="236.3" stroke="#eae5db"/><text x="61" y="240.3" text-anchor="end" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.05</text><line x1="70" y1="188.6" x2="530" y2="188.6" stroke="#eae5db"/><text x="61" y="192.6" text-anchor="end" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.10</text><line x1="70" y1="140.9" x2="530" y2="140.9" stroke="#eae5db"/><text x="61" y="144.9" text-anchor="end" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.15</text><line x1="70" y1="93.2" x2="530" y2="93.2" stroke="#eae5db"/><text x="61" y="97.2" text-anchor="end" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.20</text><line x1="70" y1="45.5" x2="530" y2="45.5" stroke="#eae5db"/><text x="61" y="49.5" text-anchor="end" font-size="10.5" fill="#9a9a90" font-family="ui-monospace,monospace">0.25</text><polyline points="70.0,282.0 74.7,281.2 79.5,280.3 84.2,279.3 89.0,278.1 93.7,276.9 98.5,275.5 103.2,274.1 107.9,272.6 112.7,271.0 117.4,269.3 122.2,267.5 126.9,265.7 131.6,263.9 136.4,261.9 141.1,260.0 145.9,257.9 150.6,255.9 155.4,253.8 160.1,251.6 164.8,249.4 169.6,247.2 174.3,244.9 179.1,242.6 183.8,240.3 188.6,237.9 193.3,235.6 198.0,233.2 202.8,230.7 207.5,228.3 212.3,225.9 217.0,223.4 221.8,220.9 226.5,218.4 231.2,215.9 236.0,213.4 240.7,210.9 245.5,208.3 250.2,205.8 254.9,203.2 259.7,200.7 264.4,198.1 269.2,195.6 273.9,193.0 278.7,190.4 283.4,187.9 288.1,185.3 292.9,182.8 297.6,180.2 302.4,177.6 307.1,175.1 311.9,172.5 316.6,170.0 321.3,167.4 326.1,164.9 330.8,162.4 335.6,159.8 340.3,157.3 345.1,154.8 349.8,152.3 354.5,149.8 359.3,147.3 364.0,144.8 368.8,142.3 373.5,139.8 378.2,137.3 383.0,134.9 387.7,132.4 392.5,130.0 397.2,127.5 402.0,125.1 406.7,122.7 411.4,120.3 416.2,117.9 420.9,115.5 425.7,113.1 430.4,110.8 435.2,108.4 439.9,106.1 444.6,103.7 449.4,101.4 454.1,99.1 458.9,96.8 463.6,94.5 468.4,92.2 473.1,89.9 477.8,87.6 482.6,85.4 487.3,83.1 492.1,80.9 496.8,78.7 501.5,76.5 506.3,74.3 511.0,72.1 515.8,69.9 520.5,67.7" fill="none" stroke="#2b3a55" stroke-width="2.6"/><line x1="70" y1="125.0" x2="530" y2="125.0" stroke="#7b5ea7" stroke-width="1.6" stroke-dasharray="6 4"/><text x="536" y="117.0" font-size="10.5" fill="#7b5ea7" font-family="system-ui,sans-serif">1/6 = 0,1667 : seuil à franchir pour 6 couleurs</text><line x1="70" y1="147.7" x2="530" y2="147.7" stroke="#4b6fa8" stroke-width="1.6" stroke-dasharray="6 4"/><text x="536" y="159.7" font-size="10.5" fill="#4b6fa8" font-family="system-ui,sans-serif">1/7 = 0,1429 : une classe du 7-coloriage</text><circle cx="520.5" cy="67.7" r="6" fill="#b34a3c"/><text x="508.5" y="55.7" text-anchor="end" font-size="13" fill="#b34a3c" font-family="ui-monospace,monospace">0,2267</text><text x="508.5" y="71.7" text-anchor="end" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">diamètre 1, pas 2 (limite)</text><text x="141.1" y="302" text-anchor="middle" font-size="11" fill="#6b7280" font-family="ui-monospace,monospace">0.2</text><text x="236.0" y="302" text-anchor="middle" font-size="11" fill="#6b7280" font-family="ui-monospace,monospace">0.4</text><text x="330.8" y="302" text-anchor="middle" font-size="11" fill="#6b7280" font-family="ui-monospace,monospace">0.6</text><text x="425.7" y="302" text-anchor="middle" font-size="11" fill="#6b7280" font-family="ui-monospace,monospace">0.8</text><text x="520.5" y="302" text-anchor="middle" font-size="11" fill="#6b7280" font-family="ui-monospace,monospace">1.0</text><text x="300.0" y="326" text-anchor="middle" font-size="12" fill="#6b7280" font-family="system-ui,sans-serif">diamètre maximal d’un disque d’une classe sans distance 1 (pas = 1 + d)</text></svg>
+<figcaption>Densité d'une classe faite de disques de diamètre d, sur réseau hexagonal de pas 1 + d (séparation minimale entre disques strictement supérieure à 1). La courbe monte vers la limite d = 1, pas = 2, où elle vaut exactement π/(8√3) = 0,2267. À comparer aux deux seuils : 1/7 (densité réellement utilisée par le 7-coloriage de la phase 1) et 1/6 (ce qu'il faudrait pour interdire six couleurs).</figcaption></figure>
+<div class="thm">
+<div class="lab">Fait (vérifié numériquement, et démontrable)</div>
+<p>Pour des disques, la densité vaut π(d/2)² / ((√3/2)(1+d)²), fonction croissante de d, donc maximale en d = 1 : <strong>δ ≤ π/(8√3) = 0,2267</strong>. Les autres formes de blobs font moins bien — c'est l'inégalité isodiamétrique (à diamètre fixé, le disque maximise l'aire) doublée de l'optimalité du réseau hexagonal (Thue).</p>
+</div>
+<table>
+<tr><th>blob</th><th>réseau</th><th class="num">densité max</th></tr>
+<tr><td>disque</td><td>hexagonal</td><td class="num"><strong>0,2267</strong></td></tr>
+<tr><td>disque</td><td>carré</td><td class="num">0,1963</td></tr>
+<tr><td>hexagone</td><td>hexagonal</td><td class="num">0,1875</td></tr>
+<tr><td>carré</td><td>carré</td><td class="num">0,1716</td></tr>
+</table>
+<p class="small">Les trois dernières lignes sont calculées avec la contrainte conservative « pas ≥ 1 + diamètre », donc sous-estimées pour l'hexagone et le carré — mais l'ordre est robuste : le disque gagne, et le maximum dans cette famille est 0,2267.</p>
+
+<h2><span class="num">4</span>Pourquoi c'est en réalité une bonne nouvelle</h2>
+<div class="dead"><strong>La piste est close —</strong> on ne cherchera pas de noyau. Mais le théorème explique aussi <em>pourquoi</em> la littérature stagne : la meilleure borne connue dans le cas mesurable est <strong>5</strong> (Falconer 1981), et le plafond de la méthode est <strong>5</strong>. La méthode n'est pas « mal exploitée » : elle est <strong>saturée</strong>. Quarante-cinq ans sans progrès ne sont pas un accident de recherche, c'est un fait structurel.</div>
+<div class="alive"><strong>Ce qui reste vrai —</strong> la phase 2 avait raison sur un point : l'outil spectral ne donne que 5. Elle avait tort sur la conclusion à en tirer (« donc cherchons un meilleur noyau »). Le bon diagnostic est : <em>il faut changer de type d'information</em>, pas de noyau.</div>
+
+<h2><span class="num">5</span>La bonne cible, à la place</h2>
+<p>Le théorème dit exactement ce qui manque : l'information « 6 » ne peut pas venir d'une classe prise seule, elle doit venir de la <strong>compatibilité entre classes</strong> — c'est-à-dire d'un argument à deux points (ou k points), et non d'un noyau scalaire. Trois cibles concrètes, par ordre de tractabilité :</p>
+<table>
+<tr><th>cible</th><th>contenu</th><th>état</th></tr>
+<tr><td><strong>Fermer l'écart 6 ↔ 7 dans la classe régulière</strong></td><td>Woodall (1973) : des classes bordées par des courbes de Jordan exigent ≥ 6. La phase 1 (E5) : des classes réunions d'hexagones de diamètre &lt; 1 exigent exactement 7. Entre les deux, il y a un énoncé précis et personne ne sait le trancher : <em>χ = 7 pour les classes bordées par des courbes de Jordan ?</em> C'est le seul endroit où l'on dispose déjà de 6 <em>et</em> de 7 sur des familles voisines.</td><td>ouvert, attaquable</td></tr>
+<tr><td><strong>Un argument à deux points</strong></td><td>Utiliser non pas la densité d'une classe mais la mesure des paires de classes à distance 1 — l'analogue, pour le plan, du niveau 2 de la hiérarchie de Lasserre. Le théorème du §2 montre que c'est <em>nécessaire</em> ; rien ne dit que c'est suffisant.</td><td>à construire</td></tr>
+<tr><td><strong>La dégénérescence</strong></td><td>Route de l'atelier précédent : « tout graphe unité fini est 4-dégénéré » ⟹ χ ≤ 5. Toujours ouverte, aucun contre-exemple trouvé.</td><td>ouverte, computationnellement hostile</td></tr>
+</table>
+
+<h2><span class="num">6</span>Ce que ce théorème ne dit pas</h2>
+<ul>
+<li><strong>Il ne dit rien sur χ(ℝ²) lui-même.</strong> Il borne une <em>méthode</em>, pas une valeur. χ ∈ {5, 6, 7} reste entièrement ouvert, et le plafond à 5 vaut pour le cas mesurable via la densité seulement.</li>
+<li><strong>Il ne dit pas que δ<sub>max</sub> = 0,2267.</strong> C'est une borne <em>inférieure</em>. La vraie valeur est inconnue ; si elle montait à 0,3, le plafond de la méthode tomberait à 3,34 — la méthode serait encore plus faible, pas plus forte.</li>
+<li><strong>Il ne tue pas tous les noyaux.</strong> Un noyau portant sur des <em>paires</em> de points (donc multiclasse) n'est pas concerné : c'est précisément la porte de sortie du §5.</li>
+<li><strong>La constante π/(8√3) suppose un réseau hexagonal de disques.</strong> L'optimalité universelle sur toutes les parties mesurables sans distance 1 n'est pas démontrée ici — c'est un problème ouvert en soi.</li>
+</ul>
+
+<h2><span class="num">7</span>Reproductibilité</h2>
+<table class="small">
+<tr><th>fichier</th><th>rôle</th></tr>
+<tr><td class="mono">plafond.py</td><td>le théorème, les tableaux de densité par forme et par réseau, la cohérence avec 5</td></tr>
+<tr><td class="mono">fig.py</td><td>la figure (densité en fonction du diamètre, seuils 1/6 et 1/7)</td></tr>
+</table>
+<p class="small" style="margin-top:34px;border-top:1px solid var(--line);padding-top:16px">
+Phase 3, option (a) — 2 novembre 2026 · chaîne complète : phase 0 (le mur) → phase 1 (falsification) → phase 2 (prédiction) → atelier de dégénérescence → cible du noyau positif (close).</p>
+</div></body></html>

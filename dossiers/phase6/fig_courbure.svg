@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" width="100%" role="img" aria-label="omega en fonction de la courbure des bords">
+<rect width="860" height="380" fill="#fbfaf7"/>
+<line x1="74" y1="318.0" x2="710" y2="318.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="62" y="323.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">6</text>
+<line x1="74" y1="272.3" x2="710" y2="272.3" stroke="#c4bfb2" stroke-width="1.5"/>
+<text x="62" y="277.3" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">7</text>
+<line x1="74" y1="226.7" x2="710" y2="226.7" stroke="#eae6dc" stroke-width="1"/>
+<text x="62" y="231.7" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">8</text>
+<line x1="74" y1="181.0" x2="710" y2="181.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="62" y="186.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">9</text>
+<line x1="74" y1="135.3" x2="710" y2="135.3" stroke="#eae6dc" stroke-width="1"/>
+<text x="62" y="140.3" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">10</text>
+<line x1="74" y1="89.7" x2="710" y2="89.7" stroke="#eae6dc" stroke-width="1"/>
+<text x="62" y="94.7" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">11</text>
+<line x1="74" y1="44.0" x2="710" y2="44.0" stroke="#eae6dc" stroke-width="1"/>
+<text x="62" y="49.0" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#5c5850">12</text>
+<line x1="74.0" y1="44" x2="74.0" y2="318" stroke="#f0ece3"/>
+<text x="74.0" y="340" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.00</text>
+<line x1="261.1" y1="44" x2="261.1" y2="318" stroke="#f0ece3"/>
+<text x="261.1" y="340" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.05</text>
+<line x1="448.1" y1="44" x2="448.1" y2="318" stroke="#f0ece3"/>
+<text x="448.1" y="340" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.10</text>
+<line x1="635.2" y1="44" x2="635.2" y2="318" stroke="#f0ece3"/>
+<text x="635.2" y="340" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#5c5850">0.15</text>
+<rect x="74" y="249.5" width="636" height="45.7" fill="#1f6f4a" opacity="0.07"/>
+<polyline points="74.0,272.3 126.1,272.3 178.9,272.3 233.3,272.3 307.1,272.3 466.1,272.3 643.0,272.3" fill="none" stroke="#1f6f4a" stroke-width="2.4"/>
+<circle cx="74.0" cy="272.3" r="4.8" fill="#1f6f4a"/>
+<circle cx="126.1" cy="272.3" r="4.8" fill="#1f6f4a"/>
+<circle cx="178.9" cy="272.3" r="4.8" fill="#1f6f4a"/>
+<circle cx="233.3" cy="272.3" r="4.8" fill="#1f6f4a"/>
+<circle cx="307.1" cy="272.3" r="4.8" fill="#1f6f4a"/>
+<circle cx="466.1" cy="272.3" r="4.8" fill="#1f6f4a"/>
+<circle cx="643.0" cy="272.3" r="4.8" fill="#1f6f4a"/>
+<polyline points="74.0,272.3 126.1,272.3 178.9,272.3 233.3,272.3 307.1,272.3 466.1,226.7 643.0,135.3" fill="none" stroke="#8a4b2a" stroke-width="2.4"/>
+<circle cx="74.0" cy="272.3" r="4.8" fill="#8a4b2a"/>
+<circle cx="126.1" cy="272.3" r="4.8" fill="#8a4b2a"/>
+<circle cx="178.9" cy="272.3" r="4.8" fill="#8a4b2a"/>
+<circle cx="233.3" cy="272.3" r="4.8" fill="#8a4b2a"/>
+<circle cx="307.1" cy="272.3" r="4.8" fill="#8a4b2a"/>
+<circle cx="466.1" cy="226.7" r="4.8" fill="#8a4b2a"/>
+<circle cx="643.0" cy="135.3" r="4.8" fill="#8a4b2a"/>
+<polyline points="74.0,181.0 126.1,181.0 178.9,181.0 233.3,181.0 307.1,181.0 466.1,89.7 643.0,135.3" fill="none" stroke="#5b4580" stroke-width="2.4"/>
+<circle cx="74.0" cy="181.0" r="4.8" fill="#5b4580"/>
+<circle cx="126.1" cy="181.0" r="4.8" fill="#5b4580"/>
+<circle cx="178.9" cy="181.0" r="4.8" fill="#5b4580"/>
+<circle cx="233.3" cy="181.0" r="4.8" fill="#5b4580"/>
+<circle cx="307.1" cy="181.0" r="4.8" fill="#5b4580"/>
+<circle cx="466.1" cy="89.7" r="4.8" fill="#5b4580"/>
+<circle cx="643.0" cy="135.3" r="4.8" fill="#5b4580"/>
+<rect x="80" y="50" width="196" height="62" rx="7" fill="#fbfaf7" stroke="#e3ded4"/>
+<circle cx="96" cy="66" r="4.6" fill="#1f6f4a"/>
+<text x="110" y="70.5" font-family="Georgia,serif" font-size="12.5" fill="#3d3a34">bords droits</text>
+<circle cx="96" cy="84" r="4.6" fill="#8a4b2a"/>
+<text x="110" y="88.5" font-family="Georgia,serif" font-size="12.5" fill="#3d3a34">désordre 0.15</text>
+<circle cx="96" cy="102" r="4.6" fill="#5b4580"/>
+<text x="110" y="106.5" font-family="Georgia,serif" font-size="12.5" fill="#3d3a34">désordre 0.30</text>
+<line x1="74" y1="318" x2="710" y2="318" stroke="#8b857a" stroke-width="1.6"/>
+<line x1="74" y1="44" x2="74" y2="318" stroke="#8b857a" stroke-width="1.6"/>
+<text x="392" y="364" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#3d3a34">courbure : flèche de l'arc (0 = bord droit)</text>
+<text x="24" y="181" transform="rotate(-90 24 181)" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#3d3a34">ω du graphe de conflit</text>
+<line x1="233.3" y1="44" x2="233.3" y2="318" stroke="#b34a3c" stroke-width="1.3" stroke-dasharray="4 4"/>
+<text x="241.3" y="64.5" font-family="Georgia,serif" font-size="12.5" fill="#b34a3c" font-style="italic">R = 1 (hypothèse du preprint)</text>
+</svg>

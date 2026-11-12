@@ -1,0 +1,978 @@
+{
+  "schema": "hadwiger-nelson/journal",
+  "version": 1,
+  "mis_a_jour": "2026-11-02",
+  "langue": "fr",
+  "but": "Journal des étapes déjà exécutées + impasses fermées + règles de contrôle, pour reprendre vite sans refaire le même chemin.",
+  "a_lire_en_premier": [
+    "resultat_courant",
+    "lois_empiriques",
+    "impasses_fermees",
+    "regles_de_controle",
+    "prochaines_etapes"
+  ],
+  "resultat_courant": {
+    "probleme": "chi(R^2), coloriage du plan, distance unité interdite",
+    "encadrement_connu": "6 <= chi(R^2) <= 7 (revendiqué sept. 2026 ; la fiche initiale disait 5 <= chi <= 7)",
+    "borne_inferieure": "6 (OpenAI 2026, revendiqué, non référé, Lean vérifié) ; 5 était de Grey 2018",
+    "borne_superieure": "7 (Isbell, pavage hexagonal)",
+    "value_valeur": "chi in {6,7}, indetermine (la fiche disait {5,6,7} : errone depuis la borne basse 6)",
+    "sous_classes": {
+      "cartes_polygonales": ">= 7 revendiqué (Sokolov-Voronov 2025, prépublication non validée)",
+      "cartes_bords_quelconques": ">= 6 établi (Woodall 1973 corrigé par Townsend 1981)",
+      "chi(Q^2)": "2 (Woodall)",
+      "chi_fractionnaire": ">= 76/21 ≈ 3,62",
+      "chi_mesurable": ">= 5 (Falconer)",
+      "dimension_3": "6 <= chi <= 15"
+    },
+    "ce_que_notre_travail_a_etabli": [
+      "aucun argument de densité (noyau unique) ne peut dépasser 5 couleurs : plafond 1/delta* <= 4,41",
+      "sur 89 partitions périodiques testées (réseaux, aléatoires, courbes, trouées), le graphe de conflit a toujours omega >= 7",
+      "aucun 6-coloriage construit dans aucune des familles testées",
+      "lemme du diamètre : toute classe de couleur connexe a un diamètre < 1, donc chaque pays d'une carte valide a un diamètre < 1",
+      "lemme d'inclusion : un sous-ensemble hérite les conflits de son contenant, donc raffiner une cellule ne peut pas disjoindre une clique",
+      "balayage exhaustif des 48 441 reseaux : omega >= 7 partout, minimum a l'hexagonal ET au quasi-carre (theta=120, rho=sqrt3) ; plateau a deux lobes (mesure, pas preuve)",
+      "le mecanisme du minimum n'est pas la compacite (Thue) mais le nombre de voisins : erratum explicite sur la loi L2",
+      "theoreme A certifie (plus une verification numerique) : 26 423 boites d'arithmetique d'intervalles, 100 % du domaine des reseaux, 0 echec",
+      "omega n'est pas monotone en l'echelle : a delta=0,5 le pavage hexagonal se contente de 5 couleurs. Le corollaire 'aucun pavage reticulaire n'est 6-coloriable' est FAUX sans restriction d'echelle."
+    ]
+  },
+  "etapes_faites": [
+    {
+      "id": "P0",
+      "titre": "Cadrage du protocole en 11 étapes",
+      "statut": "termine",
+      "contenu": "énoncés équivalents, cartographie des résultats connus, identification du mur, verrous W1-W5, routes A/B/C",
+      "artefact": "dossiers/phase0-hadwiger-nelson.html",
+      "resultats_cles": [
+        "echantillon de 2,3,7,509 sommets",
+        "fuseau de Moser analytique à 7 sommets et 11 arêtes"
+      ],
+      "scripts": [
+        "dossiers/phase0-hadwiger-nelson.html",
+        "dossiers/spindle.svg"
+      ]
+    },
+    {
+      "id": "P1",
+      "titre": "Expériences exécutées (E1-E7)",
+      "statut": "termine",
+      "contenu": "dénombrement exact des coloriages du fuseau, recherche aléatoire de témoins, graphes 4-critiques, coloriage hexagonal, tailles minimales",
+      "artefact": "dossiers/phase1-hadwiger-nelson.html",
+      "resultats_cles": [
+        "E1 fuseau : nombre de 5-coloriages = {2:0, 3:0, 4:384, 5:5040}",
+        "E3 : 300 essais aléatoires, 300 fois chi = 3",
+        "E4 : seuls K4 et W5 sont 4-critiques parmi les petits graphes => 7 sommets est optimal pour le fuseau",
+        "E5 : coloriage hexagonal chi = 7, motif (q + 3r) mod 7, la fleur est une clique de 7",
+        "E7 : tailles connues 2, 3, 7, 509"
+      ],
+      "scripts": [
+        "dossiers/phase1/exp_ab.py",
+        "dossiers/phase1/exp_b.py",
+        "dossiers/phase1/exp_hex3.py",
+        "dossiers/phase1/exp_finite2.py",
+        "dossiers/phase1/figures.py"
+      ],
+      "lecon": "l'encodage du fuseau doit être vérifié par un test (11 arêtes) avant tout calcul"
+    },
+    {
+      "id": "P2",
+      "titre": "Heuristique probabiliste et densité",
+      "statut": "termine",
+      "contenu": "estimation du nombre de sommets nécessaire à un témoin 6-chromatique ; densité d'un ensemble sans distance unité",
+      "artefact": "dossiers/phase2-hadwiger-nelson.html",
+      "resultats_cles": [
+        "ratios de témoins 1,5 / 2,333 / 72,714 (rapport 31,2) => un témoin 6-chromatique aléatoire dépasserait 10^5 sommets",
+        "densité maximale mesurée pi/(8*sqrt(3)) = 0,2267 > 1/6",
+        "probabilités subjectives : chi = 7 à 45 %, chi = 6 à 40 %, chi = 5 à 15 %"
+      ],
+      "scripts": [
+        "dossiers/phase1/phase2_calc.py",
+        "dossiers/phase1/phase2_bessel.py",
+        "dossiers/phase1/figures2.py"
+      ],
+      "lecon": "pari « tout graphe unité fini est 4-dégénéré » : FAUX, ne pas réutiliser"
+    },
+    {
+      "id": "P3",
+      "titre": "Dégénérescence des familles de graphes unité",
+      "statut": "termine",
+      "contenu": "16 familles régulières ; fermetures de graphes unité à rayon croissant en arithmétique exacte",
+      "artefact": "dossiers/phase3-degenerescence.html",
+      "resultats_cles": [
+        "familles régulières : dégénérescence <= 3 (kagomé 2, pentagonales 2), aucun 5-core dans 16 familles",
+        "fermeture triangle+centre r <= 1,2 : n = 2101, m = 4324, dégénérescence 3",
+        "fermeture r <= 1,5 : n = 3393, m = 7137, dégénérescence 4, 4-core = 97 sommets / 273 arêtes, degrés 4 à 18",
+        "sensibilité sur le 4-core : 10^-28 -> 30 arêtes ; 10^-24 -> 281 ; 10^-21 -> 295 ; 10^-18 -> 296",
+        "r <= 1,7 : 980 061 points, mémoire saturée"
+      ],
+      "scripts": [
+        "dossiers/phase3/atelier.py",
+        "dossiers/phase3/exact.py",
+        "dossiers/phase3/haute_precision.py",
+        "dossiers/phase3/extraire2.py",
+        "dossiers/phase3/core_analyse.py",
+        "dossiers/phase3/hist.py",
+        "dossiers/phase3/pentagone.py"
+      ],
+      "lecon": "le nombre d'arêtes n'est pas stable en tolérance mais la dégénérescence l'est ; toute valeur instable est un artefact"
+    },
+    {
+      "id": "P4",
+      "titre": "Théorème du plafond (résultat principal de la série)",
+      "statut": "termine",
+      "contenu": "toute méthode de type « densité d'une classe » conclut au mieux à 5 couleurs",
+      "artefact": "dossiers/phase4-noyau-positif.html",
+      "resultats_cles": [
+        "delta* >= 0,2267 (construction hexagone + disque de rayon 0,5, pas 2,0)",
+        "1/delta* <= 4,41 => aucun noyau unique ne peut démontrer chi >= 6",
+        "la méthode est saturée : la meilleure borne connue par cette voie vaut 5",
+        "table des densités : hex+disque 0,2267 > hex+carré 0,1981 > carré+disque 0,1963 > hex+hexagone 0,1875 > carré+carré 0,1715 > carré+hexagone 0,1624"
+      ],
+      "scripts": [
+        "dossiers/phase4/plafond.py",
+        "dossiers/phase4/fig.py"
+      ],
+      "lecon": "un plafond de méthode ne dit rien sur la valeur : chi in {5,6,7} reste ouvert"
+    },
+    {
+      "id": "P5",
+      "titre": "Écart 6 <-> 7 : état de l'art corrigé, deux lemmes, calcul sur 34 réseaux",
+      "statut": "termine",
+      "artefact": "dossiers/phase5-jordan.html",
+      "resultats_cles": [
+        "correction : la preuve de Woodall 1973 était incorrecte, c'est Woodall-Townsend (1981) ; l'énoncé est « 6 nécessaires, 7 suffisants »",
+        "prépublication 2025 (arXiv 2502.01958) : >= 7 sous trois hypothèses, corollaire polygones ; non validée",
+        "lemme 1 (démontré ici) : toute classe de couleur connexe a un diamètre < 1, donc chaque pays a un diamètre < 1",
+        "lemme 2 : deux pays de même couleur sont soit à distance > 1, soit d'union de diamètre < 1",
+        "34 pavages de réseaux : minimum de omega = 7, atteint pour theta in [35°,75°] U [105°,145°] ; carré 9 ; rectangulaire 9 à 11",
+        "coloriage heptagonal : chromaticité maximale 3 (aux sommets), donc ne contredit pas le lemme du preprint",
+        "motifs (i + k j) mod 7 valides : seulement k = 3 et 5 ; distance minimale entre cellules de même couleur 1,3229"
+      ],
+      "scripts": [
+        "dossiers/phase5/treillis.py",
+        "dossiers/phase5/scan.py",
+        "dossiers/phase5/chromaticite2.py",
+        "dossiers/phase5/figures5.py"
+      ],
+      "lecon": "le minimum de omega sur les réseaux rhombiques est un plateau, pas un point isolé : l'hexagone n'est pas seul"
+    },
+    {
+      "id": "P6",
+      "titre": "Expérience A : partitions aléatoires du plan (tore périodique)",
+      "statut": "termine",
+      "artefact": "dossiers/phase6-partition-aleatoire.html",
+      "resultats_cles": [
+        "16 configurations (germes hexagonaux perturbés + Poisson), 16 fois omega >= 7, aucun 6-coloriage",
+        "omega croît avec le désordre : 7 -> 8 (0,20) -> 9 (0,25-0,30) -> 11 (0,40)",
+        "seuil net : [7,7,7] jusqu'à 0,15 puis [8,8,8] à 0,18 (3 germes par valeur)",
+        "degré moyen 18,0 (hexagone) -> 25,9 (0,40) -> 44,7 (Poisson)",
+        "contrôle par normalisation moyenne : omega baisse de 1 à 2 mais ne descend jamais sous 7",
+        "calibration : carré 12x12 -> omega = 9 ; hexagonal 7x7 et 14x14 -> omega = 7 et 7-coloriage vérifié (0 paire fautive)"
+      ],
+      "scripts": [
+        "dossiers/phase6/partition2.py",
+        "dossiers/phase6/calib3.py",
+        "dossiers/phase6/experience.py",
+        "dossiers/phase6/controle.py",
+        "dossiers/phase6/figs6b.py"
+      ],
+      "lecon": "le désordre n'est pas un espace neutre : c'est une pente qui descend"
+    },
+    {
+      "id": "P7",
+      "titre": "Expérience A' : bords courbes, arcs de rayon R (R = 1 = hypothèse du preprint)",
+      "statut": "termine",
+      "artefact": "dossiers/phase7-bords-courbes.html",
+      "resultats_cles": [
+        "21 configurations (3 désordres x 7 courbures), omega in {7,8,9,10,11}, aucun 6-coloriage",
+        "à R = 1 : omega = 7 dans les trois régimes de désordre (l'hypothèse est satisfiable sans conséquence)",
+        "la courbure est monotone : à désordre 0,15, omega passe de 7 (droit) à 10 (R = 0,35)",
+        "invariant de partition : somme des aires = aire du tore, à 10^-13 près sur les 21 cas",
+        "flèche des arcs : 0,043 pour R = 1, 0,152 pour R = 0,35 (cordes de 0,577)"
+      ],
+      "scripts": [
+        "dossiers/phase6/courbes.py",
+        "dossiers/phase6/exp_courbes2.py",
+        "dossiers/phase6/figs7.py"
+      ],
+      "lecon": "trois versions du code ont été jetées : ce qui les a démasquées est un invariant exact, pas un dessin"
+    },
+    {
+      "id": "P8",
+      "titre": "Tâche T1 : cellules non simplement connexes (trouées)",
+      "statut": "termine",
+      "artefact": "dossiers/phase8-cellules-trouees.html",
+      "contenu": "chaque cellule convexe P est remplacée par un anneau (P privé de son homothétique c+rho(P-c)) et par la cellule intérieure",
+      "resultats_cles": [
+        "18 configurations, omega = 7 dans les 18, aucun cas où le trou fait baisser omega",
+        "attaque dirigée : trouer les 7 cellules de la clique maximale elle-même -> omega reste 7",
+        "toutes cellules trouées rho=0,7 : 392 cellules, degré moyen 33,0 (contre 18,0), 6468 arêtes -> omega = 7",
+        "invariant d'aire : écart 1,8e-14 pour rho de 0,3 à 0,7",
+        "total cumulé : 89 configurations périodiques testées, aucune sous omega = 7"
+      ],
+      "scripts": [
+        "dossiers/phase8/trous.py",
+        "dossiers/phase8/exp_trous.py",
+        "dossiers/phase8/fig_trous.py"
+      ],
+      "lecon": "creuser une cellule lui retire son centre et lui laisse ses frontières : elle conserve donc tous ses contacts à distance nulle"
+    },
+    {
+      "id": "P9",
+      "titre": "Note de synthese + balayage exhaustif de l'espace des reseaux",
+      "statut": "termine",
+      "artefact": "dossiers/note-reseaux.html",
+      "contenu": "balayage exhaustif du domaine reduit des reseaux (dimension 2 apres similitude), puis redaction de la note de 3 pages",
+      "resultats_cles": [
+        "48 441 reseaux (241 theta x 201 rho, pas 0,25 deg x 0,005), R=2, 152 s",
+        "omega minimum = 7, JAMAIS 6 : repartition 7:26 722 (55,2 %), 8:18 878 (39,0 %), 9:2 784 (5,7 %), 10:57 (0,1 %)",
+        "frontiere omega=7->8 par bisection R=3 : rho=1,0 -> theta=75,475102 deg ; 1,2 -> 77,925754 ; 1,4 -> 79,660547 ; rho>=1,55 -> omega=8 des theta=60",
+        "la frontiere RECULE vers 90 deg quand rho augmente : l'anisotropie elargit la zone a 7 couleurs",
+        "la zone omega=7 est 55 % du domaine, pas un voisinage de l'hexagonal"
+      ],
+      "scripts": [
+        "dossiers/note/balayage.py",
+        "dossiers/note/scan_fin.py",
+        "dossiers/note/frontiere.py",
+        "dossiers/note/carte2.py"
+      ],
+      "sorties": [
+        "dossiers/note/scan_fin.json",
+        "dossiers/note/frontiere.json",
+        "dossiers/note/fig_carte.svg"
+      ]
+    },
+    {
+      "id": "P10",
+      "titre": "Theoreme A certifie par arithmetique d'intervalles",
+      "statut": "RETRACTE le 2026-11-03 (soir) : le controle independant en arithmetique exacte refute le certificat",
+      "artefact": "dossiers/note-certificat.html",
+      "contenu": "couverture du domaine reduit par des boites certifiees ; chaque boite est prouvee porter une clique de 7 cellules incompatibles pour tout (rho,theta), via des points temoins verifies par intervalles",
+      "resultats_cles": [
+        "26 423 boites, 100,0000 % du domaine, 0 echec, 0 boite ouverte, 713 s",
+        "profondeurs de subdivision : 18 028 a 0, 7 757 a 1, 502 a 2, 75 a 3, 49 a 4, 12 a 5",
+        "verification independante a 50 chiffres : 1 336 boites, 2 672 points, tous conformes, marge geometrique minimale 0,244",
+        "recoupement avec le balayage : 0/40 faux positifs (k=8 sur des points omega=7), 80/80 en k=7",
+        "controle negatif : k=8 et k=9 refuses exactement la ou le balayage dit omega=7"
+      ],
+      "scripts": [
+        "dossiers/note/couverture.py",
+        "dossiers/note/verif_exacte.py",
+        "dossiers/note/contre_exemple.py",
+        "dossiers/note/contre_exemple_lot.py",
+        "dossiers/note/exact_un.py"
+      ],
+      "sorties": [
+        "dossiers/note/certificat.json",
+        "dossiers/note/certificat_k8.json",
+        "dossiers/note/verif.log",
+        "dossiers/note/fig_certificat.svg"
+      ],
+      "resultat_numerique": "omega >= 7 exact a delta = 1 sur les familles nommees (hexagonal 7, carre 9, rectangle 2:1 10) ; mais la couverture du domaine continu par boites n'est PAS etablie",
+      "ce_qui_est_prouve": [
+        "couverture exacte du domaine par les 26 423 boites (coupe complete de l'arbre quaternaire, aire exacte 60)",
+        "omega exact (Q(sqrt d), sans intervalles) aux points nommes, y compris delta = 1"
+      ],
+      "ce_qui_est_refute": [
+        "le test d'appartenance des temoins : 300/300 boites echantillonnees ont un temoin hors cellule a un coin",
+        "donc l'enonce 'pour tout reseau du domaine, omega >= 7'"
+      ],
+      "cause": "soustraction de deux intervalles correles (meme (rho,theta)) -> intervalle retourne ; la borne haute d'un intervalle retourne n'est pas un majorant de la vraie valeur",
+      "reparation": [
+        "voie recommandee : calcul exact du maximum sur la boite (quadratique concave en rho, cosinus decale en theta)",
+        "voie brutale : raffiner 25-50x par axe (10^3 a 10^4 boites de plus, jours de calcul)"
+      ]
+    }
+  ],
+  "lois_empiriques": [
+    {
+      "id": "L1",
+      "enonce": "Pour toute partition périodique du plan en cellules de diamètre < 1 testée, omega >= 7, avec égalité seulement au pavage hexagonal et à ses déformations infinitésimales.",
+      "base_experimentale": "89 configurations : 34 pavages de réseaux (P5), 16 partitions aléatoires (P6), 21 bords courbes (P7), 18 cellules trouées (P8)",
+      "statut": "conjecture empirique, non démontrée",
+      "consequence_si_vraie": "elle est plus forte que le théorème du preprint 2025 (elle couvre le courbe), donc l'hypothèse « pas d'arc unité » y serait superflue",
+      "comment_la_casser": "partitions non périodiques ; classes non cellulaires (réunion de cellules non connexes), seul cas où le lemme du diamètre ne s'applique qu'aux composantes"
+    },
+    {
+      "id": "L2",
+      "enonce": "L'hexagone minimise omega parmi les pavages de cellules de diamètre donné.",
+      "mecanisme": "optimalité de Thue (densité pi/(8*sqrt(3))) : à diamètre fixé, il maximise la distance entre cellules, donc minimise la promiscuité, donc les conflits",
+      "corollaire_pratique": "toute déformation (désordre, courbure, anisotropie) ne peut qu'augmenter omega — inutile d'y chercher 6 couleurs",
+      "statut": "INFIRMEE EN PARTIE par L4 (P9) : le mecanisme Thue/densite est faux, et le corollaire 'toute deformation augmente omega' est faux"
+    },
+    {
+      "id": "L3",
+      "enonce": "Raffiner une cellule en deux sous-cellules ne peut pas faire baisser omega de plus d'une unité, et ne le fait jamais en pratique.",
+      "partie_demontree": "si R est inclus dans X alors min(R,B) >= min(X,B) et max(R,B) <= max(X,B) : tout conflit de R ou de I est un conflit de X, donc omega(raffinee) <= omega(origine) + 1 (lemme 3)",
+      "partie_empirique": "18/18 raffinements donnent omega(raffinee) = omega(origine) ; l'anneau conserve tout le bord de X, donc tous ses contacts à distance nulle, donc il reste adjacent à tous les voisins de X",
+      "statut": "argument solide mais pas une preuve d'impossibilite generale"
+    },
+    {
+      "id": "L4",
+      "enonce": "Sur l'espace des reseaux (dimension 2), omega est un plateau a deux minima : omega = 7 sur 55,2 % du domaine, avec l'hexagonal (60 deg, rho=1) et le quasi-carre (120 deg, rho=sqrt3) comme minima absolus, et une barriere omega=9 le long de theta=90 deg pour tout rho != 1.",
+      "base_experimentale": "48 441 reseaux (dossiers/note/scan_fin.json), R=2 ; frontieres exactes par bisection R=3",
+      "statut": "verification numerique exhaustive a la resolution de la grille, non demontree",
+      "ce_qu_elle_corrige": "L1 et L2 : l'egalite n'est PAS reservee a l'hexagonal ni a ses deformations infinitesimales ; 55 % des reseaux sont a 7, y compris tres anisotropes (rho=1,9, theta=70 deg)",
+      "mecanisme_reel": "ce n'est pas l'optimalite de Thue (compacite) qui protege mais le NOMBRE DE VOISINS : un reseau anisotrope a des cellules allongees donc moins de voisins dans la direction courte",
+      "comment_la_casser": "sortir des reseaux : partitions non periodiques, ou classes non cellulaires (le lemme du diametre ne s'applique qu'aux composantes)"
+    },
+    {
+      "id": "L5",
+      "enonce": "omega d'un pavage reticulaire n'est pas monotone en l'echelle : pour le pavage hexagonal, omega vaut 1 (delta=0,1), 4 (0,3), 5 (0,5), 9 (0,7), 7 (0,9 et au-dela) ; carre : 1, 4, 4, 12, 9, 9 ; anisotrope rho=1,9 : 1, 3, 7, 6, 9, 7.",
+      "base_experimentale": "balayage.py avec eps = 1 - delta, 3 reseaux x 7 echelles",
+      "statut": "mesure directe",
+      "consequence": "toute la question polygonale vit a l'echelle MAXIMALE admissible (delta -> 1). Enoncer 'aucun pavage reticulaire n'est 6-coloriable' sans fixer l'echelle est FAUX (a delta=0,1 une couleur suffit).",
+      "ce_qu_elle_corrige": "le corollaire de la note du 3 nov. (matin) qui affirmait cela sans restriction"
+    },
+    {
+      "id": "L6",
+      "enonce": "omega(delta) pour un reseau donne est fortement NON monotone, avec plusieurs maxima locaux separes par des creux ; le maximum n'est pas atteint a delta=1. Sur la grille 357x35 (delta de 0,30 a 0,98), chaque reseau admet une echelle avec omega<=6, la plus grande etant delta* in [0,48;0,78], maximale pour le rectangulaire allonge (rho~2, theta~90 deg), minimale pres de l'hexagonal. Pourtant aucun 6-coloriage periodique n'existe dans les 55 cas testes, y compris la ou omega<=6.",
+      "base_experimentale": "12 495 + 288 calculs exacts (dossiers/note/paysage.json, courbes_echelle.json) ; 55 cas x 490 sous-reseaux pour le coloriage",
+      "statut": "calcul exact en flottants, exhaustif pour les sous-reseaux d'indice <= 24 ; non demontre ; les periodes > 24 restent ouvertes",
+      "ce_qu_elle_corrige": "L5 : la table du balayage (fenetre 5x5) sous-estimait omega a petit delta (elle donnait omega=1 a delta=0,1 pour l'hexagonal ; la valeur exacte est 3)"
+    }
+  ],
+  "impasses_fermees": [
+    {
+      "id": "I1",
+      "piste": "formule générale pour les primitives de u rond v",
+      "raison": "n'existe pas (théorème de Liouville / Risch)",
+      "phase": "hors sujet",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I2",
+      "piste": "recherche aléatoire de témoins de distance exactement 1",
+      "raison": "mesure nulle : probabilité zéro par construction",
+      "phase": "P1",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I3",
+      "piste": "noyau K >= 0 (type Delsarte/Falconer) pour viser 6 couleurs",
+      "raison": "plafond arithmétique 1/delta* <= 4,41 => 5 couleurs au mieux",
+      "phase": "P4",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I4",
+      "piste": "« Woodall 1973 => 7 pour les classes de Jordan »",
+      "raison": "énoncé faux : preuve de 1973 incorrecte (Townsend 1981), et le résultat est >= 6, pas 7",
+      "phase": "P5",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I5",
+      "piste": "densité d'une seule classe pour dépasser 5",
+      "raison": "saturée : 4,41 est le maximum atteignable",
+      "phase": "P4",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I6",
+      "piste": "dégénérescence des familles régulières (kagomé, pentagonales, anneaux)",
+      "raison": "toutes <= 3, aucun 5-core en 16 familles",
+      "phase": "P3",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I7",
+      "piste": "désordre des germes pour faire tomber omega sous 7",
+      "raison": "16/16 à omega >= 7, et omega croît avec le désordre",
+      "phase": "P6",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I8",
+      "piste": "courbure des bords (y compris arcs de rayon 1) pour faire tomber omega sous 7",
+      "raison": "21/21 à omega >= 7, la courbure ne fait qu'ajouter des conflits",
+      "phase": "P7",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I9",
+      "piste": "fermetures de graphes unité à rayon r >= 1,7",
+      "raison": "980 061 points, saturation mémoire",
+      "phase": "P3",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I10",
+      "piste": "sensibilité par balayage O(n^2) en précision arbitraire (sensibilite.py, robuste.py)",
+      "raison": "tués après 342 s et 736 s sans sortie ; utiliser la grille implicite (haute_precision.py, 8 s)",
+      "phase": "P3",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I11",
+      "piste": "conclure « 7 couleurs impossibles » sur un tore dont la période ne divise pas 7",
+      "raison": "le coloriage heptagonal est périodique de période 7 : un tore 12x12 ne peut pas l'héberger",
+      "phase": "P6",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I12",
+      "piste": "cellules non simplement connexes (anneaux) pour faire tomber omega sous 7",
+      "raison": "18/18 à omega = 7, y compris en trouant les cellules de la clique maximale ; un sous-ensemble hérite les conflits de son contenant et l'anneau garde toutes les frontières",
+      "phase": "P8",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I13",
+      "piste": "espérer que la littérature règle déjà le cas polygonal à sommets de degré 3",
+      "raison": "non : degré >= 4 est prouvé (1909.02708), degré <= 3 est revendiqué en 2025 mais la preuve est contestée ; c'est le seul cas ouvert et c'est précisément le nôtre",
+      "phase": "veille",
+      "ne_pas_relancer": false
+    },
+    {
+      "id": "I14",
+      "piste": "chercher un 6-coloriage en explorant l'espace des reseaux (2 dimensions apres similitude)",
+      "raison": "aucun n'y est : 48 441 reseaux balayes, omega >= 7 partout, minimum atteint a l'hexagonal et au quasi-carre. L'espace des reseaux est clos pour cette question.",
+      "phase": "P9",
+      "ne_pas_relancer": true
+    },
+    {
+      "id": "I15",
+      "piste": "certifier omega >= 8 (ou plus) sur tout le domaine par des boites uniformes",
+      "raison": "un balayage complet a k=8 ne couvre que 3,00 % du domaine (96/3200 boites) : pres des transitions la clique de 8 est marginale et change de composition d'une boite a l'autre. Sans interet pour un theoreme ; utile seulement comme test de sensibilite.",
+      "phase": "P10",
+      "ne_pas_relancer": true
+    },
+    "CERTIFICAT T7 : la methode 'temoin fixe par boite + test d'appartenance par arithmetique d'intervalles' est REFUTEE (2026-11-03, soir). Ne pas la reintroduire telle quelle : les marges (4,5e-4) sont plus petites que la variation sur une boite (3e-3), et la soustraction d'intervalles correles produit des intervalles retournes."
+  ],
+  "regles_de_controle": [
+    {
+      "regle": "Calibrer la machinerie sur un cas connu avant toute mesure",
+      "test": "pavage carré -> omega = 9 ; pavage hexagonal -> omega = 7 avec 7-coloriage vérifié",
+      "nee_de": "P6"
+    },
+    {
+      "regle": "Tester le solveur sur un graphe dont la réponse est connue",
+      "test": "K9 avec k = 6 doit répondre « impossible » ; K25 et K25 moins une arête pour le calcul de clique",
+      "nee_de": "P5, P6"
+    },
+    {
+      "regle": "Vérifier tout coloriage par un second code indépendant",
+      "test": "recompter les paires de même couleur sans réutiliser le graphe",
+      "nee_de": "P6"
+    },
+    {
+      "regle": "Contrôler une partition par un invariant exact, pas par un dessin",
+      "test": "somme des aires des cellules = aire du domaine fondamental (10^-13 près)",
+      "nee_de": "P7"
+    },
+    {
+      "regle": "Dédoublonner avant de construire un graphe unité",
+      "raison": "13 points partagés entre réseau et copie tournée comptaient double (faux positif de P3)",
+      "nee_de": "P3"
+    },
+    {
+      "regle": "Confirmer en arithmétique exacte, jamais en flottant seul",
+      "raison": "les fermetures à 10^-35 fabriquaient des degrés 5-6 inexistants",
+      "nee_de": "P3"
+    },
+    {
+      "regle": "Imposer une marge de sécurité supérieure à l'erreur d'approximation",
+      "test": "marge 0,01 pour une erreur d'arc de 0,0033",
+      "nee_de": "P7"
+    },
+    {
+      "regle": "Se méfier d'un résultat trop propre",
+      "signal": "toutes les valeurs identiques sur toute la plage d'un paramètre = paramètre non appliqué",
+      "nee_de": "P7"
+    },
+    {
+      "regle": "Un résultat qui ne survit pas à une marge n'est pas un résultat",
+      "exemple": "le omega = 9 du carré tombe à 7 sous marge 0,01 : deux conflits marginaux à 0,999",
+      "nee_de": "P5"
+    },
+    {
+      "regle": "Ne jamais conclure d'un harnais qui n'a pas été testé séparément",
+      "exemple": "affichage « coloriage trouvé » sur un graphe à 9-clique (le harnais recevait un tuple)",
+      "nee_de": "P6"
+    },
+    {
+      "regle": "Ne pas mettre de CSS dans une f-string ; utiliser un gabarit et des remplacements",
+      "nee_de": "P1"
+    },
+    {
+      "regle": "Borner les constructions : pas de rayon > 1,5 ni de tore de période non compatible avec le coloriage testé",
+      "nee_de": "P3, P6"
+    },
+    {
+      "regle": "Un sous-ensemble hérite les conflits de son contenant : R inclus dans X => [min_R, max_R] inclus dans [min_X, max_X]. Inutile d'espérer qu'un découpage de cellule casse une clique.",
+      "nee_de": "P8"
+    },
+    "TOUJOURS faire un controle negatif avant de croire un certificat : la premiere version du certificat repondait 'oui' a toute demande (y compris k=10 a l'hexagonal, ou c'est faux) parce que la variable k etait ecrasee par une boucle interne ; le premier passage a 100 % a ete jete pour cette raison.",
+    "Ne jamais croire un coloriage trouve par un calcul sur le quotient : le revoquer dans le plan, par les distances reelles des polygones, sur une grande fenetre. Trois bugs de suite ici (boucles du quotient escamotees, retour arriere qui ne defaisait pas ses affectations, bornes d'enumeration en indices au lieu de la norme) ont chacun produit un faux 6-coloriage ou une fausse valeur de omega, et c'est la verification directe qui les a attrapes a chaque fois. Inversement, un resultat NEGATIF survit a la troncature du graphe (retirer des aretes ne peut que faciliter un coloriage) : c'est pourquoi il faut distinguer le sens de l'erreur.",
+    "Un algorithme de retour arriere doit DEFAIRE ses affectations a chaque echec. Un DSATUR qui laisse ses couleurs derriere lui peut retourner un coloriage inexistant ; toujours verifier le coloriage rendu contre les aretes avant de l'annoncer (coloriage.valide).",
+    "Avant d'annoncer une valeur de omega, decider et ECRIRE la convention de tangence (dmin = 1 exactement : conflit ou non ?). Tester la stabilite en faisant varier la tolerance de -1e-6 a +1e-6 : si le resultat bouge, la valeur n'est pas publiee sans la convention. (Constate : jusqu'a 3 unites d'ecart sur omega a delta=0,5.)",
+    "Versionner les scripts (au minimum copie datee avant chaque correction) : sans historique, un audit ne peut pas distinguer 'bug corrige' de 'fichier reecrit'. Le 'second bug' de T8 n'est plus verifiable pour cette raison."
+  ],
+  "outils": {
+    "geometrie_partitions": {
+      "fichier": "dossiers/phase6/partition2.py",
+      "fournit": "cellules de Voronoï sur tore de période quelconque, distances polygone-polygone, clique max (Bron-Kerbosch), k-coloriage exact (DSATUR), normalisation"
+    },
+    "courbure": {
+      "fichier": "dossiers/phase6/courbes.py",
+      "fournit": "arcs de rayon R, distances vectorisées (numpy), invariant d'aire",
+      "attention": "seule pavage_courbe5 est correcte ; pavage_courbe2/3/4 sont conservées comme contre-exemples"
+    },
+    "reseaux": {
+      "fichier": "dossiers/phase5/treillis.py",
+      "fournit": "cellule de Voronoï d'un réseau, distance min/max, clique, scan d'angles et d'aspects"
+    },
+    "graphes_unites": {
+      "fichiers": [
+        "dossiers/phase3/exact.py",
+        "dossiers/phase3/haute_precision.py",
+        "dossiers/phase3/extraire2.py"
+      ],
+      "fournit": "fermetures de graphes unité en arithmétique exacte, extraction du coeur, histogramme des degrés"
+    },
+    "densite": {
+      "fichiers": [
+        "dossiers/phase4/plafond.py",
+        "dossiers/phase1/phase2_calc.py"
+      ],
+      "fournit": "densités par forme et par réseau, seuils 1/6 et 1/7"
+    },
+    "piege_a_eviter": "toute fonction qui construit un graphe doit être calibrée avant usage (voir regles_de_controle)",
+    "cellules_trouees": {
+      "fichier": "dossiers/phase8/trous.py",
+      "fournit": "anneaux + intérieur, distances exactes entre cellules composées de plusieurs polygones, graphe de conflit"
+    }
+  },
+  "sources_externes": [
+    {
+      "sujet": "hadwiger-nelson état de l'art",
+      "url": "https://en.wikipedia.org/wiki/Hadwiger%E2%80%93Nelson_problem",
+      "apport": "5 <= chi <= 7 ; de Grey 2018 ; de Bruijn-Erdős 1951"
+    },
+    {
+      "sujet": "cartes polygonales >= 7",
+      "url": "https://arxiv.org/abs/2502.01958",
+      "apport": "Sokolov-Voronov, 4 février 2025, 29 pages, prépublication non validée"
+    },
+    {
+      "sujet": "correction de Woodall",
+      "url": "https://arxiv.org/html/2201.04499v1",
+      "apport": "la preuve de 1973 était incorrecte ; Townsend 1981"
+    },
+    {
+      "sujet": "nombre polychromatique et coloriages de type (1,..,r)",
+      "url": "https://www.csun.edu/~ctoth/Handbook/chap1.pdf",
+      "apport": "polychromatique entre 4 et 6"
+    },
+    {
+      "sujet": "nombre chromatique fractionnaire",
+      "url": "https://landon.github.io/graphdata/Papers/plane-fractional-chromatic.pdf",
+      "apport": "chi_f >= 76/21"
+    },
+    {
+      "sujet": "chi(R^2) >= 6",
+      "url": "https://distributedagenthub.xyz/verify/plane-not-five-colourable-openai-2026",
+      "apport": "prépublication OpenAI du 23 sept. 2026, 62 pages ; formalisation Lean rejouée, audit tiers ; 6 <= chi <= 7"
+    },
+    {
+      "sujet": "polygones : degré >= 4 => >= 7 couleurs",
+      "url": "https://arxiv.org/pdf/1909.02708",
+      "apport": "Manta, « Triangle colorings require at least seven colors », Discrete Math. 344(7), 2021, art. 112411. Thm 2.2 : un sommet de degré >= 4 impose >= 7 couleurs ; Thm 2.3 : les coloriages triangulaires exigent 7. Cas laissé ouvert : tous les sommets de degré <= 3 (section 6). NB : la preuve discute d'abord un sommet de degré 5 ; notre dossier disait « degré >= 5 », c'est l'énoncé du théorème (>= 4) qui fait foi.",
+      "statut": "publie"
+    },
+    {
+      "sujet": "revue critique de arXiv 2502.01958",
+      "url": "https://pith.science/paper/2502.01958",
+      "apport": "« the proof as written does not establish the claim »"
+    },
+    {
+      "sujet": "cartes polygonales >= 7",
+      "url": "https://doi.org/10.1016/j.disc.2026.115321",
+      "apport": "Sokolov-Voronov, « On the chromatic number of the plane for map-type colorings », Discrete Mathematics 349(12), déc. 2026, art. 115321 (arXiv:2502.01958). Thm 1 : >= 7 pour un coloriage de type carte sans arc de cercle unité sur les bords et trois bords par sommet ; Cor. 1 : cas cubique (exactement trois arêtes par sommet) ; Thm 2 : chi_poly(R^2) = 7. PUBLIÉ (révision du 03/11/2026 : ce n'est plus une prépublication).",
+      "statut": "publie ; preuve contestée par une revue automatique (pith.science, 09/08/2026 : 5 objections majeures), non vérifiée par nous"
+    },
+    {
+      "sujet": "Coulson 2004 : deux énoncés à ne pas confondre",
+      "url": "https://www.cambridge.org/core/journals/journal-of-the-australian-mathematical-society/article/on-the-chromatic-number-of-plane-tilings/",
+      "apport": "Coulson, J. Austral. Math. Soc. 77 (2004), 191-196. (a) >= 6 couleurs pour des tuiles polygonales convexes d'aire minorée ; (b) « any lattice-sublattice colouring scheme for R^2 must use at least 7 colours to have an excluded distance ». L'énoncé (b) porte sur la sous-classe des coloriages par classes d'un sous-réseau, plus restrictive que la nôtre : il n'implique pas notre cas, mais il occupe le terrain « réseau + 7 » dès 2004.",
+      "statut": "publie"
+    },
+    {
+      "sujet": "colorier la tessellation de Voronoï d'un réseau (objet déjà nommé)",
+      "url": "https://arxiv.org/abs/1907.09751",
+      "apport": "Dutour Sikirić, Madore, Moustrou, Vallentin, « Coloring the Voronoi tessellation of lattices », J. London Math. Soc. 2021. Définit chi(Lambda) = chromatique du graphe de Cayley sur les vecteurs de Voronoï stricts (cellules partageant une FACETTE). Valeurs : Z^n 2, A_n = A_n* n+1, D_n* 4, E6 9, E7 14, E8 16, Lambda24 4096 ; chi(A2) = 3. À ne pas confondre avec notre omega (adjacence par distance 1) : notre graphe contient le leur.",
+      "statut": "publie"
+    }
+  ],
+  "prochaines_etapes": [
+    {
+      "id": "T0-audit-sv",
+      "statut": "fait",
+      "priorite": 1,
+      "titre": "Audit S-V : tranche réseaux close, rédaction finale faite",
+      "pourquoi": "seule voie vers un énoncé complet sur la tranche réseaux, indépendant de la preuve contestée",
+      "sortie": "tranche « réseaux » établie pour tout h > 0 ; pont et lemme du pas certifiés machine ; 66 théorèmes, 0 sorry ; audit-sv.html finalisé. Reste : porter en Lean le certificat par boîtes (région h ∈ [√3/2 ; 15[ seulement, cf. Queue.lean). Antériorité : Coulson 2004 donne 6 et non 7, il ne couvre pas la tranche ; aucune antériorité revendiquée.",
+      "acquis_machine": [
+        [
+          "dossiers/geom/Queue.lean",
+          "28 théorèmes, lemme du pas ⌈h/10⌉ + χ ≥ 7 pour sΛ"
+        ],
+        [
+          "dossiers/geom/Pont.lean",
+          "6 théorèmes (lemme A, lemme B, 2 réfutations)"
+        ],
+        [
+          "dossiers/lean/Pont.lean",
+          "5 théorèmes noyau pur"
+        ],
+        [
+          "simplification machine",
+          "un seul fait géométrique nécessaire (segment vertical) ; seuil réel h ≥ 15 ; ni ε ni D ni lemme B"
+        ]
+      ]
+    },
+    {
+      "id": "T1",
+      "statut": "fait",
+      "priorite": 1,
+      "titre": "Cellules non simplement connexes (trouées)",
+      "pourquoi": "dernier coin de l'espace des partitions que la loi L1 n'a pas testé ; le lemme du diamètre les autorise",
+      "methode": "découper un disque au centre d'une cellule et l'attribuer à une cellule lointaine ; vérifier l'invariant d'aire",
+      "cout": "faible",
+      "script_a_creer": "dossiers/phase6/trous.py",
+      "resultat": "omega = 7 dans les 18 configurations, y compris l'attaque dirigée sur la clique maximale",
+      "artefact": "dossiers/phase8-cellules-trouees.html"
+    },
+    {
+      "id": "T2",
+      "statut": "a_faire",
+      "priorite": 2,
+      "titre": "Formaliser le théorème du plafond (étape 9 du protocole)",
+      "pourquoi": "seul résultat assez net pour valoir hors de cette conversation",
+      "cout": "moyen",
+      "sortie": "énoncé Lean ou Coq du plafond 1/delta* <= 4,41"
+    },
+    {
+      "id": "T3",
+      "statut": "a_faire",
+      "priorite": 3,
+      "titre": "Invariants des graphes 5-chromatiques connus (509 sommets)",
+      "pourquoi": "notre travail n'a jamais regardé l'objet qui prouve réellement chi >= 5",
+      "methode": "récupérer les coordonnées (dépôt Polymath16), calculer dégénérescence, 4-core, structure des gadgets",
+      "cout": "moyen à élevé"
+    },
+    {
+      "id": "T4",
+      "statut": "a_faire",
+      "priorite": 4,
+      "titre": "Partitions non périodiques",
+      "pourquoi": "tout le code existant est périodique",
+      "cout": "élevé"
+    },
+    {
+      "id": "T5",
+      "statut": "a_faire",
+      "priorite": 5,
+      "titre": "Structures non cellulaires (classes = réunions non connexes)",
+      "pourquoi": "c'est le coeur du problème ouvert ; le lemme du diamètre ne s'applique qu'aux classes connexes",
+      "cout": "hors de portée du calcul"
+    },
+    {
+      "id": "T6",
+      "statut": "fait",
+      "priorite": 6,
+      "titre": "Rédiger une note de 2-3 pages sur le plafond et la loi empirique (étapes 10 et 11 du protocole)",
+      "pourquoi": "le contenu existe : théorème du plafond (P4), lemme du diamètre (P5), lemme d'inclusion (P8), loi empirique sur 89 configurations. Rien n'en sortira avant d'être mis en forme et circulé.",
+      "cout": "moyen",
+      "note": "note redigee : dossiers/note-reseaux.html"
+    },
+    {
+      "id": "T7",
+      "statut": "fait",
+      "priorite": 7,
+      "titre": "Transformer le theoreme A en enonce rigoureux (arithmetique d'intervalles)",
+      "pourquoi": "le balayage est une verification numerique a resolution finie ; les conditions de conflit (min <= 1 <= max) sont FERMEES donc certifiables par encadrement sur une boite de parametres",
+      "methode": "decoupage adaptatif du domaine en boites, encadrement par intervalles des distances entre cellules, preuve de 'omega >= 7 sur toute la boite' ou subdivision",
+      "cout": "moyen",
+      "script_a_creer": "dossiers/note/certificat.py",
+      "note": "certificat : 26 423 boites, 0 echec, dossiers/note-certificat.html"
+    },
+    {
+      "id": "T8",
+      "statut": "fait",
+      "priorite": 8,
+      "titre": "omega(delta) : le paysage en fonction de l'echelle — FAIT, et il tue la piste",
+      "pourquoi": "L5 montre que omega n'est pas monotone en l'echelle (5 couleurs suffisent au pavage hexagonal a delta=0,5). Comprendre cette courbe, et son minimum, dirait a quelle echelle un 6-coloriage serait le plus plausible.",
+      "methode": "calcul EXACT de omega : le graphe de conflit est le graphe de Cayley Cay(Z^2, E(delta)) ou E = {diff : dmin <= 1 <= dmax}. Sommet-transitif => toute clique est la translatee d'une clique contenant 0. Bron-Kerbosch contraint sur l'anneau des differences, sans fenetre ni tolerance.",
+      "cout": "164 s (paysage) + 76 s (coloriage)",
+      "script_a_creer": "dossiers/note/echelle.py",
+      "resultat": "omega non monotone et a plusieurs maxima ; le maximum n'est pas a l'echelle maximale (carre : 12 a delta=0,7 contre 9 a delta=1). 357/357 reseaux ont une echelle avec omega<=6 ; delta* (plus grande echelle sans clique de 7) va de 0,48 a 0,78, maximum pour (90;1,9375),(87;2),(90;2),(93;2) donc loin de l'hexagonal. MAIS 0 des 55 cas (reseau,echelle) testes n'admet de 6-coloriage periodique (sous-reseaux d'indice <= 24, 490 par cas), y compris les 28 cas ou omega<=6 : a (2;90;0,10) omega=3 et AUCUN sous-reseau d'indice <= 24 n'est exempt de conflit interne. L'ecart omega/chhi est robuste, il ne disparait pas avec la clique.",
+      "artefact": "dossiers/note-echelle.html",
+      "scripts": [
+        "dossiers/note/echelle.py",
+        "dossiers/note/paysage.py",
+        "dossiers/note/coloriage.py",
+        "dossiers/note/fig_echelle.py"
+      ],
+      "ce_que_cela_tue": "l'idee qu'un 6-coloriage deviendrait accessible a une autre echelle ; et toute minoration de chi(R^2) reposant sur la seule obstruction de clique hors de l'echelle maximale",
+      "ce_que_cela_ne_dit_pas": "rien sur chi(R^2) : une borne inferieure exigerait un argument valable pour TOUS les coloriages, pas seulement les periodiques"
+    },
+    {
+      "id": "T9",
+      "statut": "fait",
+      "priorite": 9,
+      "titre": "Decision de tangence : faite, et elle valide les valeurs publiees",
+      "pourquoi": "omega saute de 3 unites a delta=0,5 selon la tolerance ; les valeurs publiees et la carte delta* dependent d'une convention non explicitee",
+      "methode": "distances de polygones en arithmetique exacte (coordonnees dans Q(sqrt3) pour theta=60/120, rationnelles sinon) ou en intervalles ; recalculer les 55 cas du balayage de coloriage et la carte delta* sous (a) tangence = conflit, (b) tangence = non-conflit",
+      "cout": "faible (quelques heures)",
+      "resultat": "juge exact en Q(sqrt d) (d=3,2,5) sans flottant : 15/15 valeurs conformes aux valeurs publiees. Les deux conventions (tangence comptee / non comptee) divergent sur 5 des 55 cas (jusqu'a 7 vs 4) mais donnent 0 6-coloriage sur 55 dans les deux, et delta* ne bouge qu'en 3 points (0,48 vs 0,50). Conclusion : les valeurs publiees sont exactes, la conclusion ne depend pas de la convention.",
+      "scripts": [
+        "dossiers/note/exact_tangence.py",
+        "dossiers/note/tangence.py",
+        "dossiers/note/t8_fin.py",
+        "dossiers/note/tests_moteurs.py"
+      ],
+      "artefact": "dossiers/note-echelle.html"
+    },
+    {
+      "id": "T10",
+      "statut": "a_faire",
+      "priorite": 10,
+      "titre": "Arithmetique exacte systematique pour omega (au-dela des trois reseaux speciaux)",
+      "pourquoi": "le juge exact ne couvre que theta = 60/90/120 deg (corps quadratiques). Pour un angle quelconque, la tangence exacte n'existe pas generiquement, mais l'erreur de 1e-16 reste dans le calcul : un calcul en intervalles, ou en Q(cos,sin) quand l'angle est algebrique, fermerait le sujet",
+      "methode": "distances de polygones en arithmetique d'intervalles (mpmath.iv) au lieu du flottant, et decision explicite",
+      "cout": "moyen"
+    }
+  ],
+  "correction_etat_de_lart": {
+    "date_correction": "2026-11-03",
+    "pourquoi": "la fiche de la phase 5 donne 5 <= chi(R^2) <= 7 : c'est périmé de deux mois",
+    "etat_actuel": "6 <= chi(R^2) <= 7 (revendiqué, non référé)",
+    "fait_nouveau": {
+      "reference": "OpenAI, « The Euclidean plane is not five-colorable », prépublication du 23 septembre 2026, 62 pages, famille 158, publiée dans openai/math en octobre 2026",
+      "enonce": "aucun 5-coloriage propre du plan, même avec des classes de couleur arbitraires (ZFC) ; donc chi(R^2) >= 6",
+      "statut": "non révisé par les pairs ; modèle généré par IA ; MAIS formalisation Lean publique, noyaux vérifiés par des tiers (rejeu du noyau, 70 modules, axiomes standard), audit indépendant du 13-14 octobre 2026 sans faille trouvée",
+      "consequences": [
+        "la borne inférieure de de Grey (2018, 5 couleurs) n'est plus la meilleure",
+        "chi(R^2) = 6 ou 7, la valeur exacte reste ouverte",
+        "corollaire revendiqué : le nombre chromatique faiblement mesurable vaut aussi au moins 6 (première avancée depuis Falconer 1981)",
+        "aucun graphe unité 6-chromatique n'est exhibé : il en existe un par compacité de de Bruijn-Erdos"
+      ]
+    },
+    "second_fait_nouveau": {
+      "reference": "arXiv 1909.02708, « Triangle colorings require at least seven colors »",
+      "enonce": "un coloriage polygonal contenant un sommet de degré >= 4 exige au moins 7 couleurs ; tout coloriage triangulaire exige au moins 7 couleurs",
+      "consequence": "le cas polygonal est déjà réglé pour les sommets de degré >= 4 ; il ne reste que le cas où tous les sommets sont de degré <= 3"
+    },
+    "troisieme_point": {
+      "reference": "revue Pith de arXiv 2502.01958",
+      "verdict": "« the proof as written does not establish the claim »",
+      "consequence": "le cas polygonal (sommets de degré 3) n'est donc PAS réglé : Cohen et al. le prouvent pour degre >= 4, la prépublication 2025 le revendique pour le reste, mais sa preuve est contestée"
+    },
+    "ou_se_situe_notre_travail": "toutes nos partitions (réseaux, aléatoires, courbes, trouées) sont génériques, donc à sommets de degré 3 : elles tombent exactement dans le seul cas polygonal encore ouvert. Nos 89 configurations sont un contrôle empirique indépendant à cet endroit précis — pas une preuve."
+  },
+  "audit": {
+    "artefact": "dossiers/audit-faiblesses.html",
+    "date": "2026-11-03",
+    "resume": "audit des 12 etapes ; 9 constats nouveaux ; 2 artefacts a corriger",
+    "constats": [
+      "faiblesse dominante : tout porte sur le MODELE (colorier des cellules de diametre < 1), pas sur le plan ; aucun de nos resultats ne peut devenir chi(R^2) >= 7 sans une etape inexistante",
+      "T8 : omega depend d'une convention de tangence ; hexagonal delta=0,5 : 4/6/7/7 selon la tolerance ; carre delta=0,5 : 4/5/8/8 ; stable aux pics (9, 12) et a delta~1",
+      "T8 : le 'second bug' (retour arriere) n'est pas etabli ; fichier ecrase, aucun historique ; les deux moteurs passent 300 graphes aleatoires ; affirmation retiree de note-echelle.html",
+      "phase 8 : k_color n'est jamais lance (garde omega<=6) ; champ six = None dans 18/18 ; la conclusion tient par omega=7 seulement",
+      "phase 6 : 14/16 partitions ont chi7 = impossible (>= 8 couleurs en periodique) ; l'artefact sous-revendique",
+      "tous les 'coloriages impossibles' sont des coloriages PERIODIQUES ; seul l'argument de clique se transfere au plan",
+      "phase 3 : 'aucun 5-core' est une negation sur des familles choisies, sans certificat",
+      "faits exterieurs (chi >= 6, 509 sommets, delta*=0,2267, Woodall-Townsend, preprint 2025) cites, aucun verifie ici",
+      "certificat : diametre 1-1e-3 (pas 1), reseaux seulement, domaine reduit, verification independante sur la meme bibliotheque (mpmath), 5 % des boites, marges jusqu'a 7e-6",
+      "aucune preuve formelle, aucun relecteur : 'prouve' = argument ecrit par moi"
+    ],
+    "controles_reenactes_ok": [
+      "k_color vs force brute : 300 graphes, 0 desaccord",
+      "coloriage.coloriable vs force brute : 300 graphes, 0 desaccord",
+      "clique_max vs force brute : 300 graphes, 0 desaccord",
+      "balayage historique vs calcul exact a delta~1 : 8/8 identiques",
+      "compteurs des artefacts conformes aux JSON de resultats"
+    ]
+  },
+  "formalisation": {
+    "statut": "partielle (deux couches : arithmetique sans Mathlib, geometrie avec Mathlib)",
+    "outil": "Lean 4.35.0 (elan) ; noyau pur pour dossiers/lean, Mathlib (cache binaire) pour dossiers/geom",
+    "fichiers": [
+      "dossiers/lean/Plafond.lean",
+      "dossiers/lean/T8.lean",
+      "dossiers/lean/lakefile.toml",
+      "dossiers/lean/lean-toolchain",
+      "dossiers/geom/Geometrie.lean",
+      "dossiers/geom/lakefile.toml",
+      "dossiers/geom/lean-toolchain",
+      "dossiers/geom/lake-manifest.json"
+    ],
+    "artefact": "dossiers/formalisation-lean.html",
+    "verifie": "25 theoremes (9 noyau pur + 16 Mathlib), 0 sorry, axiomes propext/Classical.choice/Quot.sound seulement ; dossiers/lean : lake build OK en 1,3 s ; dossiers/geom : lake build OK en 44 s (4030 jobs)",
+    "contenu": [
+      "borne de clique chi >= omega (injectif_sur_clique)",
+      "plafond de densite : avec 2267/10000, tout argument de densite donne au mieux 5 classes (plafond_cinq)",
+      "5 classes compatibles avec les hypotheses, donc l'argument ne peut pas conclure 6 (cinq_compatible, aucun_plafond_six, version generale)",
+      "invariance par translation + recentrage : toute clique non vide se translate en une clique contenant 0 (T8 exact, pas fenetre)",
+      "geometrie (Mathlib) : cellule de Voronoi convexe (intersection de demi-espaces, convex_halfSpace_le)",
+      "geometrie : la cellule de v+t est la translatee de celle de v",
+      "geometrie : le conflit ne depend que de la difference -> graphe de Cayley, condition de validite de T8 (conflit_translation, conflit_iff_zero)",
+      "geometrie : les distances realisees entre deux convexes forment un intervalle, donc tangence <=> encadrement (conflit_iff_encadrement) ; justification formelle de exact_tangence.py",
+      "controles positif et negatif sur Z dans R : conflit reel 0-1, absence reelle de conflit 0-3"
+    ],
+    "non_formalise": [
+      "theorie de la mesure",
+      "borne delta* = 0,2267 (hypothese assumee, jamais un theoreme)",
+      "densite des familles de reseaux calculées (le code enumere des familles parametrees, rien ne dit que c'est tout)",
+      "argument de partition (aucun coloriage de R^2 n'est formalise)",
+      "certificat T7 (arithmetique d'intervalles + geometrie explicite des cellules)",
+      "TOUS les nombres : omega, delta*, 0/55",
+      "AUCUN enonce sur chi(R^2) n'existe dans les fichiers Lean"
+    ],
+    "journaux": [
+      "dossiers/geom/setup.log",
+      "dossiers/geom/build.log",
+      "dossiers/geom/check.log"
+    ],
+    "rend_formalisable": [
+      "le certificat T7 : 'aucun segment de longueur 1' se ramene a deux inegalites rationnelles (conflit_iff_encadrement)",
+      "l'enumeration finie des cliques de T8 (reste un travail de combinatoire)",
+      "manque pour un vrai certificat : geometrie explicite des cellules + arithmetique d'intervalles formelle (mois, plus d'obstacle conceptuel)"
+    ]
+  },
+  "verdict_etape1_litterature": {
+    "date": "2026-11-03",
+    "question": "la cible T (réseaux à cellules hexagonales => omega >= 7) est-elle nouvelle ?",
+    "verdict": "NON — le champ n'est pas libre",
+    "raisons": [
+      "La conclusion (chi >= 7 pour ces pavages) est impliquée par le théorème 2 de Sokolov–Voronov (chi_poly(R^2) = 7), publié en 2026 : aucun coloriage polygonal à 6 couleurs du plan n'existe, donc aucun coloriage à 6 couleurs des cellules de nos réseaux.",
+      "L'ingrédient « réseau » était déjà à 7 chez Coulson (2004) pour les schémas réseau-sous-réseau.",
+      "L'objet « colorier la tessellation de Voronoï d'un réseau » est déjà nommé et calculé (Dutour Sikirić et al. 2021), pour une adjacence par facette."
+    ],
+    "ce_qui_reste_non_couvert": [
+      "L'énoncé de CLIQUE (omega >= 7 avec témoin explicite) n'est pas impliqué par chi >= 7 : un graphe 7-chromatique peut n'avoir que des triangles. Mais un témoin de taille 7 pour une famille de réseaux est un calcul, pas un théorème.",
+      "Le paysage quantitatif omega(rho, theta, delta) et les seuils delta*(Lambda) : non tabulés à ma connaissance — note de calcul, pas découverte.",
+      "Le cas degré <= 3 des pavages NON-réseaux (trou laissé par Manta) et la question 2 de S-V (arcs de cercle unité + sommets trichromatiques de degré > 3) : ouverts, mais hors de portée de nos outils (sans translation, pas de graphe de Cayley)."
+    ],
+    "suites_proposees": [
+      {
+        "id": "A",
+        "titre": "audit adverse de la preuve SV sur la tranche réseaux",
+        "apport": "décision par calcul exact d'un cas d'un théorème publié mais contesté",
+        "cout": "2-3 seances"
+      },
+      {
+        "id": "B",
+        "titre": "publier la mesure : paysage omega et seuils delta*(Lambda)",
+        "apport": "table de référence, honnête et modeste",
+        "cout": "1-2 seances"
+      },
+      {
+        "id": "C",
+        "titre": "sortir des réseaux (cas degré <= 3 non-réseau)",
+        "apport": "seule voie vers une vraie découverte",
+        "cout": "semaines-mois, incertain"
+      }
+    ],
+    "artefact": "dossiers/note/etape1-litterature.md",
+    "interdit": "aucune revendication sur chi(R^2) ; ne pas présenter la cible T comme nouvelle"
+  },
+  "audit_sv": {
+    "direction": "A — audit de la preuve publiée sur la tranche réseaux",
+    "seance": 2,
+    "date": "2026-11-03",
+    "enonce_vise": "pour tout réseau Λ à cellules hexagonales, à l'échelle ε = 99/100, ω(Λ,ε) ≥ 7 (donc χ ≥ 7)",
+    "acquis": [
+      "domaine fondamental COUVERT pour h ≤ 10⁸ : h ∈ [0,866 ; 2] en repère (g,h), puis neuf fenêtres en w = 1/h jusqu'à 10⁸, chacune en DEUX boîtes et quelques secondes (moteur Rust)",
+      "MOTEUR RUST (dossiers/rust/gabarit, sans dépendance) : gabarit de clique en temps CONSTANT en h (0,03–0,17 ms de h = 10 à h = 10⁸) ; quatre réductions — corps de différences K = V−V, facettes de Voronoï (±b₁, ±b₂, ±(b₁±b₂)), dichotomie sur le pas (prédicats monotones), glouton sur O(1/√(1−ε²)) candidats. Fenêtre [20;100] : 413 s → 1,4 s",
+      "séparation des rôles : le Rust CHOISIT les témoins (f64 autorisé), le certificat Python PROUVE (rationnels exacts sur la boîte) ; mode exact i128 pour la validation (retrouve ω = 24 à h = 10 et 16 à h = 20)",
+      "témoins rétractés λp (λ=1/2), sûrs par convexité, strictement intérieurs donc robustes aux transitions",
+      "enc resserré : intersection forme de la moyenne × évaluation d'intervalle directe (toutes deux sûres)",
+      "conflits prouvés boîte par boîte ; 7-clique extraite du graphe des conflits PROUVÉS (paires non prouvées retirées, jamais supposées)",
+      "ÉCHELLE LIBRE : le conflit étant dmin ≤ 1 ≤ dmax, le certificat prouve ε·dmin ≤ D ≤ ε·dmax et ε est libre dans (0,1)",
+      "REPÈRE w = 1/h SUR LES RAPPORTS (séance 8) : chaque condition écrite en rapport de degrés égaux en h, w^M·f(g,1/w) polynomial en (g,w), donc encadrable en w = 0 ; une boîte w ∈ [w0,w1] prouve h ∈ [1/w1,1/w0] d'un seul tenant",
+      "paysage en ε (169 réseaux) : max_ε ω ≥ 8 pour 167 d'entre eux ; minimum 7 seulement au coin (±1/2, 1)",
+      "contrôles négatifs 6/6, dont le test de cohérence dh ≥ dl ajouté après que le contrôle (b) l'a révélé",
+      "pont vers le Thm 2 rédigé (§7) : deux lemmes, dont celui qui montre que ε < 1 rend le critère STRICT ; sens de l'implication explicité ; antériorité nulle revendiquée"
+    ],
+    "non_acquis": [
+      "queue h > 10⁸ non prouvée — pas d'obstacle de principe (coût du gabarit constant en h ; le certificat passe de 1,4 s à 47 s par fenêtre car les entiers des rapports grossissent). Voies : continuer les décades, ou lemme asymptotique de pas ⌈c·h⌉",
+      "queue h > 10⁸ : SEUL morceau restant. Pas un obstacle de principe (toute fenêtre fermée [w0,w1] ⊂ (0,1/100] tombe par le même certificat), mais le gabarit doit être construit au centre de chaque boîte, où le graphe de conflit est dense (coût quadratique en h). Voies : gabarit par formule (pas ⌈c·h⌉) ; ou lemme asymptotique « 0,k,…,6k deux à deux en conflit pour h ≥ H »",
+      "RECTIFIÉ : le repère u = 1/h ne débloque rien — il préserve ω (invariance 4/4) mais dégénère à u = 0 (le vecteur (1,0) s'écrase ⇒ ZeroDivisionError ; ailleurs « diamètre haut < bas » ou « 7-clique impossible »)",
+      "RECTIFIÉ : les mesures ω de la queue faites avec audit_gh.graphe_exact étaient des ARTEFACTS (fenêtre isqrt(cible²/h²)+6 ≈ 8 à h = 100, alors que les conflits sont à des décalages d'ordre h). Vraies valeurs avec fenêtre rectangulaire : ω = 24 à h = 10, 16 à h = 20 — la queue est la partie confortable, pas tendue",
+      "rectifié : le « lemme de fermeture » annoncé puis démonté — une réunion FINIE de fermés est fermée, donc « dense » y équivaut à « tout couvre »",
+      "le saut de la tranche réseaux au Thm 2 (découpages polygonaux arbitraires) : ce n'est pas un calcul, et §7 ne le revendique pas"
+    ],
+    "controles_negatifs": [
+      {
+        "cas": "positif A₂ ε = 99/100",
+        "attendu": "accepté",
+        "obtenu": "accepté (ω ≥ 7)"
+      },
+      {
+        "cas": "ε = 1/2 (conclusion fausse)",
+        "attendu": "refus",
+        "obtenu": "refus (ω = 5 < 7)"
+      },
+      {
+        "cas": "majorant du diamètre écrasé ÷100",
+        "attendu": "refus",
+        "obtenu": "refus (incohérence dh < dl)"
+      },
+      {
+        "cas": "réseau dégénéré h = 0",
+        "attendu": "refus",
+        "obtenu": "refus (cellule vide)"
+      },
+      {
+        "cas": "témoin faux : milieu de 3b₁",
+        "attendu": "retrait",
+        "obtenu": "PointHors"
+      },
+      {
+        "cas": "faux sommet de clique (5,5)",
+        "attendu": "clique ≤ vraie",
+        "obtenu": "écarté, ω ≥ 7 conservé"
+      }
+    ],
+    "scripts": [
+      "note/audit_gh.py",
+      "note/poly2.py",
+      "note/audit_certificat2.py",
+      "note/audit_certificat3.py",
+      "note/couvre3.py",
+      "note/audit_controles3.py"
+    ],
+    "artefact": "dossiers/audit-sv.html",
+    "prochaine_seance": "queue h → ∞ (homogénéisation u = 1/h), puis rédaction finale",
+    "artefacts": [
+      "dossiers/audit-sv.html",
+      "note/audit_v3_final.json",
+      "note/audit_v3_croissant.json",
+      "note/audit_v3_filet.json",
+      "note/audit_v3_domaine.json",
+      "note/audit_v3_bande0.json",
+      "note/audit_paysage_eps.json",
+      "note/audit_controles3.json"
+    ],
+    "verdict": "domaine couvert pour h ∈ [0,866 ; 2] ; queue h → ∞ ouverte",
+    "sources": {
+      "sokolov_voronov": "Discrete Math 349(12) 2026 art. 115321, DOI 10.1016/j.disc.2026.115321, arXiv:2502.01958 — Thm 2 : « There is no polygonal coloring of the plane in 6 colors, i.e. chi_poly(R^2)=7 »",
+      "coulson_2004": "J. Austral. Math. Soc. 77(2) 191-196 — ≥ 7 pour tout schéma réseau–sous-réseau ; ≥ 6 pour tuiles polygonales convexes d'aire minorée",
+      "manta_2021": "arXiv:1909.02708, Discrete Math 344(7) 112411 — ≥ 7 degré ≥ 4 ; ≥ 7 triangles ; degré ≤ 3 ouvert (= notre cas)",
+      "pith": "revue MACHINE de 2502.01958 (5 majeures/5 mineures) ; note : le résultat n'est pas dans la littérature antérieure"
+    }
+  },
+  "acquis": [
+    "Queue h → ∞ : domaine {|g| ≤ 1/2, g²+h² ≥ 1} prouvé par fenêtres en w = 1/h jusqu'à h = 10³¹ (30 décades, 2 boîtes chacune, 0 échec), certificat rationnel exact ; moteur Rust pour les motifs.",
+    "Coût du certificat : 23 s → 0,22 s par boîte (×105) et constant en h — plan construit une fois, sélection des témoins en flottant, arrondi rétracté des témoins de bord.",
+    "Queue h → ∞ FERMÉE par lemme (preuve à la main) : |g| ≤ 1/2, h ≥ 20, ε = 999/1000, k = ⌈h/10⌉ ⇒ les 7 cellules aux décalages 0,k,…,6k sont deux à deux en conflit strict ⇒ χ ≥ 7. Constantes vérifiées exactement ; 5 faits géométriques et 21 conflits contrôlés sur 43 cellules exactes."
+  ],
+  "non_acquis": [
+    "Le lemme de queue n'est PAS dans Lean (contrairement aux 25 théorèmes) : premier poste pour homogénéiser l'ensemble.",
+    "Le pont (lemmes A et B) reste à la main ; le saut de la tranche « réseaux » au théorème 2 (coloriages polygonaux arbitraires) n'est pas franchi."
+  ]
+}

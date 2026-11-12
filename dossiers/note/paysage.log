@@ -1,0 +1,24 @@
+  rho=1.000 fait  (8s)
+  rho=1.062 fait  (15s)
+  rho=1.125 fait  (22s)
+  rho=1.188 fait  (30s)
+  rho=1.250 fait  (38s)
+  rho=1.312 fait  (47s)
+  rho=1.375 fait  (56s)
+  rho=1.438 fait  (65s)
+  rho=1.500 fait  (74s)
+  rho=1.562 fait  (84s)
+  rho=1.625 fait  (94s)
+  rho=1.688 fait  (105s)
+  rho=1.750 fait  (115s)
+  rho=1.812 fait  (127s)
+  rho=1.875 fait  (139s)
+  rho=1.938 fait  (151s)
+  rho=2.000 fait  (164s)
+
+357 reseaux x 35 echelles, 164s
+reseau(x) avec omega <= 6 a une echelle : 357 / 357
+delta* maximal : 0.78  pour ['90,1.9375', '87,2.0000', '90,2.0000', '93,2.0000']
+distribution de delta* : {0.48: 3, 0.5: 16, 0.54: 8, 0.56: 12, 0.58: 18, 0.6: 16, 0.62: 26, 0.64: 30, 0.66: 38, 0.68: 35, 0.7: 40, 0.72: 40, 0.74: 45, 0.76: 26, 0.78: 4}
+minimum de omega sur toute la grille : 4
+reseaux ou omega <= 6 pour TOUTE la plage 0,30-0,98 : 0

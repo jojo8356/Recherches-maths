@@ -1,0 +1,2175 @@
+{
+ "feuilles": 60,
+ "essais": 157,
+ "hors": 35,
+ "limite_prof": 0,
+ "budget": true,
+ "boites": [
+  {
+   "g": [
+    "-1/2",
+    "-127/256"
+   ],
+   "h": [
+    "87/100",
+    "5581/6400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3144303315713675,
+   "diam_haut": 1.3680770521758001,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-127/256"
+   ],
+   "h": [
+    "5581/6400",
+    "2797/3200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3175840414885494,
+   "diam_haut": 1.3712420073076295,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-127/256",
+    "-63/128"
+   ],
+   "h": [
+    "87/100",
+    "5581/6400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.314450219813447,
+   "diam_haut": 1.3681394051104085,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-127/256",
+    "-63/128"
+   ],
+   "h": [
+    "5581/6400",
+    "2797/3200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3176039755551767,
+   "diam_haut": 1.3713045013357803,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-63/128"
+   ],
+   "h": [
+    "2797/3200",
+    "281/320"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2956539880464926,
+   "diam_haut": 1.4039276166626817,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-63/128",
+    "-125/256"
+   ],
+   "h": [
+    "87/100",
+    "5581/6400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3145100079003722,
+   "diam_haut": 1.3682437373972454,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-63/128",
+    "-125/256"
+   ],
+   "h": [
+    "5581/6400",
+    "2797/3200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3176639046215795,
+   "diam_haut": 1.3714090663680762,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-125/256",
+    "-31/64"
+   ],
+   "h": [
+    "5581/6400",
+    "2797/3200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3177640548930905,
+   "diam_haut": 1.3715555015486267,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-63/128",
+    "-31/64"
+   ],
+   "h": [
+    "2797/3200",
+    "281/320"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.295731681816484,
+   "diam_haut": 1.4041824474056905,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-31/64"
+   ],
+   "h": [
+    "281/320",
+    "709/800"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2516642116345753,
+   "diam_haut": 1.4721327723283506,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-31/64",
+    "-61/128"
+   ],
+   "h": [
+    "2797/3200",
+    "281/320"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2959659015294087,
+   "diam_haut": 1.4046105347339906,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-31/64",
+    "-15/32"
+   ],
+   "h": [
+    "281/320",
+    "709/800"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2519583492136723,
+   "diam_haut": 1.4731925259460856,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-31/64"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1663048162563383,
+   "diam_haut": 1.61623123850953,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-31/64",
+    "-15/32"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1665569874121675,
+   "diam_haut": 1.6173848143481198,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-15/32",
+    "-29/64"
+   ],
+   "h": [
+    "281/320",
+    "709/800"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2528517404908934,
+   "diam_haut": 1.4749874013442046,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-15/32",
+    "-29/64"
+   ],
+   "h": [
+    "709/800",
+    "1431/1600"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2656909470766295,
+   "diam_haut": 1.4880151667690777,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-15/32",
+    "-29/64"
+   ],
+   "h": [
+    "1431/1600",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2786901791555947,
+   "diam_haut": 1.5012264520703609,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-29/64",
+    "-7/16"
+   ],
+   "h": [
+    "709/800",
+    "1431/1600"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.267213651873133,
+   "diam_haut": 1.4905552883332416,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-29/64",
+    "-7/16"
+   ],
+   "h": [
+    "1431/1600",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.280227037002081,
+   "diam_haut": 1.5037852452255454,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-15/32"
+   ],
+   "h": [
+    "361/400",
+    "147/160"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1891439038003389,
+   "diam_haut": 1.6471412893496207,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-15/32"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2157674785697827,
+   "diam_haut": 1.674595052243777,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-15/32",
+    "-7/16"
+   ],
+   "h": [
+    "361/400",
+    "147/160"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1902028465656753,
+   "diam_haut": 1.651795022869545,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-15/32",
+    "-7/16"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2168451333078467,
+   "diam_haut": 1.6793103050789684,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-7/16",
+    "-27/64"
+   ],
+   "h": [
+    "1431/1600",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.282394215246452,
+   "diam_haut": 1.5070872302335043,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-7/16",
+    "-13/32"
+   ],
+   "h": [
+    "361/400",
+    "147/160"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.193504657006578,
+   "diam_haut": 1.659796190635419,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-7/16",
+    "-13/32"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2202124462084585,
+   "diam_haut": 1.6874034854878632,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-13/32",
+    "-3/8"
+   ],
+   "h": [
+    "361/400",
+    "147/160"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1991772718704758,
+   "diam_haut": 1.6711158358656297,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-13/32",
+    "-3/8"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2259921280150765,
+   "diam_haut": 1.6988477514520248,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-7/16"
+   ],
+   "h": [
+    "187/200",
+    "387/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.036440667388167,
+   "diam_haut": 2.024567876682557,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/2",
+    "-7/16"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.091611863789017,
+   "diam_haut": 2.0829635221306257,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-7/16",
+    "-3/8"
+   ],
+   "h": [
+    "187/200",
+    "387/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.0452584203837207,
+   "diam_haut": 2.046564892202963,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-7/16",
+    "-3/8"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.0998539285856148,
+   "diam_haut": 2.105331916645271,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-3/8",
+    "-11/32"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2342431774726064,
+   "diam_haut": 1.7137467390473853,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-3/8",
+    "-5/16"
+   ],
+   "h": [
+    "187/200",
+    "387/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.064864454174766,
+   "diam_haut": 2.0855237702108687,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-3/8",
+    "-5/16"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.119915785921402,
+   "diam_haut": 2.1447269622106697,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-5/16",
+    "-1/4"
+   ],
+   "h": [
+    "187/200",
+    "387/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.0939680762053416,
+   "diam_haut": 2.141886068491291,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-5/16",
+    "-1/4"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.14972073020084,
+   "diam_haut": 2.201572052917038,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/4",
+    "-3/16"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1902449203148386,
+   "diam_haut": 2.2774877392869737,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 1
+  },
+  {
+   "g": [
+    "-3/16",
+    "-1/8"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2427648717361246,
+   "diam_haut": 2.3745734264397784,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 1
+  },
+  {
+   "g": [
+    "-1/8",
+    "-1/16"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3088574565192435,
+   "diam_haut": 2.480588372697152,
+   "clique_prouvee": 8,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "-1/16",
+    "0"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3903999033005592,
+   "diam_haut": 2.6101749071339304,
+   "clique_prouvee": 8,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "0",
+    "1/16"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3903999033005592,
+   "diam_haut": 2.6101749071339304,
+   "clique_prouvee": 8,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "1/16",
+    "1/8"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.3088574565192435,
+   "diam_haut": 2.480588372697152,
+   "clique_prouvee": 8,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "1/8",
+    "3/16"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2427648717361246,
+   "diam_haut": 2.3745734264397784,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 1
+  },
+  {
+   "g": [
+    "3/16",
+    "1/4"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1902449203148386,
+   "diam_haut": 2.2774877392869737,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 1
+  },
+  {
+   "g": [
+    "11/32",
+    "3/8"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2342431774726064,
+   "diam_haut": 1.7137467390473853,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "1/4",
+    "5/16"
+   ],
+   "h": [
+    "187/200",
+    "387/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.0939680762053416,
+   "diam_haut": 2.141886068491291,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "1/4",
+    "5/16"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.14972073020084,
+   "diam_haut": 2.201572052917038,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "5/16",
+    "3/8"
+   ],
+   "h": [
+    "187/200",
+    "387/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.064864454174766,
+   "diam_haut": 2.0855237702108687,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "5/16",
+    "3/8"
+   ],
+   "h": [
+    "387/400",
+    "1"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.119915785921402,
+   "diam_haut": 2.1447269622106697,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "27/64",
+    "7/16"
+   ],
+   "h": [
+    "1431/1600",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.282394215246452,
+   "diam_haut": 1.5070872302335043,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "3/8",
+    "13/32"
+   ],
+   "h": [
+    "361/400",
+    "147/160"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.1991772718704758,
+   "diam_haut": 1.6711158358656297,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "3/8",
+    "13/32"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2259921280150765,
+   "diam_haut": 1.6988477514520248,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "13/32",
+    "7/16"
+   ],
+   "h": [
+    "361/400",
+    "147/160"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.193504657006578,
+   "diam_haut": 1.659796190635419,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "13/32",
+    "7/16"
+   ],
+   "h": [
+    "147/160",
+    "187/200"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2202124462084585,
+   "diam_haut": 1.6874034854878632,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "29/64",
+    "15/32"
+   ],
+   "h": [
+    "281/320",
+    "709/800"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2528517404908934,
+   "diam_haut": 1.4749874013442046,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "7/16",
+    "29/64"
+   ],
+   "h": [
+    "709/800",
+    "1431/1600"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.267213651873133,
+   "diam_haut": 1.4905552883332416,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "7/16",
+    "29/64"
+   ],
+   "h": [
+    "1431/1600",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.280227037002081,
+   "diam_haut": 1.5037852452255454,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "29/64",
+    "15/32"
+   ],
+   "h": [
+    "709/800",
+    "1431/1600"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2656909470766295,
+   "diam_haut": 1.4880151667690777,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  },
+  {
+   "g": [
+    "29/64",
+    "15/32"
+   ],
+   "h": [
+    "1431/1600",
+    "361/400"
+   ],
+   "ech": "99/100",
+   "diam_bas": 1.2786901791555947,
+   "diam_haut": 1.5012264520703609,
+   "clique_prouvee": 7,
+   "paires_non_prouvees": 0
+  }
+ ],
+ "echecs": [
+  {
+   "g": [
+    "-1/2",
+    "0"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (28 paires non prouv\u00e9es)",
+   "prof": 0,
+   "n": 3
+  },
+  {
+   "g": [
+    "-1/2",
+    "-1/4"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 1,
+   "n": 4
+  },
+  {
+   "g": [
+    "-1/2",
+    "-3/8"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "-1/2",
+    "-3/8"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "-1/2",
+    "-7/16"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-1/2",
+    "-7/16"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "-1/2",
+    "-15/32"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 2 cellules en conflit prouv\u00e9 (35 paires non prouv\u00e9es)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-1/2",
+    "-15/32"
+   ],
+   "h": [
+    "87/100",
+    "709/800"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (30 paires non prouv\u00e9es)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "-1/2",
+    "-31/64"
+   ],
+   "h": [
+    "87/100",
+    "709/800"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (30 paires non prouv\u00e9es)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "-1/2",
+    "-31/64"
+   ],
+   "h": [
+    "87/100",
+    "281/320"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 9,
+   "n": 12
+  },
+  {
+   "g": [
+    "-1/2",
+    "-63/128"
+   ],
+   "h": [
+    "87/100",
+    "281/320"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 10,
+   "n": 13
+  },
+  {
+   "g": [
+    "-1/2",
+    "-63/128"
+   ],
+   "h": [
+    "87/100",
+    "2797/3200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 11,
+   "n": 14
+  },
+  {
+   "g": [
+    "-1/2",
+    "-127/256"
+   ],
+   "h": [
+    "87/100",
+    "2797/3200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 12,
+   "n": 15
+  },
+  {
+   "g": [
+    "-127/256",
+    "-63/128"
+   ],
+   "h": [
+    "87/100",
+    "2797/3200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 12,
+   "n": 15
+  },
+  {
+   "g": [
+    "-63/128",
+    "-31/64"
+   ],
+   "h": [
+    "87/100",
+    "281/320"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 10,
+   "n": 13
+  },
+  {
+   "g": [
+    "-63/128",
+    "-31/64"
+   ],
+   "h": [
+    "87/100",
+    "2797/3200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 11,
+   "n": 14
+  },
+  {
+   "g": [
+    "-63/128",
+    "-125/256"
+   ],
+   "h": [
+    "87/100",
+    "2797/3200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 12,
+   "n": 15
+  },
+  {
+   "g": [
+    "-125/256",
+    "-31/64"
+   ],
+   "h": [
+    "87/100",
+    "2797/3200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 12,
+   "n": 15
+  },
+  {
+   "g": [
+    "-31/64",
+    "-15/32"
+   ],
+   "h": [
+    "87/100",
+    "709/800"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (30 paires non prouv\u00e9es)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "-31/64",
+    "-15/32"
+   ],
+   "h": [
+    "87/100",
+    "281/320"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 9,
+   "n": 12
+  },
+  {
+   "g": [
+    "-31/64",
+    "-61/128"
+   ],
+   "h": [
+    "87/100",
+    "281/320"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 10,
+   "n": 13
+  },
+  {
+   "g": [
+    "-1/2",
+    "-15/32"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "-15/32",
+    "-7/16"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 2 cellules en conflit prouv\u00e9 (35 paires non prouv\u00e9es)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-15/32",
+    "-7/16"
+   ],
+   "h": [
+    "87/100",
+    "709/800"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (30 paires non prouv\u00e9es)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "-15/32",
+    "-29/64"
+   ],
+   "h": [
+    "87/100",
+    "709/800"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (30 paires non prouv\u00e9es)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "-15/32",
+    "-7/16"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "-15/32",
+    "-29/64"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "-29/64",
+    "-7/16"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "-1/2",
+    "-7/16"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (29 paires non prouv\u00e9es sur 36)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "-1/2",
+    "-15/32"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (27 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-15/32",
+    "-7/16"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (28 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-7/16",
+    "-3/8"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-7/16",
+    "-3/8"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 3 cellules en conflit prouv\u00e9 (34 paires non prouv\u00e9es)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "-7/16",
+    "-13/32"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 3 cellules en conflit prouv\u00e9 (34 paires non prouv\u00e9es)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-7/16",
+    "-13/32"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (25 paires non prouv\u00e9es sur 36)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "-7/16",
+    "-27/64"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (21 paires non prouv\u00e9es sur 36)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "-7/16",
+    "-3/8"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "-7/16",
+    "-13/32"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (28 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-13/32",
+    "-3/8"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-1/2",
+    "-3/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "-1/2",
+    "-7/16"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (32 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-7/16",
+    "-3/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (33 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-3/8",
+    "-1/4"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (28 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "-3/8",
+    "-1/4"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "-3/8",
+    "-5/16"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-3/8",
+    "-5/16"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (32 paires non prouv\u00e9es sur 36)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "-3/8",
+    "-11/32"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "-3/8",
+    "-1/4"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 4 cellules en conflit prouv\u00e9 (26 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "-3/8",
+    "-5/16"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 4 cellules en conflit prouv\u00e9 (26 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-5/16",
+    "-1/4"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 5 cellules en conflit prouv\u00e9 (25 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-1/4",
+    "0"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 1,
+   "n": 4
+  },
+  {
+   "g": [
+    "-1/4",
+    "-1/8"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "-1/4",
+    "-1/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (31 paires non prouv\u00e9es sur 36)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "-1/4",
+    "-3/16"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 5 cellules en conflit prouv\u00e9 (25 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-3/16",
+    "-1/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (31 paires non prouv\u00e9es sur 36)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-1/8",
+    "0"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "-1/8",
+    "0"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (32 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "-1/8",
+    "-1/16"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "-1/16",
+    "0"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 4 cellules en conflit prouv\u00e9 (34 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "0",
+    "1/2"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (28 paires non prouv\u00e9es)",
+   "prof": 0,
+   "n": 3
+  },
+  {
+   "g": [
+    "0",
+    "1/4"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 1,
+   "n": 4
+  },
+  {
+   "g": [
+    "0",
+    "1/8"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "0",
+    "1/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (32 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "0",
+    "1/16"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 5 cellules en conflit prouv\u00e9 (32 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "1/16",
+    "1/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "1/8",
+    "1/4"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "1/8",
+    "1/4"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (31 paires non prouv\u00e9es sur 36)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "1/8",
+    "3/16"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (31 paires non prouv\u00e9es sur 36)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "3/16",
+    "1/4"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 5 cellules en conflit prouv\u00e9 (25 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "1/4",
+    "1/2"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 1,
+   "n": 4
+  },
+  {
+   "g": [
+    "1/4",
+    "3/8"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (28 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "1/4",
+    "3/8"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "5/16",
+    "3/8"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "5/16",
+    "3/8"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (32 paires non prouv\u00e9es sur 36)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "11/32",
+    "3/8"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "1/4",
+    "3/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 4 cellules en conflit prouv\u00e9 (26 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "1/4",
+    "5/16"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 5 cellules en conflit prouv\u00e9 (25 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "5/16",
+    "3/8"
+   ],
+   "h": [
+    "187/200",
+    "1"
+   ],
+   "raison": "7-clique impossible : 4 cellules en conflit prouv\u00e9 (26 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "3/8",
+    "1/2"
+   ],
+   "h": [
+    "87/100",
+    "1"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 2,
+   "n": 5
+  },
+  {
+   "g": [
+    "3/8",
+    "1/2"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 3,
+   "n": 6
+  },
+  {
+   "g": [
+    "3/8",
+    "7/16"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "3/8",
+    "7/16"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 3 cellules en conflit prouv\u00e9 (34 paires non prouv\u00e9es)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "13/32",
+    "7/16"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 3 cellules en conflit prouv\u00e9 (34 paires non prouv\u00e9es)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "13/32",
+    "7/16"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (25 paires non prouv\u00e9es sur 36)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "27/64",
+    "7/16"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (21 paires non prouv\u00e9es sur 36)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "3/8",
+    "7/16"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "3/8",
+    "13/32"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (30 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "13/32",
+    "7/16"
+   ],
+   "h": [
+    "361/400",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 3 sommets (28 paires non prouv\u00e9es sur 36)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "7/16",
+    "1/2"
+   ],
+   "h": [
+    "87/100",
+    "187/200"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 4,
+   "n": 7
+  },
+  {
+   "g": [
+    "7/16",
+    "1/2"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 0 cellules en conflit prouv\u00e9 (36 paires non prouv\u00e9es)",
+   "prof": 5,
+   "n": 8
+  },
+  {
+   "g": [
+    "7/16",
+    "15/32"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 2 cellules en conflit prouv\u00e9 (35 paires non prouv\u00e9es)",
+   "prof": 6,
+   "n": 9
+  },
+  {
+   "g": [
+    "7/16",
+    "15/32"
+   ],
+   "h": [
+    "87/100",
+    "709/800"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (30 paires non prouv\u00e9es)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "29/64",
+    "15/32"
+   ],
+   "h": [
+    "87/100",
+    "709/800"
+   ],
+   "raison": "7-clique impossible : 6 cellules en conflit prouv\u00e9 (30 paires non prouv\u00e9es)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "7/16",
+    "15/32"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 7,
+   "n": 10
+  },
+  {
+   "g": [
+    "7/16",
+    "29/64"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "29/64",
+    "15/32"
+   ],
+   "h": [
+    "709/800",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : la plus grande clique prouv\u00e9e a 2 sommets (24 paires non prouv\u00e9es sur 36)",
+   "prof": 8,
+   "n": 11
+  },
+  {
+   "g": [
+    "15/32",
+    "1/2"
+   ],
+   "h": [
+    "87/100",
+    "361/400"
+   ],
+   "raison": "7-clique impossible : 2 cellules en conflit prouv\u00e9 (35 paires non prouv\u00e9es)",
+   "prof": 6,
+   "n": 9
+  }
+ ],
+ "par_ech": {
+  "99/100": 60
+ }
+}

@@ -1,0 +1,50 @@
+=== elaboration Lean de Geometrie.lean (verification finale) — 2026-11-03 10:51:50Z ===
+
+Try this:
+  [apply] abel_nf
+Geometrie.lean:149:0: warning: automatically included section variable(s) unused in theorem `Geometrie.conflit_iff_zero`:
+  [InnerProductSpace ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+Geometrie.lean:172:8: warning: This simp argument is unused:
+  Set.mem_image
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Geometrie.lean:252:0: warning: automatically included section variable(s) unused in theorem `Geometrie.centre_mem_cellule`:
+  [InnerProductSpace ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+Geometrie.lean:252:56: warning: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+'Geometrie.centre_mem_cellule' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.cellule_Lint_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.cellule_Lint_ge' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.controle_negatif' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.controle_negatif_encadrement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.dist_le_dist_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.cellule_convexe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.dist_sub_left' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.cellule_translate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.conflit_translation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.conflit_symm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.conflit_iff_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.isPreconnected_dist_set' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.existe_paire_distance_un' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.conflit_iff_encadrement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.mem_Lint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Geometrie.conflit_vecteur_unitaire' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+real	0m40.003s
+user	0m4.878s
+sys	0m15.078s

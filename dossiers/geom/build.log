@@ -1,0 +1,60 @@
+=== lake build (etat final) — 2026-11-03 10:53:43Z ===
+⚠ [4028/4030] Built Geometrie (41s)
+warning: Geometrie.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Analysis.InnerProductSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.MetricSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+info: Geometrie.lean:87:26: Try this:
+  [apply] abel_nf
+warning: Geometrie.lean:149:0: automatically included section variable(s) unused in theorem `Geometrie.conflit_iff_zero`:
+  [InnerProductSpace ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: Geometrie.lean:172:8: This simp argument is unused:
+  Set.mem_image
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Geometrie.lean:252:0: automatically included section variable(s) unused in theorem `Geometrie.centre_mem_cellule`:
+  [InnerProductSpace ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: Geometrie.lean:252:56: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+info: Geometrie.lean:311:0: 'Geometrie.centre_mem_cellule' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:312:0: 'Geometrie.cellule_Lint_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:313:0: 'Geometrie.cellule_Lint_ge' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:314:0: 'Geometrie.controle_negatif' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:315:0: 'Geometrie.controle_negatif_encadrement' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:316:0: 'Geometrie.dist_le_dist_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:317:0: 'Geometrie.cellule_convexe' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:318:0: 'Geometrie.dist_sub_left' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:319:0: 'Geometrie.cellule_translate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:320:0: 'Geometrie.conflit_translation' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:321:0: 'Geometrie.conflit_symm' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:322:0: 'Geometrie.conflit_iff_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:323:0: 'Geometrie.isPreconnected_dist_set' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:324:0: 'Geometrie.existe_paire_distance_un' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:325:0: 'Geometrie.conflit_iff_encadrement' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:326:0: 'Geometrie.mem_Lint' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Geometrie.lean:327:0: 'Geometrie.conflit_vecteur_unitaire' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [4029/4030] Ran Geometrie:irArts
+warning: Geometrie.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Analysis.InnerProductSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Geometrie.lean: imports `Mathlib.Topology.MetricSpace.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+Build completed successfully (4030 jobs).
+
+real	0m46.383s
+user	0m5.881s
+sys	0m17.352s

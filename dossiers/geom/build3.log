@@ -1,0 +1,57 @@
+⚠ [3388/3392] Replayed Queue
+warning: Queue.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Queue.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Queue.lean:46:8: This simp argument is unused:
+  Set.mem_prod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Prod.exists]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+info: Queue.lean:86:2: Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+warning: Queue.lean:351:2: Try this: intro col hcol a b hab
+
+Note: This linter can be disabled with `set_option linter.tacticAnalysis.introMerge false`
+info: Queue.lean:375:0: 'Queue.pas_borne' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:376:0: 'Queue.proche_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:377:0: 'Queue.loin_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:378:0: 'Queue.queue' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Queue.lean:379:0: 'Queue.sept_couleurs' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [3389/3392] Ran Queue:irArts
+warning: Queue.lean: imports `Mathlib.Analysis.Convex.Topology` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: Queue.lean: imports `Mathlib.Topology.Order.IntermediateValue` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+⚠ [3390/3392] Built Boites (24s)
+info: Boites.lean:37:0: 'Boites.clique_de_temoins' depends on axioms: [propext, Classical.choice, Quot.sound]
+warning: Boites.lean:56:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+warning: Boites.lean:48:47: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+info: Boites.lean:59:0: 'Boites.contrainte_auto' depends on axioms: [propext, Classical.choice, Quot.sound]
+warning: Boites.lean:69:25: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+info: Boites.lean:79:0: 'Boites.cell_iff_translate' depends on axioms: [propext, Classical.choice, Quot.sound]
+warning: Boites.lean:95:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+info: Boites.lean:98:0: 'Boites.cell_of_fini' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (3392 jobs).

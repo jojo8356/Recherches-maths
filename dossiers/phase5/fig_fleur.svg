@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 480" width="100%" role="img" aria-label="les sept cellules de la fleur sont deux a deux en conflit">
+<rect width="700" height="480" fill="#fbfaf7"/>
+<path d="M-152.4,538.1 L-215.2,501.8 L-278.0,538.1 L-278.0,610.6 L-215.2,646.9 L-152.4,610.6Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-215.2" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M-89.6,429.3 L-152.4,393.0 L-215.2,429.3 L-215.2,501.8 L-152.4,538.1 L-89.6,501.8Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-152.4" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M-26.8,320.5 L-89.6,284.3 L-152.4,320.5 L-152.4,393.0 L-89.6,429.3 L-26.8,393.0Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-89.6" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M36.0,211.7 L-26.8,175.5 L-89.6,211.7 L-89.6,284.3 L-26.8,320.5 L36.0,284.3Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-26.8" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M98.8,103.0 L36.0,66.7 L-26.8,103.0 L-26.8,175.5 L36.0,211.7 L98.8,175.5Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="36.0" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M161.6,-5.8 L98.8,-42.1 L36.0,-5.8 L36.0,66.7 L98.8,103.0 L161.6,66.7Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="98.8" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M224.4,-114.6 L161.6,-150.9 L98.8,-114.6 L98.8,-42.1 L161.6,-5.8 L224.4,-42.1Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M-26.8,538.1 L-89.6,501.8 L-152.4,538.1 L-152.4,610.6 L-89.6,646.9 L-26.8,610.6Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-89.6" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M36.0,429.3 L-26.8,393.0 L-89.6,429.3 L-89.6,501.8 L-26.8,538.1 L36.0,501.8Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="-26.8" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M98.8,320.5 L36.0,284.3 L-26.8,320.5 L-26.8,393.0 L36.0,429.3 L98.8,393.0Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="36.0" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M161.6,211.7 L98.8,175.5 L36.0,211.7 L36.0,284.3 L98.8,320.5 L161.6,284.3Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="98.8" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M224.4,103.0 L161.6,66.7 L98.8,103.0 L98.8,175.5 L161.6,211.7 L224.4,175.5Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M287.2,-5.8 L224.4,-42.1 L161.6,-5.8 L161.6,66.7 L224.4,103.0 L287.2,66.7Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="224.4" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M350.0,-114.6 L287.2,-150.9 L224.4,-114.6 L224.4,-42.1 L287.2,-5.8 L350.0,-42.1Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="287.2" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M98.8,538.1 L36.0,501.8 L-26.8,538.1 L-26.8,610.6 L36.0,646.9 L98.8,610.6Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="36.0" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M161.6,429.3 L98.8,393.0 L36.0,429.3 L36.0,501.8 L98.8,538.1 L161.6,501.8Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="98.8" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M224.4,320.5 L161.6,284.3 L98.8,320.5 L98.8,393.0 L161.6,429.3 L224.4,393.0Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M287.2,211.7 L224.4,175.5 L161.6,211.7 L161.6,284.3 L224.4,320.5 L287.2,284.3Z" fill="#e6ddf1" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="224.4" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">6</text>
+<path d="M350.0,103.0 L287.2,66.7 L224.4,103.0 L224.4,175.5 L287.2,211.7 L350.0,175.5Z" fill="#dbe2f0" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="287.2" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">2</text>
+<path d="M412.8,-5.8 L350.0,-42.1 L287.2,-5.8 L287.2,66.7 L350.0,103.0 L412.8,66.7Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="350.0" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M475.6,-114.6 L412.8,-150.9 L350.0,-114.6 L350.0,-42.1 L412.8,-5.8 L475.6,-42.1Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="412.8" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M224.4,538.1 L161.6,501.8 L98.8,538.1 L98.8,610.6 L161.6,646.9 L224.4,610.6Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="161.6" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M287.2,429.3 L224.4,393.0 L161.6,429.3 L161.6,501.8 L224.4,538.1 L287.2,501.8Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="224.4" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M350.0,320.5 L287.2,284.3 L224.4,320.5 L224.4,393.0 L287.2,429.3 L350.0,393.0Z" fill="#d7ecef" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="287.2" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">4</text>
+<path d="M412.8,211.7 L350.0,175.5 L287.2,211.7 L287.2,284.3 L350.0,320.5 L412.8,284.3Z" fill="#dfe9e0" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="350.0" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">0</text>
+<path d="M475.6,103.0 L412.8,66.7 L350.0,103.0 L350.0,175.5 L412.8,211.7 L475.6,175.5Z" fill="#f2dce6" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="412.8" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">3</text>
+<path d="M538.4,-5.8 L475.6,-42.1 L412.8,-5.8 L412.8,66.7 L475.6,103.0 L538.4,66.7Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="475.6" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M601.2,-114.6 L538.4,-150.9 L475.6,-114.6 L475.6,-42.1 L538.4,-5.8 L601.2,-42.1Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M350.0,538.1 L287.2,501.8 L224.4,538.1 L224.4,610.6 L287.2,646.9 L350.0,610.6Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="287.2" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M412.8,429.3 L350.0,393.0 L287.2,429.3 L287.2,501.8 L350.0,538.1 L412.8,501.8Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="350.0" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M475.6,320.5 L412.8,284.3 L350.0,320.5 L350.0,393.0 L412.8,429.3 L475.6,393.0Z" fill="#eee4c8" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="412.8" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">5</text>
+<path d="M538.4,211.7 L475.6,175.5 L412.8,211.7 L412.8,284.3 L475.6,320.5 L538.4,284.3Z" fill="#f6e2cd" stroke="#1f6f4a" stroke-width="2.8"/>
+<text x="475.6" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#14482f" font-weight="700">1</text>
+<path d="M601.2,103.0 L538.4,66.7 L475.6,103.0 L475.6,175.5 L538.4,211.7 L601.2,175.5Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M664.0,-5.8 L601.2,-42.1 L538.4,-5.8 L538.4,66.7 L601.2,103.0 L664.0,66.7Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="601.2" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M726.8,-114.6 L664.0,-150.9 L601.2,-114.6 L601.2,-42.1 L664.0,-5.8 L726.8,-42.1Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="664.0" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M475.6,538.1 L412.8,501.8 L350.0,538.1 L350.0,610.6 L412.8,646.9 L475.6,610.6Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="412.8" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M538.4,429.3 L475.6,393.0 L412.8,429.3 L412.8,501.8 L475.6,538.1 L538.4,501.8Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="475.6" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M601.2,320.5 L538.4,284.3 L475.6,320.5 L475.6,393.0 L538.4,429.3 L601.2,393.0Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M664.0,211.7 L601.2,175.5 L538.4,211.7 L538.4,284.3 L601.2,320.5 L664.0,284.3Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="601.2" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M726.8,103.0 L664.0,66.7 L601.2,103.0 L601.2,175.5 L664.0,211.7 L726.8,175.5Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="664.0" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<path d="M789.6,-5.8 L726.8,-42.1 L664.0,-5.8 L664.0,66.7 L726.8,103.0 L789.6,66.7Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="726.8" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M852.4,-114.6 L789.6,-150.9 L726.8,-114.6 L726.8,-42.1 L789.6,-5.8 L852.4,-42.1Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="789.6" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M601.2,538.1 L538.4,501.8 L475.6,538.1 L475.6,610.6 L538.4,646.9 L601.2,610.6Z" fill="#f6e2cd" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="538.4" y="580.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">1</text>
+<path d="M664.0,429.3 L601.2,393.0 L538.4,429.3 L538.4,501.8 L601.2,538.1 L664.0,501.8Z" fill="#d7ecef" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="601.2" y="471.6" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">4</text>
+<path d="M726.8,320.5 L664.0,284.3 L601.2,320.5 L601.2,393.0 L664.0,429.3 L726.8,393.0Z" fill="#dfe9e0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="664.0" y="362.8" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">0</text>
+<path d="M789.6,211.7 L726.8,175.5 L664.0,211.7 L664.0,284.3 L726.8,320.5 L789.6,284.3Z" fill="#f2dce6" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="726.8" y="254.0" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">3</text>
+<path d="M852.4,103.0 L789.6,66.7 L726.8,103.0 L726.8,175.5 L789.6,211.7 L852.4,175.5Z" fill="#e6ddf1" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="789.6" y="145.2" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">6</text>
+<path d="M915.2,-5.8 L852.4,-42.1 L789.6,-5.8 L789.6,66.7 L852.4,103.0 L915.2,66.7Z" fill="#dbe2f0" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="852.4" y="36.4" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">2</text>
+<path d="M978.0,-114.6 L915.2,-150.9 L852.4,-114.6 L852.4,-42.1 L915.2,-5.8 L978.0,-42.1Z" fill="#eee4c8" stroke="#c6c1b4" stroke-width="1.1"/>
+<text x="915.2" y="-72.3" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#b0a99b" font-weight="400">5</text>
+<rect x="0" y="0" width="700" height="46" fill="#fbfaf7"/><rect x="0" y="438" width="700" height="42" fill="#fbfaf7"/>
+<text x="350.0" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="16.5" fill="#3d3a34">La fleur : sept cellules deux à deux en conflit</text>
+<text x="350.0" y="465" text-anchor="middle" font-family="Georgia,serif" font-size="13.5" fill="#5c5850" font-style="italic">chiffre = couleur (i+3j) mod 7 : sept couleurs distinctes, donc six ne peuvent pas suffire</text>
+</svg>

@@ -1,0 +1,17 @@
+{
+ "hexagonal (60 deg)|3/10": 4,
+ "hexagonal (60 deg)|1/2": 7,
+ "hexagonal (60 deg)|7/10": 9,
+ "hexagonal (60 deg)|9/10": 7,
+ "hexagonal (60 deg)|999/1000": 7,
+ "carre (90 deg)|3/10": 4,
+ "carre (90 deg)|1/2": 8,
+ "carre (90 deg)|7/10": 12,
+ "carre (90 deg)|9/10": 9,
+ "carre (90 deg)|999/1000": 9,
+ "rectangle 2:1 (90 deg)|4/10": 6,
+ "rectangle 2:1 (90 deg)|1/2": 8,
+ "rectangle 2:1 (90 deg)|7/10": 8,
+ "rectangle 2:1 (90 deg)|49/50": 10,
+ "rectangle 2:1 (90 deg)|999/1000": 10
+}

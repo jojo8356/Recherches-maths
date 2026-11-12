@@ -1,0 +1,31 @@
+<svg viewBox="0 0 660 420" width="100%" role="img" aria-label="Moser spindle">
+<rect width="660" height="420" fill="#fbf8f3"/>
+<g><line x1="130.8" y1="240.0" x2="330.0" y2="125.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="130.8" y1="240.0" x2="330.0" y2="355.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="330.0" y2="125.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="330.0" y2="355.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="330.0" y1="125.0" x2="330.0" y2="355.0" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="299.6" y2="254.3" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="529.2" y1="240.0" x2="426.8" y2="445.9" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="197.2" y1="460.2" x2="299.6" y2="254.3" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="197.2" y1="460.2" x2="426.8" y2="445.9" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="299.6" y1="254.3" x2="426.8" y2="445.9" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="130.8" y1="240.0" x2="197.2" y2="460.2" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="130.8" cy="240.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="140.8" y="232.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">A</text>
+<circle cx="529.2" cy="240.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="539.2" y="232.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">B</text>
+<circle cx="330.0" cy="125.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="340.0" y="117.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">C</text>
+<circle cx="330.0" cy="355.0" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="340.0" y="347.0" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">D</text>
+<circle cx="197.2" cy="460.2" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="207.2" y="452.2" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">E</text>
+<circle cx="299.6" cy="254.3" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="309.6" y="246.3" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">F</text>
+<circle cx="426.8" cy="445.9" r="6" fill="#c2703d" stroke="#2b3a55" stroke-width="1.6"/>
+<text x="436.8" y="437.9" font-size="13" fill="#6b7280" font-family="ui-monospace,monospace">G</text>
+</g>
+<text x="330" y="400" text-anchor="middle" font-size="13" fill="#6b7280" font-family="system-ui,sans-serif">
+Fuseau de Moser — 7 sommets, 11 arêtes de longueur 1, chromatique 4</text>
+</svg>

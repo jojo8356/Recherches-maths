@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 1 — Hadwiger–Nelson : journal d'expériences</title><style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;--ok:#3f8a7a;--ko:#b34a3c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 30px;max-width:66ch}
+  h2{font-size:1.24rem;margin:50px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:24px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1rem;margin:22px 0 4px;color:var(--acc)}
+  p{margin:10px 0} ul,ol{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.89em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .ok{background:#eef4f1;border-left:4px solid var(--ok);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ok strong{color:#2c6a5d}
+  .ko{background:#f8eeec;border-left:4px solid var(--ko);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ko strong{color:#8f3a2c}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:24px 0}
+  .verdict strong{color:#ffd9b8}
+  figure{margin:24px 0;text-align:center} figcaption{font-size:.85rem;color:var(--muted);margin-top:6px;text-align:left}
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+  .dash div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px}
+  .dash b{display:block;font-size:1.35rem;color:var(--acc);font-variant-numeric:tabular-nums}
+  .dash span{font-size:.76rem;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:8px}
+  .tag.t1{background:#e8f0ee;color:#2c6a5d} .tag.t2{background:#f6e9e6;color:#8f3a2c} .tag.t3{background:#eee9f4;color:#5b4580}
+  @media(max-width:680px){.dash{grid-template-columns:1fr 1fr}h1{font-size:1.55rem}}
+</style></head><body><div class="wrap">
+
+<div class="kicker">Journal d'expériences · Phase 1 du protocole</div>
+<h1>Hadwiger–Nelson : falsifier, pas prouver</h1>
+<p class="sub">Phase 1 ne cherche pas d'idées : elle cherche à <em>avoir tort</em>, et à produire des données. Six expériences exécutées dans le workspace, avec leurs chiffres bruts, et trois choses qu'elles ont réfutées.</p>
+
+<div class="dash">
+  <div><b>6</b><span>expériences exécutées</span></div>
+  <div><b>3</b><span>hypothèses réfutées</span></div>
+  <div><b>1</b><span>résultat fini établi (7 optimal)</span></div>
+  <div><b>0</b><span>témoin 5-chromatique trouvé</span></div>
+</div>
+
+<h2><span class="num">E1</span>Le fuseau de Moser, exhaustif</h2>
+<p>On énumère <em>tous</em> les coloriages propres du témoin à 7 sommets, pour k = 2, 3, 4, 5 couleurs étiquetées.</p>
+<table>
+<tr><th>k couleurs</th><th class="num">coloriages propres</th><th>verdict</th></tr>
+<tr><td>2</td><td class="num">0</td><td>impossible</td></tr>
+<tr><td>3</td><td class="num">0</td><td><strong>impossible</strong> — c'est l'argument de la phase 0, vérifié</td></tr>
+<tr><td>4</td><td class="num">384</td><td>possible ; 384 / 4! = <strong>16</strong> coloriages à renommage près</td></tr>
+<tr><td>5</td><td class="num">5040</td><td>possible, et sans intérêt (5 couleurs ≫ χ)</td></tr>
+</table>
+<div class="ok"><strong>Acquis —</strong> χ(fuseau) = 4 exactement, et le nombre de coloriages à 4 couleurs est déjà petit (16). Un témoin 5-chromatique doit donc tuer <em>tous</em> les coloriages d'une famille très contrainte : la marge est mince, pas confortable.</div>
+
+<figure><svg viewBox="0 0 600 330" width="100%" role="img" aria-label="fuseau de Moser"><rect width="600" height="330" fill="#fbf8f3"/><line x1="113.8" y1="235.0" x2="300.0" y2="127.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="113.8" y1="235.0" x2="300.0" y2="342.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="486.2" y1="235.0" x2="300.0" y2="127.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="486.2" y1="235.0" x2="300.0" y2="342.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="300.0" y1="127.5" x2="300.0" y2="342.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="486.2" y1="235.0" x2="271.6" y2="248.3" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="486.2" y1="235.0" x2="390.5" y2="427.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="175.9" y1="440.8" x2="271.6" y2="248.3" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="175.9" y1="440.8" x2="390.5" y2="427.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="271.6" y1="248.3" x2="390.5" y2="427.5" stroke="#3b4657" stroke-width="2.1" stroke-linecap="round"/>
+<line x1="113.8" y1="235.0" x2="175.9" y2="440.8" stroke="#b34a3c" stroke-width="3.2" stroke-linecap="round"/>
+<circle cx="113.8" cy="235.0" r="6.5" fill="#b34a3c"/>
+<text x="124.8" y="226.0" font-size="14" fill="#6b7280" font-family="ui-monospace,monospace">A</text>
+<circle cx="486.2" cy="235.0" r="6.5" fill="#b34a3c"/>
+<text x="497.2" y="226.0" font-size="14" fill="#6b7280" font-family="ui-monospace,monospace">B</text>
+<circle cx="300.0" cy="127.5" r="6.5" fill="#3b4657"/>
+<text x="311.0" y="118.5" font-size="14" fill="#6b7280" font-family="ui-monospace,monospace">C</text>
+<circle cx="300.0" cy="342.5" r="6.5" fill="#3b4657"/>
+<text x="311.0" y="333.5" font-size="14" fill="#6b7280" font-family="ui-monospace,monospace">D</text>
+<circle cx="175.9" cy="440.8" r="6.5" fill="#b34a3c"/>
+<text x="186.9" y="431.8" font-size="14" fill="#6b7280" font-family="ui-monospace,monospace">E</text>
+<circle cx="271.6" cy="248.3" r="6.5" fill="#3b4657"/>
+<text x="282.6" y="239.3" font-size="14" fill="#6b7280" font-family="ui-monospace,monospace">F</text>
+<circle cx="390.5" cy="427.5" r="6.5" fill="#3b4657"/>
+<text x="401.5" y="418.5" font-size="14" fill="#6b7280" font-family="ui-monospace,monospace">G</text>
+<text x="300" y="34" text-anchor="middle" font-size="14.5" fill="#b34a3c" font-family="system-ui,sans-serif" font-weight="600">diamant 1 : A et B contraints à la même couleur</text>
+<text x="300" y="54" text-anchor="middle" font-size="14.5" fill="#b34a3c" font-family="system-ui,sans-serif" font-weight="600">diamant 2 : B et E contraints à la même couleur</text>
+<text x="300" y="74" text-anchor="middle" font-size="14.5" fill="#3b4657" font-family="system-ui,sans-serif">or A et E sont à distance 1 : contradiction ⇒ 4 couleurs</text></svg>
+<figcaption>Le mécanisme complet, en trois lignes. Un <em>diamant</em> (deux triangles équilatéraux collés) force ses deux pointes — à distance √3 — à recevoir la même couleur : les deux milieux sont adjacents, donc de couleurs distinctes, et chaque pointe est adjacente aux deux. Deux diamants partageant une pointe forcent A ≡ B ≡ E, alors que A et E sont à distance 1.</figcaption></figure>
+
+<h2><span class="num">E2</span>Le pouvoir contraignant d'un gadget s'effondre quand k augmente</h2>
+<p>Question testée : le diamant force-t-il l'égalité de ses pointes ? On compte séparément les coloriages où les pointes sont égales et ceux où elles diffèrent.</p>
+<table>
+<tr><th>contexte</th><th class="num">pointes égales</th><th class="num">pointes différentes</th><th>conséquence</th></tr>
+<tr><td>3 couleurs</td><td class="num">6</td><td class="num">0</td><td><strong>égalité forcée</strong> (et 6 = 3!, donc unique à renommage près)</td></tr>
+<tr><td>4 couleurs</td><td class="num">24</td><td class="num">24</td><td><strong>plus rien n'est forcé</strong> (1 + 1 à renommage près)</td></tr>
+</table>
+<div class="ko"><strong>Réfutation n°1 (conceptuelle) —</strong> « empiler des fuseaux » ne peut pas produire un témoin 5-chromatique. Toute la mécanique de la phase 0 (le diamant, donc le fuseau) est une mécanique <em>à trois couleurs</em> : à quatre couleurs le diamant perd intégralement son pouvoir. Il faut des gadgets qui contraignent <strong>à k = 4</strong>, et c'est précisément ce que personne n'a su construire entre 1961 et 2018. Cette expérience donne un nom au verrou de 57 ans.</div>
+
+<h2><span class="num">E3</span>Chasse au témoin par recherche : échec documenté</h2>
+<p>300 essais d'unions de 2 à 3 réseaux triangulaires tournés aléatoirement (≤ 90 points), nombre chromatique exact par backtracking DSATUR.</p>
+<table>
+<tr><th>mesure</th><th class="num">résultat</th></tr>
+<tr><td>essais effectués</td><td class="num">300</td></tr>
+<tr><td>distribution des χ observés</td><td class="num">χ = 3 : 300 / 300</td></tr>
+<tr><td>arêtes entre deux copies tournées au hasard</td><td class="num">moyenne 0,00 (max 0) sur 60 essais</td></tr>
+<tr><td>témoins 5-chromatiques trouvés</td><td class="num">0</td></tr>
+</table>
+<div class="ko"><strong>Réfutation n°2 (structurelle) —</strong> l'espace de recherche n'est pas seulement « grand », il est <strong>de mesure nulle</strong>. Deux copies tournées au hasard n'ont <em>aucune</em> paire de points à distance exactement 1 : les arêtes inter-copies sont des accidents algébriques, pas des événements qu'on peut échantillonner. Chercher au hasard est donc stérile <em>en principe</em>. Corollaire opérationnel : toute recherche doit se faire dans des corps de nombres fixés (ℚ(√3), ℚ(√11), …), où les distances unité sont exactes par construction.</div>
+
+<h2><span class="num">E4</span>Le cas fini exact : 7 sommets est <em>optimal</em>, pas seulement « le plus petit connu »</h2>
+<p>Énumération exhaustive de tous les graphes à n ≤ 6 sommets (33 866 graphes), calcul de χ, puis extraction des graphes <strong>4-critiques</strong> (χ = 4 et la suppression d'un sommet quelconque fait tomber à 3).</p>
+<table>
+<tr><th>graphe 4-critique</th><th class="num">sommets</th><th class="num">étiquetages</th><th>réalisable à distance unité ?</th></tr>
+<tr><td>K₄</td><td class="num">4</td><td class="num">1</td><td>non — aucun point à distance 1 de trois sommets d'un triangle équilatéral</td></tr>
+<tr><td>W₅ = C₅ + moyeu</td><td class="num">6</td><td class="num">72</td><td>non — 5 cordes égales à 1 sur un cercle unité imposeraient 5 × 60° = 300° ≠ 360°</td></tr>
+</table>
+<div class="ok"><strong>Acquis —</strong> tout graphe 4-chromatique contient un graphe 4-critique, et aucun des deux n'est réalisable : <strong>il n'existe aucun graphe unité 4-chromatique à 6 sommets ou moins</strong>. Le fuseau de Moser (7 sommets) est donc optimal, et non un optimum accidentel. C'est le genre de petit résultat certain qu'une phase 1 doit produire : il fixe un point de la courbe.</div>
+
+<h2><span class="num">E5</span>Le côté supérieur, reconstruit depuis zéro</h2>
+<p>On pave le plan par des hexagones réguliers de diamètre 0,98 &lt; 1. Deux cellules <em>entrent en conflit</em> si elles peuvent contenir deux points à distance exactement 1, c'est-à-dire si leur distance minimale est ≤ 1 ≤ leur distance maximale. Ces deux quantités sont calculées exactement (distance polygone–polygone) sur 666 paires de cellules.</p>
+<table>
+<tr><th>étape</th><th>résultat obtenu</th></tr>
+<tr><td>relation « conflit ⇔ distance hexagonale ≤ 2 »</td><td><strong>validée</strong> sur toutes les paires du patch (0 contre-exemple)</td></tr>
+<tr><td>graphe de conflit, patch de 37 cellules</td><td>37 sommets, 231 arêtes</td></tr>
+<tr><td>la « fleur » (1 cellule + ses 6 voisines)</td><td><strong>clique de taille 7</strong> ⇒ tout coloriage cellulaire exige ≥ 7 couleurs</td></tr>
+<tr><td>nombre chromatique du graphe de conflit</td><td class="num"><strong>7</strong></td></tr>
+<tr><td>coloriage périodique trouvé par recherche</td><td>réseau d'indice 7, engendré par (−7,−7) et (−6,−5)</td></tr>
+<tr><td>forme close dudit coloriage</td><td><span class="mono">couleur(q,r) = (q + 3r) mod 7</span></td></tr>
+<tr><td>vérification du motif</td><td><strong>0 violation</strong> sur 118 098 contraintes de conflit</td></tr>
+</table>
+<figure><svg viewBox="0 0 470 504" width="100%" role="img" aria-label="7-coloriage du plan">
+<rect width="470" height="504" fill="#fbf8f3"/><g><polygon points="141.4,257.0 131.0,263.0 120.6,257.0 120.6,245.0 131.0,239.0 141.4,245.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="151.8,239.0 141.4,245.0 131.0,239.0 131.0,227.0 141.4,221.0 151.8,227.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="162.2,221.0 151.8,227.0 141.4,221.0 141.4,209.0 151.8,203.0 162.2,209.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="172.6,203.0 162.2,209.0 151.8,203.0 151.8,191.0 162.2,185.0 172.6,191.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="183.0,185.0 172.6,191.0 162.2,185.0 162.2,173.0 172.6,167.0 183.0,173.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="193.4,167.0 183.0,173.0 172.6,167.0 172.6,155.0 183.0,149.0 193.4,155.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="151.8,275.0 141.4,281.0 131.0,275.0 131.0,263.0 141.4,257.0 151.8,263.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="162.2,257.0 151.8,263.0 141.4,257.0 141.4,245.0 151.8,239.0 162.2,245.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="172.6,239.0 162.2,245.0 151.8,239.0 151.8,227.0 162.2,221.0 172.6,227.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="183.0,221.0 172.6,227.0 162.2,221.0 162.2,209.0 172.6,203.0 183.0,209.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="193.4,203.0 183.0,209.0 172.6,203.0 172.6,191.0 183.0,185.0 193.4,191.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="203.8,185.0 193.4,191.0 183.0,185.0 183.0,173.0 193.4,167.0 203.8,173.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="214.2,167.0 203.8,173.0 193.4,167.0 193.4,155.0 203.8,149.0 214.2,155.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="162.2,293.0 151.8,299.0 141.4,293.0 141.4,281.0 151.8,275.0 162.2,281.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="172.6,275.0 162.2,281.0 151.8,275.0 151.8,263.0 162.2,257.0 172.6,263.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="183.0,257.0 172.6,263.0 162.2,257.0 162.2,245.0 172.6,239.0 183.0,245.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="193.4,239.0 183.0,245.0 172.6,239.0 172.6,227.0 183.0,221.0 193.4,227.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="203.8,221.0 193.4,227.0 183.0,221.0 183.0,209.0 193.4,203.0 203.8,209.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="214.2,203.0 203.8,209.0 193.4,203.0 193.4,191.0 203.8,185.0 214.2,191.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="224.6,185.0 214.2,191.0 203.8,185.0 203.8,173.0 214.2,167.0 224.6,173.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="235.0,167.0 224.6,173.0 214.2,167.0 214.2,155.0 224.6,149.0 235.0,155.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="172.6,311.0 162.2,317.0 151.8,311.0 151.8,299.0 162.2,293.0 172.6,299.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="183.0,293.0 172.6,299.0 162.2,293.0 162.2,281.0 172.6,275.0 183.0,281.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="193.4,275.0 183.0,281.0 172.6,275.0 172.6,263.0 183.0,257.0 193.4,263.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="203.8,257.0 193.4,263.0 183.0,257.0 183.0,245.0 193.4,239.0 203.8,245.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="214.2,239.0 203.8,245.0 193.4,239.0 193.4,227.0 203.8,221.0 214.2,227.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="224.6,221.0 214.2,227.0 203.8,221.0 203.8,209.0 214.2,203.0 224.6,209.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="235.0,203.0 224.6,209.0 214.2,203.0 214.2,191.0 224.6,185.0 235.0,191.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="245.4,185.0 235.0,191.0 224.6,185.0 224.6,173.0 235.0,167.0 245.4,173.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="255.8,167.0 245.4,173.0 235.0,167.0 235.0,155.0 245.4,149.0 255.8,155.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="183.0,329.0 172.6,335.0 162.2,329.0 162.2,317.0 172.6,311.0 183.0,317.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="193.4,311.0 183.0,317.0 172.6,311.0 172.6,299.0 183.0,293.0 193.4,299.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="203.8,293.0 193.4,299.0 183.0,293.0 183.0,281.0 193.4,275.0 203.8,281.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="214.2,275.0 203.8,281.0 193.4,275.0 193.4,263.0 203.8,257.0 214.2,263.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="224.6,257.0 214.2,263.0 203.8,257.0 203.8,245.0 214.2,239.0 224.6,245.0" fill="#9a9a90" stroke="#1a2233" stroke-width="1.6"/>
+<polygon points="235.0,239.0 224.6,245.0 214.2,239.0 214.2,227.0 224.6,221.0 235.0,227.0" fill="#8ea653" stroke="#1a2233" stroke-width="1.6"/>
+<polygon points="245.4,221.0 235.0,227.0 224.6,221.0 224.6,209.0 235.0,203.0 245.4,209.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="255.8,203.0 245.4,209.0 235.0,203.0 235.0,191.0 245.4,185.0 255.8,191.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="266.2,185.0 255.8,191.0 245.4,185.0 245.4,173.0 255.8,167.0 266.2,173.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="276.6,167.0 266.2,173.0 255.8,167.0 255.8,155.0 266.2,149.0 276.6,155.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="193.4,347.0 183.0,353.0 172.6,347.0 172.6,335.0 183.0,329.0 193.4,335.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="203.8,329.0 193.4,335.0 183.0,329.0 183.0,317.0 193.4,311.0 203.8,317.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="214.2,311.0 203.8,317.0 193.4,311.0 193.4,299.0 203.8,293.0 214.2,299.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="224.6,293.0 214.2,299.0 203.8,293.0 203.8,281.0 214.2,275.0 224.6,281.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="235.0,275.0 224.6,281.0 214.2,275.0 214.2,263.0 224.6,257.0 235.0,263.0" fill="#4b6fa8" stroke="#1a2233" stroke-width="1.6"/>
+<polygon points="245.4,257.0 235.0,263.0 224.6,257.0 224.6,245.0 235.0,239.0 245.4,245.0" fill="#b34a3c" stroke="#1a2233" stroke-width="1.6"/>
+<polygon points="255.8,239.0 245.4,245.0 235.0,239.0 235.0,227.0 245.4,221.0 255.8,227.0" fill="#3f8a7a" stroke="#1a2233" stroke-width="1.6"/>
+<polygon points="266.2,221.0 255.8,227.0 245.4,221.0 245.4,209.0 255.8,203.0 266.2,209.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="276.6,203.0 266.2,209.0 255.8,203.0 255.8,191.0 266.2,185.0 276.6,191.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="287.0,185.0 276.6,191.0 266.2,185.0 266.2,173.0 276.6,167.0 287.0,173.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="297.4,167.0 287.0,173.0 276.6,167.0 276.6,155.0 287.0,149.0 297.4,155.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="214.2,347.0 203.8,353.0 193.4,347.0 193.4,335.0 203.8,329.0 214.2,335.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="224.6,329.0 214.2,335.0 203.8,329.0 203.8,317.0 214.2,311.0 224.6,317.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="235.0,311.0 224.6,317.0 214.2,311.0 214.2,299.0 224.6,293.0 235.0,299.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="245.4,293.0 235.0,299.0 224.6,293.0 224.6,281.0 235.0,275.0 245.4,281.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="255.8,275.0 245.4,281.0 235.0,275.0 235.0,263.0 245.4,257.0 255.8,263.0" fill="#7b5ea7" stroke="#1a2233" stroke-width="1.6"/>
+<polygon points="266.2,257.0 255.8,263.0 245.4,257.0 245.4,245.0 255.8,239.0 266.2,245.0" fill="#d99544" stroke="#1a2233" stroke-width="1.6"/>
+<polygon points="276.6,239.0 266.2,245.0 255.8,239.0 255.8,227.0 266.2,221.0 276.6,227.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="287.0,221.0 276.6,227.0 266.2,221.0 266.2,209.0 276.6,203.0 287.0,209.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="297.4,203.0 287.0,209.0 276.6,203.0 276.6,191.0 287.0,185.0 297.4,191.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="307.8,185.0 297.4,191.0 287.0,185.0 287.0,173.0 297.4,167.0 307.8,173.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="235.0,347.0 224.6,353.0 214.2,347.0 214.2,335.0 224.6,329.0 235.0,335.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="245.4,329.0 235.0,335.0 224.6,329.0 224.6,317.0 235.0,311.0 245.4,317.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="255.8,311.0 245.4,317.0 235.0,311.0 235.0,299.0 245.4,293.0 255.8,299.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="266.2,293.0 255.8,299.0 245.4,293.0 245.4,281.0 255.8,275.0 266.2,281.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="276.6,275.0 266.2,281.0 255.8,275.0 255.8,263.0 266.2,257.0 276.6,263.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="287.0,257.0 276.6,263.0 266.2,257.0 266.2,245.0 276.6,239.0 287.0,245.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="297.4,239.0 287.0,245.0 276.6,239.0 276.6,227.0 287.0,221.0 297.4,227.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="307.8,221.0 297.4,227.0 287.0,221.0 287.0,209.0 297.4,203.0 307.8,209.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="318.2,203.0 307.8,209.0 297.4,203.0 297.4,191.0 307.8,185.0 318.2,191.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="255.8,347.0 245.4,353.0 235.0,347.0 235.0,335.0 245.4,329.0 255.8,335.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="266.2,329.0 255.8,335.0 245.4,329.0 245.4,317.0 255.8,311.0 266.2,317.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="276.6,311.0 266.2,317.0 255.8,311.0 255.8,299.0 266.2,293.0 276.6,299.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="287.0,293.0 276.6,299.0 266.2,293.0 266.2,281.0 276.6,275.0 287.0,281.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="297.4,275.0 287.0,281.0 276.6,275.0 276.6,263.0 287.0,257.0 297.4,263.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="307.8,257.0 297.4,263.0 287.0,257.0 287.0,245.0 297.4,239.0 307.8,245.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="318.2,239.0 307.8,245.0 297.4,239.0 297.4,227.0 307.8,221.0 318.2,227.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="328.6,221.0 318.2,227.0 307.8,221.0 307.8,209.0 318.2,203.0 328.6,209.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="276.6,347.0 266.2,353.0 255.8,347.0 255.8,335.0 266.2,329.0 276.6,335.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="287.0,329.0 276.6,335.0 266.2,329.0 266.2,317.0 276.6,311.0 287.0,317.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="297.4,311.0 287.0,317.0 276.6,311.0 276.6,299.0 287.0,293.0 297.4,299.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="307.8,293.0 297.4,299.0 287.0,293.0 287.0,281.0 297.4,275.0 307.8,281.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="318.2,275.0 307.8,281.0 297.4,275.0 297.4,263.0 307.8,257.0 318.2,263.0" fill="#d99544" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="328.6,257.0 318.2,263.0 307.8,257.0 307.8,245.0 318.2,239.0 328.6,245.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="339.0,239.0 328.6,245.0 318.2,239.0 318.2,227.0 328.6,221.0 339.0,227.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="297.4,347.0 287.0,353.0 276.6,347.0 276.6,335.0 287.0,329.0 297.4,335.0" fill="#4b6fa8" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="307.8,329.0 297.4,335.0 287.0,329.0 287.0,317.0 297.4,311.0 307.8,317.0" fill="#b34a3c" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="318.2,311.0 307.8,317.0 297.4,311.0 297.4,299.0 307.8,293.0 318.2,299.0" fill="#3f8a7a" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="328.6,293.0 318.2,299.0 307.8,293.0 307.8,281.0 318.2,275.0 328.6,281.0" fill="#9a9a90" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="339.0,275.0 328.6,281.0 318.2,275.0 318.2,263.0 328.6,257.0 339.0,263.0" fill="#8ea653" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+<polygon points="349.4,257.0 339.0,263.0 328.6,257.0 328.6,245.0 339.0,239.0 349.4,245.0" fill="#7b5ea7" stroke="rgba(0,0,0,.18)" stroke-width="0.7"/>
+</g>
+<text x="235.0" y="488" text-anchor="middle" font-size="13.5" fill="#6b7280" font-family="system-ui,sans-serif">
+hexagones de diamètre 0,98 &lt; 1 · couleur(q,r) = (q + 3r) mod 7 · les 7 cellules cerclées forment une clique de conflit</text>
+</svg>
+<figcaption>Le coloriage obtenu. La règle tient en une ligne : <span class="mono">(q + 3r) mod 7</span> sur les coordonnées axiales — c'est le motif classique d'Isbell, ici <em>redécouvert</em> par une recherche sur les sous-réseaux d'indice 7, puis vérifié indépendamment.</figcaption></figure>
+<div class="verdict"><strong>Conséquence dure —</strong> tout coloriage dont les classes sont des hexagones de diamètre &lt; 1 exige 7 couleurs, parce que la fleur est une clique. Le 7-coloriage n'est donc pas « une construction parmi d'autres » : c'est le plafond de <em>toute</em> la famille cellulaire. Un 6-coloriage, s'il existe, doit renoncer à la cellularité.</div>
+
+<h2><span class="num">E6</span>L'obstruction logique qui tue d'avance tous les schémas réguliers</h2>
+<p>Supposons qu'un coloriage ait toutes ses classes de diamètre &lt; 1. Chaque classe est alors bornée, donc la réunion d'un nombre fini de classes est bornée — et ne peut pas être le plan. Autrement dit :</p>
+<div class="box"><strong>Dans tout coloriage fini du plan, au moins une classe est non bornée</strong> — et chacune doit être « trouée partout » : elle ne peut contenir aucun segment de longueur 1, tout en s'étendant à l'infini.</div>
+<p>D'où l'échec mécanique de tous les schémas naïfs, chacun avec son témoin explicite :</p>
+<table>
+<tr><th>schéma candidat</th><th>témoin de paire à distance 1 de même couleur</th></tr>
+<tr><td>6 bandes verticales</td><td>(0,0) et (0,1) : même bande, distance 1</td></tr>
+<tr><td>bandes obliques d'angle α</td><td>p et p + n, où n est le vecteur unité <em>parallèle</em> aux bandes</td></tr>
+<tr><td>secteurs angulaires (6 parts)</td><td>deux points d'un même rayon, à distance 1</td></tr>
+<tr><td>pavage hexagonal à 6 couleurs</td><td>la fleur est une clique de 7 : E5</td></tr>
+</table>
+<div class="ko"><strong>Réfutation n°3 —</strong> aucune classe de couleur ne peut être « petite et propre ». L'irrégularité n'est pas une difficulté technique à surmonter : c'est une <em>nécessité logique</em>. Voilà le verrou W4 de la phase 0, cette fois démontré et non plus soupçonné.</div>
+
+<h2><span class="num">E7</span>La donnée centrale : une anomalie d'échelle</h2>
+<figure><svg viewBox="0 0 620 300" width="100%" role="img" aria-label="croissance"><rect width="620" height="300" fill="#fbf8f3"/><text x="126" y="82.0" text-anchor="end" font-size="13.5" fill="#3b4657" font-family="system-ui,sans-serif">χ = 2</text><rect x="140" y="54" width="42.1" height="46" rx="3" fill="#b34a3c"/><text x="191.1" y="82.0" font-size="13" fill="#1a2233" font-family="ui-monospace,monospace">2 sommets</text><text x="261.1" y="82.0" font-size="12" fill="#9a9a90" font-family="system-ui,sans-serif">segment</text><text x="126" y="144.0" text-anchor="end" font-size="13.5" fill="#3b4657" font-family="system-ui,sans-serif">χ = 3</text><rect x="140" y="116" width="66.8" height="46" rx="3" fill="#8ea653"/><text x="215.8" y="144.0" font-size="13" fill="#1a2233" font-family="ui-monospace,monospace">3 sommets</text><text x="285.8" y="144.0" font-size="12" fill="#9a9a90" font-family="system-ui,sans-serif">triangle</text><text x="126" y="206.0" text-anchor="end" font-size="13.5" fill="#3b4657" font-family="system-ui,sans-serif">χ = 4</text><rect x="140" y="178" width="118.3" height="46" rx="3" fill="#4b6fa8"/><text x="267.3" y="206.0" font-size="13" fill="#1a2233" font-family="ui-monospace,monospace">7 sommets</text><text x="337.3" y="206.0" font-size="12" fill="#9a9a90" font-family="system-ui,sans-serif">fuseau de Moser</text><text x="126" y="268.0" text-anchor="end" font-size="13.5" fill="#3b4657" font-family="system-ui,sans-serif">χ = 5</text><rect x="140" y="240" width="378.9" height="46" rx="3" fill="#9a9a90"/><text x="527.9" y="268.0" font-size="13" fill="#1a2233" font-family="ui-monospace,monospace">509 sommets</text><text x="597.9" y="268.0" font-size="12" fill="#9a9a90" font-family="system-ui,sans-serif">de Grey / Polymath16</text><line x1="140.0" y1="46" x2="140.0" y2="294" stroke="#e3ded4" stroke-width="1"/><text x="140.0" y="40" text-anchor="middle" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">1</text><line x1="280.0" y1="46" x2="280.0" y2="294" stroke="#e3ded4" stroke-width="1"/><text x="280.0" y="40" text-anchor="middle" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">10</text><line x1="420.0" y1="46" x2="420.0" y2="294" stroke="#e3ded4" stroke-width="1"/><text x="420.0" y="40" text-anchor="middle" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">100</text><line x1="560.0" y1="46" x2="560.0" y2="294" stroke="#e3ded4" stroke-width="1"/><text x="560.0" y="40" text-anchor="middle" font-size="11" fill="#9a9a90" font-family="ui-monospace,monospace">1000</text><text x="310.0" y="286" text-anchor="middle" font-size="12.5" fill="#6b7280" font-family="system-ui,sans-serif">nombre minimal (connu) de sommets d’un graphe unité k-chromatique — échelle log</text></svg>
+<figcaption>Taille minimale (connue) d'un graphe unité k-chromatique : 2, 3, 7, puis <strong>509</strong>. Le cas k = 4 est prouvé optimal (E4) ; le cas k = 5 est le meilleur connu (de Grey 2018 : 1581 sommets, ramené à 509).</figcaption></figure>
+<p>Le rapport entre les tailles pour k = 4 et k = 5 vaut <strong>7 → 509, soit ×72</strong>. Ce n'est pas une progression, c'est un changement de régime. Trois lectures :</p>
+<ul>
+<li>La suite 2, 3, 7 suggère une croissance modérée ; 509 la contredit brutalement. Un témoin à 6 couleurs pourrait demander un nombre de sommets hors de portée de toute recherche exhaustive, voire de tout SAT.</li>
+<li>Corollaire stratégique : « passer de 5 à 6 » n'est pas un cran de plus dans la même échelle. C'est un problème d'une autre taille, et probablement d'une autre nature.</li>
+<li>Corollaire inverse et plus intéressant : si χ(ℝ²) = 5, alors aucune quantité finie ne le dira. Le seul espoir du côté « ≤ 6 » est un argument global — c'est-à-dire exactement le pont manquant identifié en phase 0.</li>
+</ul>
+
+<h2><span class="num">8</span>Ce que la phase 1 change au plan d'attaque</h2>
+<table>
+<tr><th>route (phase 0)</th><th>statut après phase 1</th></tr>
+<tr><td><strong>A — renforcer le côté fini</strong> (viser χ ≥ 6)</td><td><em>Reformulée.</em> Il ne s'agit plus de chercher plus grand, mais de construire des gadgets qui contraignent <strong>à 4 couleurs</strong> (E2), à coordonnées dans un corps fixé (E3). C'est un problème de conception, pas de puissance de calcul.</td></tr>
+<tr><td><strong>B — renforcer le côté régulier</strong> (viser χ ≤ 6)</td><td><em>Confirmée et précisée.</em> Tout coloriage cellulaire est mort (E5) et toute classe doit être irrégulière (E6) : la seule cible raisonnable est la classe mesurable / à classes de Jordan, où l'on sait déjà ≥ 6.</td></tr>
+<tr><td><strong>C — affaiblir / déplacer</strong></td><td><em>Renforcée.</em> Les résultats partiels ont maintenant un cadre : toute famille de coloriages « structurés » (cellulaires, périodiques, mesurables) donne un problème distinct et attaquable.</td></tr>
+</table>
+<div class="box"><strong>Nouvelle piste née des expériences —</strong> définir un invariant numérique de gadget : le <em>pouvoir contraignant à k couleurs</em>, mesuré par le nombre de k-coloriages modulo renommage (E1 : 16 pour le fuseau à k = 4 ; E2 : 1 pour le diamant à k = 3). Chercher les gadgets qui minimisent ce nombre à k = 4, c'est-à-dire ceux qui « serrent » le plus. C'est une formulation quantitative et optimisable du seul verrou que la phase 1 ait identifié comme conceptuel.</div>
+
+<h2><span class="num">9</span>Honnêteté : ce que cette phase 1 n'a pas fait</h2>
+<ul>
+<li><strong>Aucun témoin 5-chromatique reproduit.</strong> Le graphe de de Grey n'est pas reconstruit ici : il faudrait les fichiers de Polymath16. Les chiffres 1581 et 509 sont donc repris de la littérature, pas recalculés.</li>
+<li><strong>Pas de vérification formelle.</strong> Tous les résultats ci-dessus viennent de code Python direct (exacts pour E1, E2, E4 ; flottants avec tolérance pour E5 via distances de polygones). Une certification Lean serait la suite logique.</li>
+<li><strong>E5 suppose ρ = 0,49 fixé.</strong> La conclusion (conflit ⇔ distance hexagonale ≤ 2) est vraie pour tout diamètre &lt; 1, mais elle n'a été vérifiée numériquement qu'à ce paramètre — un balayage de ρ serait à faire.</li>
+<li><strong>La recherche de E3 était volontairement naïve.</strong> Son échec est un résultat sur la méthode aléatoire, pas une preuve d'absence.</li>
+</ul>
+
+<h2><span class="num">10</span>Reproductibilité</h2>
+<p class="small">Tous les scripts sont dans <span class="mono">dossiers/phase1/</span> :</p>
+<table class="small">
+<tr><th>fichier</th><th>expérience</th></tr>
+<tr><td class="mono">exp_ab.py</td><td>E1 — énumération sur le fuseau de Moser</td></tr>
+<tr><td class="mono">exp_b.py</td><td>E2 — pouvoir contraignant du diamant selon k</td></tr>
+<tr><td class="mono">exp_search.py</td><td>E3 — 300 unions de réseaux tournés, χ exact</td></tr>
+<tr><td class="mono">exp_finite2.py</td><td>E4 — énumération exhaustive des graphes 4-critiques à n ≤ 6</td></tr>
+<tr><td class="mono">exp_hex.py</td><td>E5 — distances polygone–polygone, graphe de conflit, fleur</td></tr>
+<tr><td class="mono">exp_hex3.py</td><td>E5 — recherche de sous-réseau d'indice 7 et coloriage</td></tr>
+<tr><td class="mono">figures.py</td><td>vérification du motif <span class="mono">(q+3r) mod 7</span> + les trois figures</td></tr>
+</table>
+<p class="small" style="margin-top:34px;border-top:1px solid var(--line);padding-top:16px">
+Phase 1 terminée le 2 novembre 2026 · suite logique : phase 2 (construire une prédiction) — ou attaquer directement la nouvelle piste de l'invariant « pouvoir contraignant à k couleurs ».
+</p>
+</div></body></html>

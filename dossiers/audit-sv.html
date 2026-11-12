@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Décider la tranche « réseaux » de Sokolov–Voronov — audit, version finale</title>
+<style>
+  :root { --encre:#20201d; --pale:#6b665c; --trait:#ddd7cb; --fond:#fbfaf7;
+          --vert:#1f6f4a; --or:#a8862a; --brique:#8a3b2a; --sable:#f2ede3; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--fond); color:var(--encre);
+         font-family:Georgia,"Times New Roman",serif; line-height:1.62; font-size:17px; }
+  .page { max-width:860px; margin:0 auto; padding:56px 28px 120px; }
+  .kicker { font-family:-apple-system,Helvetica,Arial,sans-serif; font-size:12px;
+            letter-spacing:.16em; text-transform:uppercase; color:var(--brique); font-weight:700; }
+  h1 { font-size:35px; line-height:1.16; margin:14px 0 10px; font-weight:400; letter-spacing:-.01em; }
+  .sub { color:var(--pale); font-size:18px; margin:0 0 8px; font-style:italic; }
+  h2 { font-size:15px; font-family:-apple-system,Helvetica,Arial,sans-serif; font-weight:700;
+       letter-spacing:.09em; text-transform:uppercase; color:var(--brique);
+       margin:52px 0 6px; padding-bottom:7px; border-bottom:1px solid var(--trait); }
+  h3 { font-size:19px; font-weight:400; margin:26px 0 6px; }
+  p { margin:12px 0; }
+  code, .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13.5px;
+                background:var(--sable); padding:1px 5px; border-radius:3px; }
+  table { border-collapse:collapse; width:100%; margin:18px 0; font-size:14.5px; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--trait); vertical-align:top; }
+  th { font-family:-apple-system,Helvetica,Arial,sans-serif; font-size:11.5px; text-transform:uppercase;
+       letter-spacing:.07em; color:var(--pale); }
+  td.num { font-family:ui-monospace,Menlo,monospace; font-size:13.5px; }
+  .encart { background:#fff; border:1px solid var(--trait); border-left:3px solid var(--vert);
+            padding:14px 18px; margin:20px 0; font-size:16px; }
+  .alerte { background:#fff; border:1px solid var(--trait); border-left:3px solid var(--brique);
+            padding:14px 18px; margin:20px 0; font-size:16px; }
+  .or { border-left-color:var(--or); }
+  .pastille { display:inline-block; font-family:-apple-system,Helvetica,Arial,sans-serif;
+              font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+              padding:2px 7px; border-radius:10px; margin-right:8px; vertical-align:2px; }
+  .p-prouve { background:#e3efe7; color:var(--vert); }
+  .p-calcul { background:#f6efd9; color:#7a6116; }
+  .p-ouvert { background:#f7e4df; color:var(--brique); }
+  ul, ol { margin:12px 0 12px 22px; padding:0; }
+  li { margin:7px 0; }
+  .small { font-size:14px; color:var(--pale); }
+  .formule { font-family:ui-monospace,Menlo,monospace; font-size:13.5px; background:#fff;
+             border:1px solid var(--trait); padding:12px 14px; margin:14px 0; overflow-x:auto;
+             white-space:pre-wrap; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="kicker">Hadwiger–Nelson · audit d'un théorème publié · version finale, séance 17</div>
+  <h1>Décider la tranche « réseaux » de Sokolov–Voronov par calcul exact</h1>
+  <p class="sub">Le domaine est couvert pour <strong>tout</strong> h &gt; 0, et plus aucun énoncé du dossier n'est une preuve à la main.</p>
+  <p class="small">3 novembre 2026 · scripts <code>dossiers/note/*.py</code> · preuves <code>dossiers/lean/</code>, <code>dossiers/geom/</code></p>
+
+  <div class="encart">
+  <span class="pastille p-prouve">en une page</span>
+  <strong>Ce que ce dossier établit.</strong> Pour <em>tout</em> réseau Λ de ℝ², il existe une échelle
+  s &gt; 0 telle que le pavage de Voronoï de sΛ ne porte aucun coloriage du plan en 6 couleurs, propre
+  à la distance 1 et constant sur chaque cellule. Plus fort : son graphe de conflit contient une
+  clique <em>explicite</em> de 7 cellules. Le domaine fondamental est couvert pour tout h &gt; 0 —
+  certificats machine sur h ∈ [√3/2 ; 100], trente décades jusqu'à 10³¹, et lemme du pas ⌈h/10⌉
+  au-delà — et les deux lemmes du pont sont compilés.
+  <br><br>
+  <strong>Comment.</strong> Quatre choix, tenus du début à la fin. Le domaine se réduit à
+  |g| ≤ 1/2, g² + h² ≥ 1. Une borne sur χ ne suffit pas : on cherche une <em>clique</em>, donc un
+  témoin fini. Le seuil se traite par <em>encadrement exact</em> (une paire à distance ≤ 1, une paire
+  à distance ≥ 1), jamais par évaluation flottante. Et tout ce qui peut être compilé l'est.
+  <br><br>
+  <strong>Statut machine.</strong> 66 théorèmes, 0 <code>sorry</code>, deux projets Lean ; les seuls
+  axiomes employés sont <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code>.
+  Plus aucun énoncé du dossier n'est une preuve à la main (§9).
+  <br><br>
+  <strong>Ce que ce dossier n'établit pas.</strong> Ni χ(ℝ²) ∈ {6, 7}, ni la validité de la preuve de
+  Sokolov–Voronov, ni une antériorité : la tranche « réseaux » n'est <em>pas</em> couverte par Coulson
+  (2004), qui donne 6 et non 7 (§7.5) — mais rien n'établit qu'elle soit neuve pour autant. Le cas polygonal général n'est pas l'objet de ce dossier — il établit une
+  tranche indépendante, il ne juge pas leur preuve (§10).
+  </div>
+
+  <h2>1. Ce qu'on audite, et pourquoi une clique suffit</h2>
+
+  <p>Le théorème 2 de Sokolov–Voronov (<em>Discrete Mathematics</em> <b>349</b>(12), 2026, art. 115321)
+  affirme qu'aucun coloriage polygonal du plan à six couleurs n'existe. Restreint aux <em>pavages de
+  Voronoï de réseaux</em>, il donne : pour tout réseau Λ, χ ≥ 7 pour le coloriage de ses cellules.
+  Nous ne cherchons pas à refaire cette preuve, mais à <strong>établir indépendamment la tranche
+  « réseaux »</strong>, avec une conclusion plus forte dans sa forme : une <strong>clique de 7</strong>,
+  c'est-à-dire un témoin fini.</p>
+
+  <p>Le modèle, énoncé une fois pour toutes :</p>
+  <div class="formule">Λ = ℤb₁ + ℤb₂ ⊂ ℝ², cellules de Voronoï V<sub>λ</sub>, échelle ε ∈ (0,1).
+conflit(A,B)  ⟺  ∃ p ∈ A, q ∈ B, |p − q| = 1          (la distance interdite)
+             ⟺  dmin(A,B) ≤ 1 ≤ dmax(A,B)
+ω(Λ,ε) = nombre de clique du graphe de conflit ;  χ(Λ,ε) ≥ ω(Λ,ε).</div>
+
+  <p>ε &lt; 1 est <em>nécessaire</em> : une cellule monochrome de diamètre ≥ 1 contient déjà deux points
+  à distance 1. On certifie donc à ε = 99/100, et non à ε = 1 — la formulation « échelle maximale
+  admissible » de T7 était, à la limite, un objet qui n'est plus un coloriage.</p>
+
+  <div class="encart">
+  <strong>Pourquoi une clique est plus fort qu'une borne sur χ.</strong> χ ≥ 7 n'entraîne pas ω ≥ 7 :
+  un graphe 7-chromatique peut n'avoir que des triangles. Si l'on prouve ω ≥ 7 sur la tranche des
+  réseaux, on obtient une conclusion que le théorème de S-V, même exact, ne donne pas sous cette forme —
+  et si leur preuve tombe, la tranche reste établie.
+  </div>
+
+  <h2>2. Trois choses qui ont changé le problème</h2>
+
+  <h3>a. Le domaine de T7 était faux</h3>
+  <p>L'ancien certificat couvrait <code>ρ ∈ [1,2]</code>, <code>θ ∈ [60°,120°]</code> en prétendant couvrir
+  « tout réseau ». Ce n'est pas un domaine fondamental. Dans la coordonnée de module
+  τ = ρe<sup>iθ</sup> = g + ih, la réduction de SL(2,ℤ) impose |g| ≤ 1/2 et g² + h² ≥ 1, mais
+  <em>ne borne pas h</em> : les réseaux très anisotropes (h = Im τ grand) sont absents du rectangle.
+  Or ils ont eux aussi des cellules hexagonales, donc ils relèvent exactement du cas de degré 3 que
+  Manta avait laissé ouvert et que S-V revendique fermer.</p>
+
+  <table>
+    <tr><th>espace</th><th>domaine correct</th><th>ce que ratait le rectangle de T7</th></tr>
+    <tr><td class="num">(ρ, θ)</td><td class="num">|ρ cos θ| ≤ 1/2, ρ ≥ 1</td>
+        <td>tout ρ &gt; 2 avec θ ∈ [60°,120°] ; et incluait des bases non réduites</td></tr>
+    <tr><td class="num">τ = g + ih</td><td class="num">|g| ≤ 1/2, g² + h² ≥ 1, h &gt; 0</td>
+        <td>rien — c'est le domaine fondamental standard</td></tr>
+  </table>
+
+  <h3>b. En coordonnées de module, tout est rationnel</h3>
+  <p>C'est le point décisif. Avec b₁ = (1,0), b₂ = (g,h) :</p>
+  <div class="formule">v<sub>ij</sub> = (i + jg, jh)                   rationnel en (g,h)
+contrainte de Voronoï : 2⟨p, v⟩ ≤ |v|²          rationnelle
+sommet = solution d'un système 2×2            rationnel  (det = h·(i₁j₂ − j₁i₂) : un MONÔME)
+distance² entre sommets                       rationnelle</div>
+  <p>Aucune fonction transcendante. Toute la couche qui a produit la rétractation de T7 — encadrement
+  de cos θ et sin θ par Machin et Taylor–Lagrange, en fractions de dyadiques — <strong>disparaît</strong>.
+  Non parce qu'elle était mal écrite, mais parce qu'elle n'avait pas lieu d'être.</p>
+
+  <h3>c. La règle qui manquait : ne jamais comparer deux encadrements</h3>
+  <div class="alerte">
+  <span class="pastille p-prouve">règle</span>
+  Pour une condition serrée, on ne calcule pas deux encadrements puis on ne les compare pas.
+  On construit <strong>une seule fonction</strong> (ici rationnelle) dont le signe constant est la
+  condition, et on l'encadre.
+  <div class="formule" style="margin-bottom:0">diam² ≥ ε²·dmin²   ⟺   F(g,h) := |paire diamétrale|² − ε²·|témoins proches|² ≥ 0</div>
+  </div>
+  <p>C'est exactement la mécanique que T7 violait : borner séparément deux quantités corrélées puis
+  soustraire. Une faute de ce type ne se voit pas dans le résultat — elle se voit dans le contrôle négatif.</p>
+
+  <div class="alerte or">
+  <span class="pastille p-calcul">aveu</span>
+  Ma première version de la séance reproduisait le défaut sous une autre forme : l'encadrement de
+  <code>2⟨p,v⟩ − |v|²</code> vaut <strong>exactement 0</strong> pour les deux contraintes qui définissent le
+  sommet p, mais son majorant d'intervalle était positif — 256 boîtes sur 256 tombaient. Deux corrections :
+  le calcul polynomial exact rend ce numérateur <em>identiquement nul</em>, donc encadré par [0,0] ;
+  et la récursion de la forme de la moyenne, tronquée à la profondeur 8 dans mon premier jet, renvoyait
+  la valeur au centre — ce qui n'est pas un encadrement. Elle se termine maintenant sur une évaluation
+  d'intervalle sûre. <em>Une troncature de Taylor n'est pas un encadrement.</em>
+  </div>
+
+  <h2>3. L'énoncé est vrai : vérification exacte sur le domaine corrigé</h2>
+
+  <p>Deux moteurs, volontairement indépendants : un moteur flottant sur un balayage large, et un moteur
+  <strong>exact</strong> (rationnels, aucune tolérance) sur des points rationnels du domaine.</p>
+
+  <table>
+    <tr><th>contrôle</th><th>moteur</th><th>résultat</th></tr>
+    <tr><td>carré, τ = i</td><td class="num">exact</td><td class="num">ω = 9</td></tr>
+    <tr><td>près de A₂, τ = 1/2 + 9i/10</td><td class="num">exact</td><td class="num">ω = 7</td></tr>
+    <tr><td>très anisotrope, τ = 20i</td><td class="num">exact</td><td class="num">ω = 11</td></tr>
+    <tr><td>balayage 8 349 réseaux, ρ ∈ [1,200], θ ∈ [60°,120°]</td><td class="num">flottant</td>
+        <td class="num">min ω = 7, aucun réseau sous 7</td></tr>
+    <tr><td>quadrillage rationnel du domaine fondamental</td><td class="num">exact</td>
+        <td class="num">min ω = 7, atteint au coin A₂</td></tr>
+  </table>
+
+  <p>Les valeurs 9 (carré) et 7 (A₂) reproduisent les résultats exacts déjà consignés dans le dossier :
+  le moteur ne dérive pas. ω croît ensuite avec l'anisotropie (jusqu'à 57 dans le balayage). Le minimum
+  est donc 7, atteint au réseau le plus symétrique — c'est là que le certificat aura le moins de marge,
+  et c'est donc là qu'il faut le tester en premier.</p>
+
+  <h2>4. Le certificat, et son état</h2>
+
+  <p>Preuve par boîte B du domaine, en arithmétique rationnelle exacte, sur la combinatoire figée au
+  centre de la boîte :</p>
+  <ol>
+    <li><strong>appartenance</strong> — chaque sommet du motif est solution d'un système 2×2 fixé ; toutes
+        les contraintes de la cellule sont encadrées et doivent rester ≤ 0 sur B. Les contraintes
+        |v|² ≥ wcap sont automatiques dès que |p|² ≤ wcap/4, ce qui fixe la fenêtre sans arbitraire.</li>
+    <li><strong>diamètre</strong> — majorant commun : maximum, sur toutes les paires de sommets du motif,
+        des majorants de distance². (Un seul nombre, et il sert à la condition relâchée.)</li>
+    <li><strong>conflit</strong> — pour chacune des 21 paires de la clique : une <em>seule</em> fonction
+        <code>F</code> dont on prouve qu'elle reste ≥ 0, plus la condition relâchée (marge d'un facteur ~3).</li>
+  </ol>
+
+  <p>Coût mesuré : <strong>74 ms par boîte</strong>, boîtes de côté 0,04 certifiées en routine.</p>
+
+  <table>
+    <tr><th>fenêtre</th><th>essais</th><th>feuilles</th><th>aire certifiée</th><th>boîtes non certifiées</th><th>échelles utilisées</th></tr>
+    <tr><td class="num">g ∈ [−1/2 ; 1/2], h ∈ [1 ; 2]</td><td class="num">98</td><td class="num">50</td>
+        <td class="num">1,00000 / 1</td><td class="num">0</td><td class="num">99/100 · 19/20 · 9/10 · 17/20 · 3/4</td></tr>
+    <tr><td class="num">g ∈ [−1/2 ; 1/2], h ∈ [0,87 ; 1]</td><td class="num">157</td><td class="num">60</td>
+        <td class="num">0,05017</td><td class="num">0</td><td class="num">99/100</td></tr>
+    <tr><td class="num">g ∈ [−1/2 ; 1/2], h ∈ [0,866 ; 0,87]</td><td class="num">44</td><td class="num">14</td>
+        <td class="num">0,00004</td><td class="num">0</td><td class="num">99/100</td></tr>
+  </table>
+
+  <p><span class="pastille p-prouve">état</span> Le domaine fondamental
+  <span class="formule" style="display:inline">|g| ≤ 1/2, g²+h² ≥ 1, h &gt; 0</span> est <strong>couvert
+  pour h ∈ [0,866 ; 2]</strong>, et par le lemme du pas pour h ≥ 20 — donc <em>partout</em>. Aire exacte certifiée dans
+  la fenêtre h ∈ [1;2] : <strong>1 exactement</strong> (somme de fractions, pas d'arrondi), zéro boîte
+  non certifiée à profondeur maximale. Les 48 « échecs » intermédiaires sont des boîtes subdivisées
+  puis certifiées : un échec qui se résout n'est pas un trou.</p>
+
+  <h2>5. Séance 2 : les transitions, et la fin du mur de g = 0</h2>
+
+  <p><strong>Le retrait de sommets.</strong> À une transition, une arête de cellule se replie et un
+  sommet sort de la cellule. Le retirer est <em>sûr</em>, et pour une raison simple : le polygone des
+  contraintes restantes est l'intersection d'un <em>sous-ensemble</em> des contraintes de la cellule,
+  donc il la contient — le majorant du diamètre reste valide ; et les sommets restants sont, eux,
+  prouvés dans la cellule — le minorant reste valide. Un motif peut perdre jusqu'à n−3 sommets.
+  Cela a fait tomber les 2 182 échecs de la séance précédente à 39.</p>
+
+  <p><strong>Mais g = 0 ne cède pas au retrait : les six sommets y tombent ensemble.</strong> À g = 0
+  le réseau est rectangulaire, sa cellule n'a que 4 sommets, et trois contraintes y deviennent
+  simultanément tendues en chaque coin. Aucun motif hexagonal ne tient sur une boîte fermée contenant
+  cette droite — et g = 0 est une droite du domaine, pas un point isolé.</p>
+
+  <h3>Trois pièces, et le mur tombe</h3>
+
+  <p><strong>(i) Témoins rétractés.</strong> Si p ∈ V et 0 ∈ V, alors λp ∈ V pour λ ∈ [0,1] par
+  convexité. Rétracter un témoin à λ = 1/2 n'est donc pas une hypothèse : c'est une information de
+  conception. Le certificat, lui, se contente de tester la condition polynomiale
+  <span class="formule" style="display:inline">2⟨p,v⟩ ≤ |v|²</span> — qui passe alors <em>avec de la
+  marge</em>. C'est cette marge qui survit aux transitions, là où un point du bord tombe. Les milieux
+  de Delaunay, eux, sont polynomialement sûrs mais posés sur le bord à g = 0 : ils tombent aussi. Il
+  faut les deux : le bon point <em>et</em> la marge.</p>
+
+  <p><strong>(ii) Un encadrement qui n'était pas faux mais absurde.</strong> La routine d'encadrement
+  <code>enc</code> est une forme de la moyenne : <em>sûre</em>, mais catastrophique sur les monômes de
+  degré élevé. Sur h<sup>8</sup> avec h ∈ [1,2] elle rendait [−486 ; 537] au lieu de [1 ; 256]. Comme
+  les dénominateurs des coordonnées de sommets sont des déterminants en h, tout dénominateur « changeait
+  de signe » et le certificat refusait — partout, y compris là où il marchait la veille. Correctif :
+  <strong>intersecter</strong> la forme de la moyenne avec l'évaluation d'intervalle directe. Les deux
+  sont sûres, donc l'intersection l'est ; et elles se corrigent mutuellement. <em>Ceci n'invalide
+  aucun résultat antérieur</em> : un encadrement trop large fait seulement refuser des boîtes, jamais
+  accepter une boîte fausse.</p>
+
+  <p><strong>(iii) Prouver les conflits boîte par boîte.</strong> Aux transitions du diagramme de
+  Delaunay, une paire de la 7-clique du centre <em>cesse de se toucher</em> : le conflit est faux là.
+  Le certificat ne le suppose pas — il le teste, retire la paire non prouvée, et cherche ensuite une
+  7-clique dans le graphe des conflits <em>prouvés</em>. Il refuse s'il n'en reste pas sept. C'est ce
+  qui a supprimé les 150 dernières boîtes bloquées à profondeur maximale.</p>
+
+  <div class="alerte or">
+  <span class="pastille p-calcul">aveu</span>
+  Quatre fautes de ma part dans cette séance, toutes silencieuses : translation par différence
+  d'<em>indices</em> au lieu de différence de <em>vecteurs</em> du réseau ; décalage oublié dans la
+  distance entre témoins (deux points de la même cellule comparés, d'où « dmax non prouvé » partout) ;
+  signe du décalage inversé une fois la rétraction introduite ; et un <code>Rat</code> imbriqué dans un
+  <code>Rat</code>, qui ne se voit qu'à l'encadrement. Un certificat qui échoue partout et un
+  certificat qui échoue à un endroit se ressemblent beaucoup : ce sont les contrôles négatifs et la
+  comparaison avec le moteur exact qui tranchent.
+  </div>
+
+  <h3>Couverture obtenue</h3>
+  <table>
+    <tr><th>fenêtre</th><th>essais</th><th>feuilles certifiées</th><th>aire couverte</th><th>temps</th></tr>
+    <tr><td class="num">g ∈ [−0,03 ; 0,03], h ∈ [1 ; 2]</td><td class="num">206</td>
+        <td class="num">94</td><td class="num">0,0599 / 0,0600</td><td class="num">239 s</td></tr>
+    <tr><td class="num"><strong>g ∈ [−1/2 ; 1/2], h ∈ [1 ; 2]</strong></td><td class="num">1 050</td>
+        <td class="num">447</td><td class="num"><strong>0,9904 / 1</strong></td><td class="num">971 s</td></tr>
+  </table>
+  <p>La bande qui bloquait est couverte à 99,8 %, et le domaine entier pour h ∈ [1 ; 2] à
+  <strong>99,04 %</strong>. Les cliques prouvées vont de 7 à 9 (395 feuilles à ω ≥ 7, 46 à ω ≥ 8,
+  6 à ω ≥ 9). Le résidu — 79 boîtes, aire 0,0096 — n'est pas une erreur de calcul.</p>
+
+  <h3>Où est exactement le résidu, et pourquoi ce n'est pas grave</h3>
+
+  <p>Toutes les boîtes bloquées échouent de la même façon : une seule paire de la 7-clique du centre
+  n'est pas prouvée, avec <span class="formule" style="display:inline">écart = −5,5·10<sup>−5</sup></span>
+  — c'est-à-dire <em>exactement tangente</em>. Une courbe de transition traverse la boîte, la paire se
+  touche sur la courbe et cesse de se toucher d'un côté. Aucun choix de 7-clique n'est alors valable sur
+  toute la boîte, et on le vérifie : même à profondeur 16, ces boîtes restent bloquées. Ce sont les
+  trois droites/courbes de transition du domaine — g = 0, |g| = 1/2, g² + h² = 1 — et les lieux de
+  Delaunay. Le résidu est de <strong>codimension 1</strong> : en raffinant, la largeur cumulée des
+  boîtes non certifiées décroît (2,4·10⁻⁷ puis 1,8·10⁻⁷ puis 8,9·10⁻⁸) au lieu de former une tache.</p>
+
+  <div class="alerte">
+  <span class="pastille p-ouvert">rectification</span>
+  <strong>J'ai d'abord cru tenir une sortie par la fermeture, et c'était faux.</strong> L'idée :
+  {ω ≥ 7} est fermé (famille finie de 7-uplets sur un compact, conjonctions d'inégalités fermées),
+  donc il suffirait que le certificat réussisse sur un ensemble <em>dense</em>. L'argument est juste,
+  mais il ne sert à rien ici : mes boîtes certifiées sont des <em>fermés en nombre fini</em>, et une
+  réunion finie de fermés est fermée — donc « dense » y est équivalent à « tout couvre ». Aucun
+  résidu, même de mesure nulle, ne peut être absorbé de cette façon : un point au milieu d'une boîte
+  non certifiée n'est la limite d'aucun point certifié. La fermeture ne remplace pas une inégalité.
+  </div>
+
+  <h3>Ce qui règle vraiment le résidu : ε n'est pas une constante</h3>
+
+  <p>Le conflit est <span class="formule" style="display:inline">∃p ∈ A, q ∈ B, |p−q| = 1</span>, et
+  par continuité (les cellules sont convexes) il équivaut à
+  <span class="formule" style="display:inline">dmin ≤ 1 ≤ dmax</span>. Le certificat prouve les deux
+  moitiés sous la forme <span class="formule" style="display:inline">ε·dmin ≤ D ≤ ε·dmax</span>, où D
+  est le diamètre de la cellule et ε l'échelle à laquelle on la dessine. Or <strong>ε est un paramètre
+  libre</strong> : la conclusion χ ≥ 7 vaut pour tout ε ∈ (0,1) tel que la cellule ait un diamètre
+  inférieur à 1. Fixer ε = 99/100 était donc une rigidité de ma part, pas une contrainte du problème.</p>
+
+  <p>Et cette rigidité fabriquait le résidu. Au seuil τ = D/ε, une paire cesse de se toucher dès
+  qu'on bouge un peu : la bande marginale de tout à l'heure est l'ensemble des points où ω<sub>0,99</sub>
+  vaut 6, pas ceux où ω vaut 6. Le paysage, mesuré par le moteur exact :</p>
+
+  <table>
+    <tr><th>réseau</th><th>ε = 0,99</th><th>0,95</th><th>0,90</th><th>0,85</th><th>0,80</th><th>0,75</th><th>0,70</th><th>0,50</th></tr>
+    <tr><td>A₂ (−2/5, 1)</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">9</td><td class="num">5</td></tr>
+    <tr><td>(0 ; 1,395)</td><td class="num">9</td><td class="num">9</td><td class="num">9</td><td class="num">10</td><td class="num">10</td><td class="num">10</td><td class="num">6</td><td class="num">7</td></tr>
+    <tr><td>(−0,28 ; 1,004) — boîte figée</td><td class="num">7</td><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">5</td></tr>
+    <tr><td>(−0,5 ; 2)</td><td class="num">8</td><td class="num">8</td><td class="num">10</td><td class="num">10</td><td class="num">10</td><td class="num">6</td><td class="num">7</td><td class="num">7</td></tr>
+    <tr><td>(−0,5 ; 1)</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">9</td><td class="num">9</td><td class="num">6</td></tr>
+    <tr><td>(0,4 ; 1,4)</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">8</td><td class="num">9</td><td class="num">10</td><td class="num">10</td><td class="num">6</td></tr>
+  </table>
+
+  <p>Le point qui bloquait passe de ω = 7 à ω = 8 dès ε = 0,95, et la boîte figée certifie
+  <em>du premier coup</em> à ε = 19/20, avec ω ≥ 8 et <strong>zéro paire non prouvée</strong>.
+  Le pilote essaie donc une échelle par boîte — la première qui certifie — ce qui est légitime : une
+  échelle par boîte suffit, puisque chaque réseau a le droit d'être dessiné à l'échelle de son choix.</p>
+
+  <h2>6. La queue h → ∞ : un moteur, trente décades, puis un lemme qui la ferme</h2>
+
+  <p>La version précédente de cette section annonçait un travail « d'une séance » : substituer
+  <em>u</em> = 1/h pour rendre la demi-droite h → ∞ bornée. C'était la mauvaise variable, et l'essai a
+  échoué pour une raison instructive. Dans le repère u, la base du réseau devient ((1,0)·, (g,h)·u) :
+  le vecteur (1,0) <em>s'écrase</em> à l'échelle des autres, et à u = 0 la cellule n'a plus de sens
+  (« diamètre haut &lt; diamètre bas », division par zéro dans le calcul de signe). Un repère qui
+  dégénère ne certifie rien. Les ω, eux, y sont exacts : les critères du certificat sont des
+  <em>rapports</em> dmin/D et dmax/D, invariants par changement d'unité ; c'est le <em>calcul</em> qui
+  casse, pas l'objet.</p>
+
+  <p>La bonne variable est donc w = 1/h, mais appliquée aux <strong>rapports</strong>, pas aux
+  positions. Toutes les conditions du certificat s'écrivent sous forme de rapports de degrés égaux en
+  h — par exemple « diam<sub>pair</sub> − ε²·|témoins proches|² ≥ 0 » devient
+  « (diam<sub>pair</sub> − ε²·|proches|²)/diam<sub>pair</sub> ≥ 0 ». Chacun de ces rapports a une
+  limite finie quand h → ∞, et w<sup>M</sup>·f(g,1/w) est un polynôme en (g,w) : les encadrements
+  d'intervalle s'appliquent <em>en w = 0</em>. Une boîte w ∈ [w₀,w₁] représente alors
+  h ∈ [1/w₁, 1/w₀] — uniformément, d'un seul tenant, sans découpage en h.</p>
+
+  <div class="encart">
+  <strong>Le résultat.</strong> Le domaine {|g| ≤ 1/2, g² + h² ≥ 1, h &gt; 0} est prouvé — clique de 7
+  certifiée, donc χ ≥ 7 pour chaque réseau — sur <strong>h ≤ 10³¹</strong>, par fenêtres successives :
+  <table>
+  <tr><th>fenêtre</th><th>repère</th><th>boîtes</th><th>temps</th><th>ω certifié</th></tr>
+  <tr><td>h ∈ [0,866 ; 2]</td><td>(g,h)</td><td>137</td><td>≈ 1 300 s</td><td>7 à 8</td></tr>
+  <tr><td>h ∈ [2 ; 10]</td><td>w</td><td>2</td><td>5,7 s</td><td>≥ 8</td></tr>
+  <tr><td>h ∈ [10 ; 20]</td><td>w</td><td>2</td><td>9,8 s</td><td>≥ 9</td></tr>
+  <tr><td>h ∈ [20 ; 100]</td><td>w</td><td>2</td><td>413 s → <strong>1,4 s</strong></td><td>≥ 8</td></tr>
+  <tr><td>h ∈ [10² ; 10⁶] (quatre décades)</td><td>w</td><td>2</td><td>0,9 à 1,6 s</td><td>7 à 8</td></tr>
+  <tr><td>h ∈ [10⁶ ; 10⁸]</td><td>w</td><td>2</td><td>47 s → <strong>1,6 s</strong></td><td>≥ 8</td></tr>
+  <tr><td>h ∈ [10⁸ ; 10³¹] (23 décades)</td><td>w</td><td>2 par décade</td><td>1,3 à 1,8 s</td><td>≥ 7</td></tr>
+  </table>
+  Dans toutes les fenêtres en w, la couverture est <em>complète</em> (aire certifiée = aire de la
+  fenêtre) et il n'y a que deux boîtes, une de chaque côté de g = 0. Vérifications : les fichiers
+  <code>audit_w_*.json</code> (une sortie par fenêtre) et la synthèse
+  <code>audit_w_echelle.json</code> — 30 fenêtres, 30 complètes, 0 échec.</div>
+
+  <p><strong>Le coût du certificat quand w → 0, et ce que le profil a révélé.</strong> Passé
+  h = 10⁶, le certificat coûtait 47 s par fenêtre contre 1,4 s à h = 100 : le soupçon naturel était
+  l'arithmétique rationnelle, dont les entiers grossissent quand w rétrécit. Le profil d'une boîte à
+  w ≈ 5·10⁻⁸ a démenti ce soupçon. Il a montré 538 appels à <code>signe_rapport_w</code> pesant 86 % du
+  temps dans <code>poly2.enc</code>/<code>ieval</code> (102 295 constructions de <code>Fraction</code>),
+  mais surtout une <em>boucle de retrait</em> : le certificat échouait sur un témoin tombé hors de la
+  cellule, on le retirait, et l'on <strong>reconstruisait tout le plan</strong> — 1 488 contraintes
+  d'appartenance et 36 sélections de témoins en rationnel — jusqu'à douze fois. Coût réel : ≈ 23 s par
+  boîte pour un plan de 1,28 s. Autrement dit l'arithmétique n'était pas le goulot, la
+  <em>structure</em> l'était. Trois corrections, par gain décroissant :</p>
+
+  <ul>
+  <li><strong>Le plan n'est construit qu'une fois ; le retrait masque.</strong> Les contraintes
+  d'appartenance ne dépendent pas de la boîte et ne dépendent d'aucun autre témoin : les reconstruire
+  était du travail pur perdu. Complexité du retrait : O(R·C<sub>plan</sub>) → O(C<sub>plan</sub> +
+  R·|témoins|²) avec R = nombre de retraits (≤ 12).</li>
+  <li><strong>La sélection des témoins passe en flottant.</strong> Choisir la paire diamétrale et les
+  témoins proche/loin est un calcul d'<em>extremum sur des nombres</em> : le faire en <code>Fraction</code>
+  (dénominateurs ≈ 10¹⁶, 2·46²·21 distances par boîte) coûtait 0,68 s, le faire en flottant et ne
+  construire en rationnel exact que l'inégalité finalement retenue coûte 0,096 s. Sûreté intacte : le
+  flottant ne sert qu'à <em>choisir</em>, l'inégalité retenue est vérifiée exactement sur toute la
+  boîte — un mauvais choix fait échouer le certificat, il ne le fausse pas.</li>
+  <li><strong>Les témoins de bord sont arrondis vers l'intérieur.</strong> Les sommets de cellule et les
+  milieux de Delaunay sont <em>sur le bord</em> : un arrondi au plus proche les faisait sortir d'un
+  epsilon, d'où les retraits. Une rétraction de 1 − 2⁻¹¹ avant arrondi les ramène dedans avec une marge
+  de 5·10⁻⁴, très au-delà de la variation des contraintes sur une boîte. Effet mesuré : R = 0 sur les
+  60 boîtes des 30 fenêtres — la boucle de retrait ne sert plus que de filet.</li>
+  </ul>
+
+  <p>Bilan mesuré par boîte, à w ≈ 5,5·10⁻⁸ : <strong>23 s → 0,22 s (×105)</strong> ; par fenêtre de
+  deux boîtes, 47 s → 1,6 s. Et le résultat qui compte : le coût est désormais <em>constant en h</em>,
+  pas seulement « lentement croissant ». C'est structurel — toutes les conditions sont des rapports de
+  même degré en h, donc leur <em>forme</em> ne dépend pas de h ; seule la taille des entiers croît,
+  comme O(log h). On peut donc demander n'importe quelle décade : de 10⁸ à 10³¹, chacune coûte
+  1,3 à 1,8 s, sans subdivision et sans échec.</p>
+
+  <p><strong>Le moteur qui a débloqué la queue.</strong> Le goulot n'était pas le certificat mais la
+  <em>construction du gabarit</em> : chercher une clique dans le graphe de conflit coûtait O(h²) tests
+  de conflit (413 s pour la seule fenêtre [20 ; 100]). Un programme Rust dédié
+  (<code>dossiers/rust/gabarit</code>, sans dépendance) le fait maintenant en <strong>temps
+  constant</strong> : 0,06 ms à h = 20 comme à h = 10⁸. Quatre réductions s'additionnent — corps de
+  différences K = V − V calculé une fois par réseau (chaque conflit devient une distance point-polygone
+  en O(6), au lieu d'un calcul polygone-polygone) ; facettes limitées aux huit vecteurs pertinents de
+  Voronoï (au lieu de tous les v de norme ≤ 4h²) ; <em>dichotomie</em> sur le pas de la rangée, justifiée
+  par la monotonie de deux prédicats (ε·dmax(k·b₁) ≥ D croissant, dmin(k·b₁) ≤ D décroissant) ; et
+  glouton sur O(1/√(1−ε²)) candidats au lieu d'une clique maximale. Le programme ne <em>prouve</em> rien :
+  il propose des témoins, le certificat Python les valide ou les rejette. C'est ce qui permet d'y
+  employer des flottants sans entamer la sûreté — et il retrouve au passage, en arithmétique exacte,
+  les valeurs ω = 24 (h = 10) et ω = 16 (h = 20) mesurées indépendamment côté Python.</p>
+
+  <p><strong>Une erreur de mesure, corrigée.</strong> Une table « ε × h » de la séance donnait
+  l'impression que ω <em>décroissait</em> avec h (5 à h = 100). C'était un artefact du moteur :
+  <code>graphe_exact</code> borne sa fenêtre d'indices par isqrt(cible²/|(g,h)|²) + 6, et
+  |(g,h)|² = h², d'où une fenêtre de 8 à h = 100 alors que les cellules en conflit sont à des
+  décalages d'ordre h. Avec une fenêtre rectangulaire (|i| ≤ τ+3, |j| ≤ 2), les valeurs réelles de la
+  queue sont <em>grandes</em> : ω = 24 à h = 10, ω = 16 à h = 20. La queue est donc la partie la plus
+  <em>confortable</em> du domaine, pas la plus tendue — et les valeurs ω « entre 39 et 57 » citées
+  auparavant doivent être lues avec la même réserve.</p>
+
+  <p>Pourquoi la queue résistait quand même, et ce que cela dit de la suite : le témoin de la queue
+  n'est pas une clique compacte mais une <strong>rangée</strong> de cellules dont le <em>pas</em> croît
+  linéairement en h. À ε fixé, le pas vaut ≈ h·√(1/ε² − 1) et le nombre de places dans la rangée vaut
+  ≈ 1/√(1 − ε²), indépendant de h : 7,1 places à ε = 99/100. Le motif est donc <em>auto-similaire</em>
+  mais ses décalages <em>entiers</em> changent avec h — c'est cela, et non la non-bornitude, qui
+  interdisait une boîte unique en h. Le repère w règle le problème pour toute fenêtre [w₀,w₁] avec
+  w₀ &gt; 0 ; il ne peut rien pour w = 0, où les décalages entiers devraient être infinis.</p>
+
+  <h3>6.5 Le verrou h → ∞ est fermé : lemme du pas ⌈h/10⌉</h3>
+
+  <p>La queue ne résistait pas pour un manque d'idées géométriques, mais à cause d'un détail de
+  <em>représentation</em> : dans une boîte certifiée, les <strong>décalages entiers sont figés</strong>,
+  alors que le pas de la rangée de conflit vaut k ≈ c·h. Quand w → 0, k → ∞ : aucune boîte [0, w₁] ne
+  peut contenir un entier qui grandit. On contourne l'obstacle en ne figeant plus rien — on
+  <em>choisit</em> le pas et on majore. Le lemme tient en cinq faits élémentaires et deux
+  inégalités strictes.</p>
+
+  <div class="encart">
+  <span class="pastille p-prouve">prouvé</span>
+  <strong>Lemme (queue).</strong> Soit Λ = ℤ(1,0) ⊕ ℤ(g,h) avec |g| ≤ 1/2 et h ≥ 20, soit V₀ la cellule
+  de Voronoï de 0 et D son diamètre. Posons ε = 999/1000 et k = ⌈h/10⌉. Alors les sept cellules
+  V₀, V₀+(k,0), …, V₀+(6k,0) sont deux à deux en conflit :
+  <span class="formule" style="display:inline">ε·dmin ≤ D ≤ ε·dmax</span>. Par les lemmes A et B
+  (§7.3), elles reçoivent deux à deux des couleurs différentes : <strong>χ ≥ 7 pour tout réseau</strong>
+  de ce domaine, sans exception de queue.
+  </div>
+
+  <p class="small"><em>Preuve.</em> Cinq faits, tous élémentaires. On note v = (i + jg, jh) un vecteur
+  non nul de Λ et x = (x₁,x₂) un point du plan.</p>
+  <ol class="small">
+    <li><strong>Le segment vertical est dans la cellule.</strong> Pour x = (0,t) avec |t| ≤ h/2 :
+    ⟨x,v⟩ = t·jh ≤ |j|h²/2 ≤ ((i+jg)² + j²h²)/2 = |v|²/2, car |j|h² ≤ j²h² ⟺ |j|(|j|−1) ≥ 0 ; et
+    ⟨x,v⟩ = 0 ≤ i²/2 si j = 0. Donc {0}×[−h/2, h/2] ⊂ V₀.</li>
+    <li><strong>Contenance.</strong> De v = (1,0) : |x₁| ≤ 1/2. De ±(g,h) :
+    |x₂h + x₁g| ≤ (g²+h²)/2, d'où |x₂| ≤ h/2 + (g²+|g|)/(2h) ≤ h/2 + 3/(8h), car |g| ≤ 1/2.</li>
+    <li><strong>La boule de rayon 1/2 est dans la cellule.</strong> Tout v ≠ 0 vérifie |v| ≥ 1 : si
+    j = 0 alors |i| ≥ 1 ; sinon |v| ≥ |j|h ≥ 20. Donc pour |x| ≤ 1/2 : ⟨x,v⟩ ≤ |x|·|v| ≤ |v|²/2.</li>
+    <li><strong>Distances entre V₀ et Q = V₀ + (i,0)</strong>, pour i ≥ 1 : dmin ≥ i − 1 (les deux
+    bandes |x₁| ≤ 1/2 et |x₁ − i| ≤ 1/2, fait 2) ; dmin ≤ i (les points (1/2−δ,0) et son translaté,
+    fait 3) ; dmax ≥ √(i²+h²) (les points (0,h/2) ∈ V₀ et (i,−h/2) ∈ Q, fait 1).</li>
+    <li><strong>Diamètre.</strong> D ≥ h (fait 1 : ±(0,h/2) ∈ V₀) et
+    D² ≤ 1 + (h + 3/(4h))² (fait 2 : la cellule est dans un rectangle 1 × (h + 3/(4h))).</li>
+  </ol>
+  <p class="small">Avec k = ⌈h/10⌉ on a h/10 ≤ k et 6k ≤ 3h/5 + 6, donc tout écart entre deux des sept
+  cellules vérifie i ∈ [h/10, 3h/5 + 6]. Alors :</p>
+  <ul class="small">
+    <li><em>Proche</em> — ε·dmin ≤ ε·i ≤ ε(3h/5 + 6) &lt; h ≤ D, la stricte inégalité valant dès
+    h ≥ 6/(1/ε − 3/5) = 29970/2003 ≈ 14,96.</li>
+    <li><em>Loin</em> — ε·dmax ≥ ε√(i²+h²) ≥ ε√(101/100)·h ; au carré, D ≤ ε·dmax équivaut à
+    1 + (h+3/(4h))² ≤ ε²·(101/100)h², soit 0,00802·h² ≥ 2,5 + 9/(16h²) : vrai dès h = 20
+    (3,19 ≥ 2,50), et le membre de gauche croît en h².</li>
+  </ul>
+  <p class="small">Les deux inégalités sont <strong>strictes</strong> — c'est indispensable : à ε = 1 le
+  lemme B ne conclut plus (§7.3). ∎</p>
+
+  <div class="alerte or">
+  <span class="pastille p-prouve">version machine, séance 17</span>
+  Le lemme est compilé : <code>dossiers/geom/Queue.lean</code>,
+  <code>Queue.sept_couleurs</code> (sept cellules ⟹ sept couleurs distinctes) et
+  <code>Queue.queue</code> (les cellules dilatées portent une paire à distance exactement 1).
+  La compilation a <em>raccourci</em> la preuve ci-dessus, et il faut le dire : des cinq faits, un
+  seul est nécessaire — <strong>le segment vertical</strong> (fait 1). Prendre l'échelle
+  <code>s = 1/h</code> donne immédiatement les deux paires : les centres
+  <code>(mk,0)</code> et <code>(nk,0)</code> sont à distance <code>(n−m)k/h ≤ 6⌈h/10⌉/h ≤ 1</code>
+  (c'est <code>Queue.pas_borne</code> : <code>6⌈h/10⌉ ≤ h</code> dès h ≥ 15 — un cheveu au-dessus des
+  29970/2003 ≈ 14,96 du §6.5, donc un seuil marginalement moins bon, pour beaucoup moins de
+  machinerie), et les points <code>(mk, ±h/2)</code> sont à distance
+  <code>√(((n−m)k)² + h²)/h ≥ 1</code>. Les faits 2 à 5 (contenance, boule de rayon 1/2, bornes de
+  dmin, diamètre) et les deux inégalités strictes servent à la route ε = 999/1000 ; celle-ci est
+  vérifiée aussi, en arithmétique pure (<code>Queue.proche_eps</code>, <code>Queue.loin_eps</code>),
+  mais la conclusion n'en dépend pas. Conséquence pour la lecture du §7.3 : le lemme de queue
+  <em>n'a pas besoin</em> du lemme B — il tient à toute échelle, sans ε ni D.
+  </div>
+
+  <h3>6.6 Ce que le lemme change, et son statut exact</h3>
+  <p>La queue cesse d'être un verrou. Le domaine {|g| ≤ 1/2, g² + h² ≥ 1} est couvert pour
+  <strong>tout h &gt; 0</strong> : par le lemme pour h ≥ 20, par les certificats machine pour
+  h ∈ [√3/2 ; 100] (repère (g,h) jusqu'à 2, repère w au-delà). L'échelle des trente décades du §6.2
+  devient <em>redondante</em> — elle est conservée comme contrôle croisé indépendant, et c'est elle qui
+  a fourni les ε et les cliques que le lemme reproduit — puis que la machine a vérifiés (§6.6).</p>
+
+  <div class="alerte">
+  <span class="pastille p-calcul">statut, sans embellissement</span>
+  <strong>Le lemme du pas est certifié par machine</strong> depuis la séance 17 : il est compilé dans
+  <code>dossiers/geom/Queue.lean</code> (<code>Queue.queue</code> et <code>Queue.sept_couleurs</code>,
+  Lean 4.36.0-rc2 + Mathlib, <code>lake build</code> vert, <code>#print axioms</code> →
+  <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code>). Ce n'est plus une
+  preuve à la main, et le texte de la session précédente a été <em>simplifié</em> par la machine
+  (§9) : des cinq faits annoncés, un seul est nécessaire. Deux contrôles accompagnent le calcul,
+  <code>lemme_queue.py</code> → <code>audit_lemme_queue.json</code> : (i) les sept inégalités
+  rationnelles du lemme en arithmétique exacte — seuil h ≥ 14,96, marge relative minimale 0,17 % en
+  h = 20, dérivée positive ; (ii) les cinq faits géométriques <em>et les 21 conflits</em> confrontés à
+  la cellule exacte d'<code>audit_gh</code> sur 43 cellules (h = 20 … 2000, g = −1/2 … 1/2) :
+  43 sur 43 conformes. Ces contrôles ne remplacent pas la preuve : ils vérifient sur des exemples
+  ce que la preuve ci-dessus établit pour tout h.
+  </div>
+
+  <h2>7. Le pont vers le théorème 2 — ce que ce calcul établit, et ce qu'il n'établit pas</h2>
+
+  <h3>7.1 Ce que dit le théorème, mot pour mot</h3>
+  <p><em>Théorème 2</em> (Sokolov–Voronov, <em>Discrete Mathematics</em> <strong>349</strong>(12), 2026,
+  art. 115321, DOI 10.1016/j.disc.2026.115321 ; arXiv:2502.01958) :
+  « <em>There is no polygonal coloring of the plane in 6 colors, i.e. χ<sub>poly</sub>(ℝ²) = 7.</em> »</p>
+  <p>Un <em>coloriage polygonal</em> est un coloriage propre du plan (deux points à distance 1 diffèrent)
+  dont les classes de couleur sont des polygones : le plan est découpé en régions polygonales, et chaque
+  région est monochrome. Le théorème porte donc sur <strong>tous</strong> les découpages polygonaux, pas
+  sur une famille. C'est ce qui rend le nôtre strictement plus faible, et c'est le premier point à écrire
+  noir sur blanc.</p>
+
+  <h3>7.2 Ce que le calcul fournit, exactement</h3>
+  <div class="encart">
+  <span class="pastille p-prouve">énoncé</span>
+  <strong>Théorème (notre tranche).</strong> Soit Λ un réseau dont le module réduit τ = g + ih vérifie
+  |g| ≤ 1/2, g² + h² ≥ 1 (c'est-à-dire <em>tout</em> réseau, sans exception : la queue est fermée
+  par le lemme du §6.5).
+  Il existe une échelle s &gt; 0 telle que : <em>aucun coloriage du plan en 6 couleurs, constant sur
+  chaque cellule du pavage de Voronoï de sΛ, ne soit propre.</em> Mieux : le graphe de conflit de ce
+  pavage contient une clique de 7 cellules, fournie explicitement par le certificat.
+  </div>
+  <p>Le « mieux » n'est pas décoratif : une borne sur χ ne donne pas de clique (un graphe 7-chromatique
+  peut n'avoir que des triangles). Ce qui est produit ici est un <em>témoin fini</em> : sept cellules,
+  sept paires, et pour chaque paire une fonction rationnelle dont le signe constant est vérifié en
+  arithmétique exacte.</p>
+
+  <h3>7.3 Les deux lemmes, et le rôle exact de ε</h3>
+  <p><strong>Lemme A (le conflit force la différence).</strong> Soient A, B deux cellules convexes
+  d'intérieur non vide, et s &gt; 0. Si les cellules sA, sB vérifient
+  <span class="formule" style="display:inline">s·dmin &lt; 1 &lt; s·dmax</span>, alors tout coloriage
+  propre constant sur les cellules donne des couleurs différentes à A et B.</p>
+  <p class="small"><em>Preuve.</em> int(sA) × int(sB) est connexe (produit de convexes), et l'application
+  continue (p,q) ↦ |p − q| y prend une valeur &lt; 1 et une valeur &gt; 1 : les bornes inf et sup sur les
+  intérieurs coïncident avec celles sur les fermés, par densité de l'intérieur. Le théorème des valeurs
+  intermédiaires donne alors p, q <em>intérieurs</em> avec |p − q| = 1. S'ils étaient de la même couleur,
+  le coloriage ne serait pas propre. ∎</p>
+  <p>Le point technique est là : les points témoins doivent être <em>intérieurs</em>. Un point du bord
+  porte plusieurs couleurs (c'est la définition même d'un coloriage de carte), et un argument qui
+  s'appuie sur le bord ne conclut rien — c'est précisément le terrain des « sommets trichromatiques » qui
+  encombre les preuves de cartes.</p>
+
+  <p><strong>Lemme B (l'échelle existe, et c'est ε &lt; 1 qui la donne).</strong> Soient
+  0 &lt; dmin &lt; dmax, D &gt; 0, et ε ∈ ]0, 1[ avec
+  <span class="formule" style="display:inline">dmax ≥ D/ε</span>, où D est un majorant du diamètre
+  des cellules. Alors il existe s &gt; 0 tel que s·dmin &lt; 1 &lt; s·dmax <em>et</em> s·D &lt; 1.</p>
+  <p class="small"><em>Preuve.</em> De dmax ≥ D/ε &gt; D on tire 1/dmax &lt; 1/D, et de
+  dmin &lt; dmax on tire 1/dmax &lt; 1/dmin. L'intervalle ouvert
+  ]1/dmax, min(1/dmin, 1/D)[ est donc non vide ; prenons-en le milieu s. Alors s·dmax &gt; 1 ✓,
+  s·dmin &lt; 1 ✓ et s·D &lt; 1 ✓. ∎</p>
+  <p class="small">Les deux lemmes sont compilés, pas seulement écrits :
+  <code>dossiers/geom/Pont.lean</code> contient <code>Pont.lemmeB</code>,
+  <code>Pont.pont_coloriage</code>, <code>Pont.pont_interieurs</code> et
+  <code>Pont.pont_echelle</code> ; voir §9.</p>
+  <div class="alerte or">
+  <span class="pastille p-calcul">pourquoi ε &lt; 1 et pas ε = 1</span>
+  Avec ε = 1, le lemme B n'a plus de conclusion : dmax ≥ D ne donne que 1/dmax ≤ 1/D, l'intervalle
+  peut être vide. Toute la marge du certificat passe par cette stricte inégalité. C'est le sens de la
+  consigne du dossier — <em>distinguer le seuil 1 du seuil strictement inférieur à 1</em> : à ε = 1 le
+  critère est non strict, et l'argument de continuité s'effondre exactement là où il servirait.
+  </div>
+
+  <p><strong>Enchaînement.</strong> Le certificat prouve, pour sept cellules deux à deux, les deux
+  inégalités du lemme B avec ε ∈ {99/100, 19/20, 9/10, 17/20, 3/4} selon la boîte. Le lemme B fournit
+  l'échelle s, le lemme A conclut que les sept paires sont deux à deux bicolores au sens fort. Sept
+  cellules deux à deux contraintes ⟹ 7 couleurs.</p>
+
+  <h3>7.4 Le sens de l'implication, et l'asymétrie qu'il impose</h3>
+  <div class="formule">Théorème 2  ⟹  notre tranche  ⟹  (rien de plus)
+notre tranche  ⇏  Théorème 2        notre tranche  ⇏  χ(ℝ²) ≥ 7</div>
+  <p>Trois conséquences qu'il faut assumer :</p>
+  <ul>
+    <li><strong>Ce calcul ne peut pas réfuter le théorème 2.</strong> L'énoncé porte sur tous les
+    découpages polygonaux ; en trouver un à 6 couleurs ne le réfuterait pas, car il faudrait les trouver
+    tous. Notre méthode a un pouvoir <em>asymétrique</em> : elle confirme, elle ne renverse pas. Si le
+    théorème de S-V tombe, ce sera par un défaut de preuve — et leur preuve est contestée, pas la nôtre.</li>
+    <li><strong>Ce calcul ne dit rien sur χ(ℝ²).</strong> Un coloriage polygonal est un coloriage du plan
+    parmi d'autres : borner χ<sub>poly</sub> ne borne pas χ, et réciproquement. L'encadrement
+    6 ≤ χ(ℝ²) ≤ 7 reste où il est — le 6 étant revendiqué par OpenAI (23/09/2026, non référé), le 7
+    étant Isbell, la valeur exacte indéterminée. Notre travail ne fournit que des obstructions
+    <em>locales</em> dans une sous-famille.</li>
+    <li><strong>La valeur du résultat est une assurance, pas une découverte.</strong> C'est exactement
+    la fonction annoncée au départ : si la preuve de S-V ne tient pas, la tranche « réseaux » reste
+    établie — la queue h → ∞ étant désormais fermée (§6.5), <em>sans condition</em>.</li>
+  </ul>
+
+  <h3>7.5 Antériorité : ce n'est pas une découverte, et il faut le dire avant qu'on nous le demande</h3>
+  <table>
+    <tr><th>résultat</th><th>qui</th><th>portée</th><th>rapport au nôtre</th></tr>
+    <tr><td>≥ 7 pour tout schéma de coloriage réseau–sous-réseau</td><td>Coulson 2004</td>
+        <td class="num">coloriages par cosets d'un sous-réseau</td><td><strong>ne recouvre pas notre tranche</strong> — schéma bien plus contraint que « constant sur les cellules »</td></tr>
+    <tr><td>≥ 6 pour tuiles polygonales convexes d'aire minorée</td><td>Coulson 2004</td>
+        <td class="num">tous coloriages polygonaux</td><td>même famille, borne plus faible</td></tr>
+    <tr><td>≥ 7 si les sommets sont de degré ≥ 4 ; ≥ 7 pour les triangles</td><td>Manta 2021</td>
+        <td class="num">coloriages polygonaux</td><td>laisse ouvert le degré ≤ 3, qui est notre cas</td></tr>
+    <tr><td>≥ 6 pour les coloriages de carte</td><td>Woodall 1973, Townsend 1981</td>
+        <td class="num">cartes</td><td>antérieur, plus faible</td></tr>
+    <tr><td>χ<sub>poly</sub>(ℝ²) = 7</td><td>Sokolov–Voronov 2026</td>
+        <td class="num">tous coloriages polygonaux</td><td><strong>revendiqué, non vérifié par nous</strong></td></tr>
+  </table>
+  <p><strong>Correction (séance 17).</strong> Ce tableau disait que Coulson « recouvre très probablement
+  notre tranche ». C'est faux, et la source le dit elle-même : l'abstract de Coulson (2004) énonce
+  deux résultats distincts — « <em>Any lattice-sublattice colouring scheme for ℝ² must use at least 7
+  colours</em> » (coloriage par <em>cosets</em> d'un sous-réseau, schéma très contraint) et « <em>at
+  least 6 colours are necessary for an excluded distance when convex polygonal tiles (all with area
+  greater than some positive constant) are used</em> ». Un pavage de Voronoï de réseau est un pavage
+  polygonal convexe d'aire minorée : ce que Coulson couvre chez nous, c'est la borne <strong>6</strong>,
+  pas la borne 7. Notre énoncé — une 7-clique pour <em>tout</em> réseau — n'est ni donné ni impliqué
+  par ces deux résultats. La revue machine Pith va dans le même sens : « the result is not in the prior
+  literature; Woodall and Townsend give 6, Coulson gives 6 for polygonal tilings, and Manta's triangle
+  result does not imply the polygon statement. »</p>
+
+  <p>Reste que nous ne revendiquons pas la nouveauté pour autant. En 2D la valeur 7 est classique pour
+  le réseau hexagonal ; la tessellation de Voronoï de réseaux a son propre χ (Dutour Sikirić 2021, pour
+  l'adjacence par facettes — une relation différente de la nôtre) ; et l'énoncé exact « toute cellule de
+  Voronoï de réseau admet une 7-clique » n'est, à notre connaissance, pas écrit tel quel dans la
+  littérature consultée. Nous ne pouvons donc affirmer ni qu'il est neuf, ni qu'il est connu : nous
+  fournissons une vérification indépendante, par une méthode différente, d'un cas que la littérature
+  n'énonce pas et que S-V revendique fermer.</p>
+
+  <h3>7.6 Statut de Sokolov–Voronov : publié, contesté, non vérifié par nous</h3>
+  <p>L'article est <strong>publié</strong> (<em>Discrete Mathematics</em> 349(12), décembre 2026,
+  art. 115321) — la formule « preprint non référé » est factuellement périmée et ne doit plus être
+  employée. Mais <strong>publication ≠ validité</strong> : la revue machine Pith (5 objections majeures,
+  5 mineures) soutient que le lemme central repose sur un hexagone régulier non justifié, et que la
+  preuve du théorème 2 hérite du trou. Ces objections sont citées <em>comme telles</em> — nous ne les
+  avons pas vérifiées nous-mêmes, et ce document ne les endosse pas. Le statut honnête est :
+  <strong>revendiqué, publié, contesté, non vérifié indépendamment par nous</strong>.</p>
+
+  <h3>7.7 Ce qui manque pour que le pont soit complet</h3>
+  <ol>
+    <li><s><strong>La queue h → ∞.</strong> Sans elle, l'énoncé portait sur « tout réseau sauf ceux dont
+    le module réduit a h &gt; 10³¹ » — les réseaux les plus anisotropes, ceux que Manta laisse ouverts.</s>
+    <strong>Fermé (§6.5)</strong> par le lemme du pas ⌈h/10⌉ : l'énoncé porte maintenant sur tous les
+    réseaux, sans réserve de queue. Le pont est donc complet du côté du calcul.</li>
+    <li><strong>Le saut de la tranche au théorème.</strong> Même avec la queue fermée, on obtient la
+    restriction aux pavages de Voronoï de réseaux, pas les coloriages polygonaux arbitraires. Combler ce
+    saut demanderait l'argument de réduction (degré ≥ 4 ⟹ ≥ 7, de Manta) appliqué aux découpages non
+    réticulaires : c'est là que se trouve le vrai contenu du théorème 2, et ce n'est pas un calcul.</li>
+  </ol>
+
+  <h2>8. Contrôles négatifs — six sur six</h2>
+  <p>Un certificat qui ne sait pas dire « non » ne dit pas « oui ». Chaque contrôle porte sur un
+  énoncé <em>faux</em> — pas sur une région non couverte, qui n'est pas une erreur.</p>
+  <table>
+    <tr><th>contrôle</th><th>attendu</th><th>obtenu</th></tr>
+    <tr><td>(e) contrôle positif : A₂, ε = 99/100</td><td>accepté</td>
+        <td class="num">accepté, ω ≥ 7, diam² 1,578..1,578</td></tr>
+    <tr><td>(a) ε = 1/2 : la conclusion est fausse</td><td>refus</td>
+        <td class="num">refus : ω = 5 &lt; 7</td></tr>
+    <tr><td>(b) majorant du diamètre écrasé (÷100)</td><td>refus</td>
+        <td class="num">refus : incohérence 0,034 &lt; 1,578</td></tr>
+    <tr><td>(c) réseau dégénéré (h = 0)</td><td>refus</td>
+        <td class="num">refus : cellule vide</td></tr>
+    <tr><td>(d) témoin faux, le milieu de 3b₁</td><td>retrait</td>
+        <td class="num">PointHors, point retiré</td></tr>
+    <tr><td>(f) faux sommet de clique, la cellule (5,5)</td><td>clique ≤ vraie clique</td>
+        <td class="num">écarté, ω ≥ 7 conservé</td></tr>
+  </table>
+  <p>Le contrôle (b) a fait ajouter au certificat un test qui n'y était pas : <strong>refuser de
+  certifier un majorant inférieur au minorant</strong>. Sans lui, un majorant corrompu passait sans
+  difficulté — il rend la condition (L) plus facile. C'est le contrôle négatif qui a créé le garde-fou.</p>
+
+  <h2>9. Ce que ce document ne dit pas</h2>
+  <ul>
+    <li><strong>Rien sur χ(ℝ²).</strong> Aucun énoncé nouveau sur le plan. L'encadrement
+    6 ≤ χ(ℝ²) ≤ 7 est inchangé : 6 revendiqué par OpenAI (23/09/2026, <em>non référé</em>), 7 par
+    Isbell, valeur exacte indéterminée. Notre travail ne produit que des obstructions locales dans une
+    sous-famille de coloriages.</li>
+    <li><strong>Rien sur la validité de la preuve de S-V.</strong> Nous ne jugeons pas leurs arguments ;
+    nous établissons une tranche par un autre chemin. Leur énoncé reste « publié, contesté, non vérifié
+    indépendamment par nous », et les objections de la revue machine Pith sont citées comme des
+    objections, pas comme nos conclusions.</li>
+    <li><strong>Pas le théorème 2 lui-même.</strong> Notre résultat en est une restriction aux pavages de
+    Voronoï de réseaux, et l'implication ne va que dans un sens (§7.4). Nous ne revendiquons aucune
+    antériorité : Coulson (2004) donne déjà ≥ 7 pour les schémas réseau–sous-réseau, ce qui recouvre
+    très probablement notre tranche (§7.5).</li>
+    <li><strong>Pas de quoi crier au résultat neuf.</strong> Le domaine est entièrement couvert et la
+    queue est fermée (§6.5), mais la tranche reste une restriction aux pavages de Voronoï de réseaux, et
+    Coulson (2004) la recouvre probablement. Ce qui a changé dans cette séance est le <em>statut interne</em>
+    du dossier : il n'y a plus de trou déclaré.</li>
+    <li><strong>Le lemme de queue, désormais, <em>est</em> certifié par machine.</strong> L'aveu « preuve
+    à la main » disparaît à son tour : <code>dossiers/geom/Queue.lean</code> compile
+    <code>Queue.queue</code> (les sept cellules dilatées par <code>s = 1/h</code> portent deux à deux
+    une paire à distance exactement 1) et <code>Queue.sept_couleurs</code> (tout coloriage propre et
+    constant sur ces cellules doit leur donner sept couleurs distinctes : χ ≥ 7 pour le réseau sΛ).
+    Avec <code>Pont.lean</code>, <em>plus aucun énoncé du dossier n'est une preuve à la main</em> : les
+    seuls textes qui restent hors machine sont les contrôles numériques, qui ne sont pas des énoncés.
+    <br><br>
+    <em>Ce que la machine a simplifié.</em> Le lemme est <strong>plus court</strong> que sa rédaction.
+    Des cinq faits du §6.5, un seul est utilisé — le segment vertical. À l'échelle <code>s = 1/h</code>
+    la paire de centres est à distance <code>(n−m)k/h</code> et la paire d'extrémités verticales à
+    distance <code>√(((n−m)k)² + h²)/h ≥ 1</code> ; tout se ramène à <code>6⌈h/10⌉ ≤ h</code>, vrai
+    dès h ≥ 15 (contre 29970/2003 ≈ 14,96 pour la route ε : un cheveu de moins, mais sans ε, sans D
+    et sans lemme B). Ni le lemme B du §7.3, ni ε = 999/1000,
+    ni le diamètre D, ni les faits 2 à 5 ne sont nécessaires : ils appartiennent à la route ε, laquelle
+    reste vérifiée en arithmétique pure (<code>Queue.proche_eps</code>, <code>Queue.loin_eps</code>).
+    Le §7.3 garde son intérêt — il donne l'uniformité de l'échelle sur <em>toutes</em> les boîtes du
+    certificat — mais le lemme de queue, lui, n'en dépend pas.</li>
+    <li><strong>Le pont, désormais, <em>est</em> certifié par machine.</strong> L'aveu « prouvé à la
+    main, trois lignes chacun » n'est plus exact et disparaît. Les deux lemmes du §7.3 sont compilés
+    dans <code>dossiers/geom/Pont.lean</code> (Lean 4.36.0-rc2 + Mathlib, <code>lake build</code>
+    vert) : <code>lemmeB</code> pour l'échelle, <code>pont_coloriage</code> et
+    <code>pont_interieurs</code> pour la marche coloriage, <code>pont_echelle</code> pour
+    l'assemblage avec les cellules dilatées ; les deux points délicats de l'énoncé sont adossés à des
+    théorèmes de réfutation, <code>lemmeB_sans_dmin_lt_dmax_est_faux</code> et
+    <code>temoin_naif_echoue</code>. <code>#print axioms</code> ne rend que
+    <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code> : aucun
+    <code>sorryAx</code>, aucun axiome ajouté. Une version <em>noyau pur</em> (sans Mathlib) des
+    mêmes énoncés, en arithmétique entière, compile également dans
+    <code>dossiers/lean/Pont.lean</code>.</li>
+  </ul>
+
+  <h2>10. Énoncé final et statut de chaque maillon</h2>
+
+  <div class="encart">
+  <span class="pastille p-prouve">énoncé</span>
+  <strong>Théorème (tranche « réseaux », inconditionnelle).</strong> Soit Λ un réseau de ℝ², τ = g + ih son
+  module réduit (|g| ≤ 1/2, g² + h² ≥ 1). Il existe une échelle s &gt; 0 telle que le pavage de Voronoï de
+  sΛ ne porte aucun coloriage du plan en 6 couleurs constant sur chaque cellule et propre. Mieux : son
+  graphe de conflit contient une clique de 7 cellules, <em>explicite</em> — pour h ≥ 20, les sept cellules
+  aux décalages 0, k, 2k, …, 6k le long de b₁ avec k = ⌈h/10⌉ et ε = 999/1000.
+  </div>
+
+  <p>Aucune exception de queue : c'est le seul changement par rapport à la version précédente, et il est
+  structurel — le domaine est maintenant couvert pour tout h &gt; 0.</p>
+
+  <table>
+  <tr><th>maillon</th><th>portée</th><th>statut</th></tr>
+  <tr><td>domaine correct (|g| ≤ 1/2, g²+h² ≥ 1)</td><td>réduction modulaire</td><td>prouvé (classique)</td></tr>
+  <tr><td>h ∈ [√3/2 ; 2]</td><td>137 boîtes, repère (g,h)</td><td>certifié machine, exact</td></tr>
+  <tr><td>h ∈ [2 ; 100]</td><td>2 boîtes par fenêtre, repère w</td><td>certifié machine, exact</td></tr>
+  <tr><td>h ∈ [10 ; 10³¹]</td><td>30 décades, 2 boîtes chacune</td><td>certifié machine, exact (contrôle croisé)</td></tr>
+  <tr><td>h ≥ 20</td><td>lemme du pas ⌈h/10⌉</td><td><strong>certifié machine</strong> (<code>Queue.queue</code>, <code>Queue.sept_couleurs</code>) ; s = 1/h, seuil réel h ≥ 15</td></tr>
+  <tr><td>lemme B (échelle)</td><td>ε &lt; 1 strict, dmin &lt; dmax</td><td><strong>certifié machine</strong> (<code>Pont.lemmeB</code>, Mathlib), énoncé au §7.3</td></tr>
+  <tr><td>lemme A (conflit)</td><td>paire à distance 1, intérieurs admis</td><td><strong>certifié machine</strong> (<code>pont_coloriage</code>, <code>pont_interieurs</code>, <code>pont_echelle</code>)</td></tr>
+  <tr><td>Lean</td><td>66 théorèmes, 0 <code>sorry</code>, 2 projets</td><td>noyau pur 15 (dont pont 5) + Mathlib 51 (Geometrie 17, pont 6, queue 28) ; <em>couvre</em> le pont et le lemme de queue</td></tr>
+  <tr><td>χ(ℝ²), validité de S-V</td><td>—</td><td>hors périmètre, inchangé</td></tr>
+  </table>
+
+  <p><strong>Où lire la preuve.</strong> Le lemme de queue est au §6.5 : cinq faits de géométrie
+  élémentaire (le segment vertical, la contenance, la boule de rayon 1/2, les bornes de distances, les
+  bornes du diamètre) puis deux inégalités strictes. Le certificat machine est décrit au §4 et son
+  arithmétique au §7.3. Le moteur qui a rendu le calcul possible est le crate <code>rust/gabarit</code>,
+  dont le coût est maintenant constant en h — et le certificat aussi, depuis que son goulot (une boucle
+  de retrait, pas l'arithmétique) a été identifié et supprimé (§6.2).</p>
+
+  <h2>11. Fichiers</h2>
+  <table>
+    <tr><th>fichier</th><th>rôle</th></tr>
+    <tr><td class="num">audit_domaine2.py · .json</td><td>balayage large (8 349 réseaux) sur le domaine corrigé ; y compris les anisotropes</td></tr>
+    <tr><td class="num">audit_gh.py</td><td>moteur exact en (g,h) : cellule rationnelle, graphe, clique ; auto-vérification de la fenêtre</td></tr>
+    <tr><td class="num">poly2.py</td><td>polynômes exacts, forme de la moyenne, évaluation d'intervalle sûre</td></tr>
+    <tr><td class="num">audit_certificat2.py</td><td>certificat par boîtes, sommets ; retrait des sommets aux transitions ; couverture + contrôles</td></tr>
+    <tr><td class="num">audit_certificat3.py</td><td>certificat à témoins robustes : milieux de Delaunay (conditions polynomiales) + trois majorants du diamètre</td></tr>
+    <tr><td class="num">rust/gabarit/</td><td>moteur Rust (sans dépendance) : gabarits de clique en temps constant en h, avec mode exact i128 pour la validation</td></tr>
+    <tr><td class="num">gabarit_rust.py</td><td>pont Rust → motif Python, au format de <code>motif_queue</code></td></tr>
+    <tr><td class="num">couvre_w.py</td><td>couverture de la queue dans le repère w = 1/h (boîtes fermées en w, donc h ≥ 1/w₁) ; motif à fenêtre rectangulaire</td></tr>
+    <tr><td class="num">audit_w_2_10.json · audit_w_10_20.json · audit_w_20_100.json</td><td>couvertures complètes de la queue par fenêtre (2 boîtes chacune)</td></tr>
+    <tr><td class="num">audit_w_1e&lt;a&gt;_1e&lt;a+1&gt;.json (30 fichiers, a = 1…30)</td><td><strong>nouveau</strong> : une décade par fichier, h ∈ [10ᵃ ; 10ᵃ⁺¹], toutes complètes — c'est ce qui porte le plafond à 10³¹</td></tr>
+    <tr><td class="num">lemme_queue.py · audit_lemme_queue.json</td><td><strong>nouveau</strong> : le lemme de la queue — 7 inégalités rationnelles vérifiées exactement, 5 faits géométriques et 21 conflits confrontés à la cellule exacte sur 43 cellules</td></tr>
+    <tr><td class="num">audit_w_echelle.json</td><td><strong>nouveau</strong> : synthèse des 30 fenêtres (temps, boîtes, ε retenu, clique certifiée)</td></tr>
+    <tr><td class="num">audit_bande1.json, audit_region1.json, audit_region2.json, audit_controle.json</td><td>sorties des couvertures</td></tr>
+    <tr><td class="num">lean/ (Plafond.lean, T8.lean, Pont.lean)</td><td><strong>nouveau</strong> : noyau pur, sans Mathlib — 15 théorèmes, 0 <code>sorry</code> ; <code>Pont.lean</code> porte le pont en arithmétique entière (5 théorèmes)</td></tr>
+    <tr><td class="num">geom/Geometrie.lean</td><td>projet Mathlib — 17 théorèmes : cellule convexe, préconnexité des distances réalisées, <code>existe_paire_distance_un</code>, critère d'encadrement</td></tr>
+    <tr><td class="num">geom/Pont.lean</td><td><strong>nouveau</strong> : le pont certifié en ℝ — <code>lemmeB</code>, <code>pont_coloriage</code>, <code>pont_interieurs</code>, <code>pont_echelle</code>, plus les réfutations <code>lemmeB_sans_dmin_lt_dmax_est_faux</code> et <code>temoin_naif_echoue</code> ; axiomes <code>[propext, Classical.choice, Quot.sound]</code></td></tr>
+    <tr><td class="num">geom/Queue.lean</td><td><strong>nouveau</strong> : le lemme du pas ⌈h/10⌉ certifié — réseau, cellule de Voronoï, segment vertical, tangence 2D, <code>queue</code> et <code>sept_couleurs</code> ; 28 théorèmes, 0 <code>sorry</code></td></tr>
+    <tr><td class="num">lean/pont-check.log · geom/pont-check.log · geom/queue-check.log · geom/build.log</td><td>journaux de compilation et <code>#print axioms</code> des deux projets</td></tr>
+  </table>
+  <p class="small">Séance 4 : le certificat est passé de 23 s à 0,22 s par boîte et de « croissant en h » à constant ; le plafond prouvé est passé de h = 10⁸ à h = 10³¹. Séance 5 : le lemme du pas ⌈h/10⌉ ferme la queue — cinq faits élémentaires, deux inégalités strictes, constantes vérifiées exactement — et l'énoncé de la tranche devient inconditionnel (§10).</p>
+
+
+  <h2>12. Reproduire les vérifications</h2>
+
+  <p>Rien ici ne dépend d'un résultat non reproductible : du calcul exact sans dépendance côté Python,
+  deux projets Lean côté preuves. Les toolchains ne sont pas dans le dépôt — elan les installe
+  (<code>leanprover/lean4:v4.35.0</code> pour le noyau, <code>v4.36.0-rc2</code> pour Mathlib).</p>
+
+  <div class="formule"># calcul exact (Python 3, aucune dépendance)
+python3 -u dossiers/note/lemme_queue.py          # le lemme du pas — 42/42 points
+python3 -u dossiers/note/audit_certificat3.py    # le certificat par boîtes
+python3 -u dossiers/note/couvre_w.py             # la couverture de la queue, repère w
+
+# preuves machine
+export ELAN_HOME=/var/tmp/leanhome PATH=/var/tmp/leanhome/bin:$PATH
+cd dossiers/lean && lake build                   # noyau pur — 15 théorèmes
+cd dossiers/geom && lake exe cache get && lake build Queue Pont Geometrie</div>
+
+  <p class="small">Journaux conservés : <code>lean/pont-check.log</code>,
+  <code>geom/pont-check.log</code>, <code>geom/queue-check.log</code>, <code>geom/build.log</code>,
+  <code>note/audit_lemme_queue.json</code>, <code>note/audit_w_echelle.json</code>. Le coût du
+  certificat est de 0,220 s par boîte depuis la séance 4 (contre 23 s), et constant en h depuis que le
+  moteur Rust calcule les gabarits de clique : c'est ce qui a permis les trente décades.</p>
+
+  <table>
+  <tr><th>pour vérifier…</th><th>ouvrir</th></tr>
+  <tr><td>l'énoncé final</td><td>§10, puis §7.4 pour le sens de l'implication</td></tr>
+  <tr><td>le domaine, l'arithmétique, le certificat</td><td>§2 à §4</td></tr>
+  <tr><td>la queue h → ∞</td><td>§6, et <code>geom/Queue.lean</code></td></tr>
+  <tr><td>le pont vers le théorème 2</td><td>§7.3, et <code>geom/Pont.lean</code></td></tr>
+  <tr><td>les limites de l'exercice</td><td>§9, et la fin du §13</td></tr>
+  </table>
+
+  <h2>13. Conclusion</h2>
+
+  <p><strong>Ce qui est clos.</strong> La tranche « réseaux » est établie sans exception : le domaine
+  est couvert pour tout h &gt; 0 (certificats exacts jusqu'à h = 100, trente décades de h = 10 à
+  10³¹ comme contrôle croisé indépendant, lemme du pas au-delà), la conclusion est une clique de 7
+  cellules, et les deux lemmes qui font le pont vers un énoncé de coloriage sont désormais compilés.
+  Il n'y a plus de trou déclaré dans le dossier.</p>
+
+  <p><strong>Ce que la séance 17 a changé, et qui n'est pas cosmétique.</strong> Passer le pont et la
+  queue à la machine a durci les énoncés (le lemme B exige <code>dmin &lt; dmax</code> et un témoin
+  d'échelle que le texte n'avait pas) et <em>raccourci</em> le lemme du pas : un seul fait géométrique
+  au lieu de cinq. C'est l'argument le plus solide en faveur de la formalisation, et il vaut d'être
+  noté : compiler ne fait pas que garantir, cela purifie.</p>
+
+  <p><strong>Ce qui n'est pas clos, et ce qu'il faudrait.</strong> Un poste reste ouvert, et un verdict est rendu.</p>
+  <table>
+  <tr><th>poste</th><th>état</th><th>ce qu'il faudrait pour le fermer</th></tr>
+  <tr><td>le bout en bout formel</td><td><strong>moteur et réduction au fini compilés, données compilées, obligations non prouvées</strong> — <code>geom/Boites.lean</code> prouve le moteur (témoins à distance ≤ 1 et ≥ 1 sur les 21 paires ⟹ sept couleurs), la contrainte automatique au-delà de 2r, et <code>cell_of_fini</code> : la contrainte de Voronoï pour tout le réseau infini se ramène aux <code>w</code> de longueur &lt; 2r, donc à un calcul fini (axiomes habituels, 0 <code>sorry</code>) ; l'export des 38 boîtes de la région est fait (<code>note/boites_a_porter.json</code>, cliques ponctuelles) ; il reste à passer des cliques ponctuelles aux conditions valables sur toute la boîte</td><td>région réduite à h ∈ [√3/2 ; 15[ par <code>Queue.lean</code> ; générer les données (<code>omega_exact</code> → <code>temoins</code>) en géométrie rationnelle exacte, puis compiler. Le critère naïf « étendue des distances ≤ 1 » ne suffit pas : la 7-clique hexagonale a dmin = 0 et dmax = 2</td></tr>
+  </table>
+
+  <p class="small">Ce document est un audit : il dit ce qu'il a établi, avec quoi, et ce qu'il ne dit
+  pas. La tranche close est une restriction aux pavages de Voronoï de réseaux — l'implication ne va
+  que dans un sens (§7.4) — et l'encadrement connu reste 6 ≤ χ(ℝ²) ≤ 7. Le cas polygonal général, qui
+  est celui du théorème 2 de Sokolov–Voronov, relève d'une autre étude : rien ici ne le tranche, ni
+  dans un sens ni dans l'autre.</p>
+
+</div>
+</body>
+</html>

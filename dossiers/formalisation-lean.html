@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formalisation en Lean 4 — couche arithmétique et couche géométrique</title>
+<style>
+  :root{--ink:#1a2233;--muted:#6b7280;--line:#e3ded4;--bg:#fdfcf9;--acc:#2b3a55;--warm:#c2703d;--box:#f4efe6;--ok:#3f8a7a;--ko:#b34a3c;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.62;font-size:16.5px}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 26px 90px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:700;margin-bottom:10px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0 0 30px;max-width:66ch}
+  h2{font-size:1.24rem;margin:50px 0 6px;letter-spacing:-.01em;border-top:1px solid var(--line);padding-top:24px}
+  h2 .num{color:var(--warm);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:700}
+  h3{font-size:1rem;margin:22px 0 4px;color:var(--acc)}
+  p{margin:10px 0} ul,ol{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.89em;background:#f0ece3;padding:1px 5px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--acc)}
+  td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+  .box{background:var(--box);border-left:4px solid var(--warm);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .box strong{color:#8f4c22}
+  .ok{background:#eef4f1;border-left:4px solid var(--ok);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ok strong{color:#2c6a5d}
+  .ko{background:#f8eeec;border-left:4px solid var(--ko);padding:15px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+  .ko strong{color:#8f3a2c}
+  .verdict{background:var(--acc);color:#f7f4ee;padding:22px 24px;border-radius:12px;margin:24px 0}
+  .verdict strong{color:#ffd9b8}
+  figure{margin:24px 0;text-align:center} figcaption{font-size:.85rem;color:var(--muted);margin-top:6px;text-align:left}
+  .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+  .dash div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px}
+  .dash b{display:block;font-size:1.35rem;color:var(--acc);font-variant-numeric:tabular-nums}
+  .dash span{font-size:.76rem;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .small{font-size:.86rem;color:var(--muted)}
+  a{color:#2b5fa8}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:8px}
+  .tag.t1{background:#e8f0ee;color:#2c6a5d} .tag.t2{background:#f6e9e6;color:#8f3a2c} .tag.t3{background:#eee9f4;color:#5b4580}
+  pre{background:#f4efe6;padding:14px;border-radius:8px;overflow-x:auto;font-size:.85rem}
+  @media(max-width:680px){.dash{grid-template-columns:1fr 1fr}h1{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">formalisation · Lean 4.35 + Mathlib · 3 novembre 2026 (mise à jour)</div>
+<h1>Deux couches prouvées, deux bases de confiance, et une frontière qui n'a pas bougé</h1>
+<p class="sub">L'audit reprochait « aucune formalisation ». La première réponse a été une couche arithmétique en <strong>noyau pur</strong> (9 théorèmes, 1,3 s, zéro dépendance). La deuxième — celle demandée ensuite — est la couche <strong>géométrique</strong> : réseaux, cellules de Voronoï, distances, convexité, cette fois <em>avec Mathlib</em> (16 théorèmes, 44 s). Au total 25 théorèmes vérifiés par le noyau, zéro <code>sorry</code>, axiomes standard seulement. Ce qui n'a pas bougé : <strong>aucun de nos nombres n'est formalisé</strong>, et il n'y a dans ces fichiers <strong>aucun énoncé sur χ(ℝ²)</strong>.</p>
+
+<div class="dash">
+  <div><b>25</b><span>théorèmes vérifiés par le noyau (9 + 16)</span></div>
+  <div><b>0</b><span><code>sorry</code> ; 3 axiomes standard seulement</span></div>
+  <div><b>0</b><span>énoncé sur χ(ℝ²) dans les fichiers</span></div>
+  <div><b>0,2267</b><span>reste une hypothèse, pas un théorème</span></div>
+</div>
+
+<h2><span class="num">1</span>Pourquoi deux projets, et pourquoi Mathlib pour le second</h2>
+<p>La première couche formalise ce qui est <em>arithmétique et combinatoire</em> : une borne de clique, un plafond de densité, une translation de graphe de Cayley sur ℤ². Là, le noyau de Lean suffit, et il donne la base de confiance la plus courte possible : 233 lignes qui ne dépendent que de trois axiomes standard.</p>
+<p>La seconde couche formalise ce qui est <em>géométrique</em> : un réseau, la cellule de Voronoï d'un point du réseau, la relation « ces deux cellules portent un segment de longueur 1 », la convexité, les distances. Sans Mathlib, tout cela se réécrit à la main — des semaines pour un résultat moins sûr que les 400 000 lignes d'analyse réelle déjà relues par la communauté. La contrainte « pas de Mathlib » était un choix de la première couche ; elle a été levée explicitement pour la géométrie, et le document de la première version disait déjà que c'était ce qu'il fallait faire.</p>
+<table>
+<tr><th>Élément</th><th>Poids / durée réels</th><th>Utilisé</th></tr>
+<tr><td>Toolchain Lean 4 (elan + lean 4.35.0)</td><td>~250 Mo, <strong>15 s</strong> dans ce sandbox</td><td>oui (les deux projets)</td></tr>
+<tr><td>Mathlib + cache binaire</td><td><code>lake update</code> puis <code>lake exe cache get</code> : <strong>2 min 30</strong>, 9 112 fichiers, ~7,4 Go sur disque</td><td>couche géométrique seulement</td></tr>
+<tr><td>Vérification de la couche arithmétique</td><td>1,3 s (noyau pur)</td><td>—</td></tr>
+<tr><td>Vérification de la couche géométrique</td><td>44 s (Mathlib comprise dans le graphe de dépendances)</td><td>—</td></tr>
+</table>
+<div class="box"><strong>Ce que « avec Mathlib » veut dire pour la confiance.</strong> Les théorèmes géométriques reposent, en plus des trois axiomes standard, sur les définitions et preuves de Mathlib — un très gros corpus, mais un corpus public, relu, et dont on n'a utilisé qu'une poignée de lemmes nommés (<code>convex_halfSpace_le</code>, <code>norm_sub_sq_real</code>, <code>IsPreconnected.image</code>, <code>Convex.isPreconnected</code>, <code>isPreconnected_iff_ordConnected</code>, <code>continuous_dist</code>). L'audit peut les vérifier un par un ; c'est un coût de relecture, pas un saut de foi.</div>
+
+<h2><span class="num">2</span>Couche arithmétique : ce qui est prouvé (noyau pur, <code>dossiers/lean/</code>)</h2>
+<table>
+<tr><th style="width:34%">Théorème</th><th style="width:38%">Ce qu'il dit</th><th style="width:28%">Pourquoi il compte ici</th></tr>
+<tr><td><code>injectif_sur_clique</code></td><td>Un coloriage propre est injectif sur une clique : deux sommets distincts d'une clique reçoivent des couleurs distinctes.</td><td>C'est le <em>seul</em> argument qui transfère nos résultats du tore au plan. « 7 cellules deux à deux incompatibles » ⇒ 7 couleurs, partout dans les phases 5 à 8 et le certificat.</td></tr>
+<tr><td><code>somme_le</code></td><td>Si chaque élément d'une liste est ≤ d, la somme est ≤ (longueur × d).</td><td>Le comptage qui transforme « k classes de densité ≤ d » en « k ≥ 1/d ».</td></tr>
+<tr><td><code>plafond_cinq</code></td><td>Si chaque classe a une densité ≤ 2267/10000 et que les classes partitionnent le plan, tout coloriage propre a <strong>au moins 5</strong> classes.</td><td>La conclusion exacte d'un argument de densité avec la constante de la littérature : 4 ne suffiraient pas (4 × 2267 = 9068 &lt; 10000), 5 est le minimum.</td></tr>
+<tr><td><code>cinq_compatible</code><br><code>aucun_plafond_six</code></td><td>Cinq classes de poids 2267, 2267, 2267, 2267, 932 satisfont toutes les hypothèses — donc ces hypothèses <strong>ne forcent pas</strong> 6 classes.</td><td>La forme exacte de « cet argument tue une méthode, pas une valeur ». Ce n'était qu'une phrase dans la phase 4 ; c'est maintenant un théorème.</td></tr>
+<tr><td><code>aucun_plafond_six_general</code></td><td>Même chose pour toute borne d comprise entre 1/5 (2000) et 1/4 (2500).</td><td>La constante 0,2267 tombe dans cet intervalle. Au-delà de 1/4 le plafond est encore plus bas, donc l'énoncé « au plus 5 » vaut a fortiori.</td></tr>
+<tr><td><code>voisin_translation</code><br><code>recentrage</code><br><code>existe_clique_par_zero</code></td><td>Le graphe de conflit ne dépend que des différences ; toute clique non vide se translate en une clique de même taille <strong>contenant 0</strong>.</td><td>C'est le lemme qui rend T8 <em>exact</em> : sans lui, chercher les cliques passant par 0 serait une fenêtre heuristique, et les valeurs de ω n'auraient pas de statut.</td></tr>
+</table>
+
+<h2><span class="num">3</span>Couche géométrique : ce qui est prouvé (Mathlib, <code>dossiers/geom/</code>)</h2>
+<p>325 lignes, 16 théorèmes, 0 <code>sorry</code>. Les énoncés sont écrits pour un espace <code>E</code> muni d'un produit scalaire réel quelconque : ℝ² en est un cas particulier, et les preuves ne cachent aucune hypothèse de dimension.</p>
+<table>
+<tr><th style="width:32%">Théorème</th><th style="width:40%">Ce qu'il dit</th><th style="width:28%">Pourquoi il compte ici</th></tr>
+<tr><td><code>dist_le_dist_iff</code></td><td>« <code>x</code> est plus proche de <code>v</code> que de <code>w</code> » équivaut à une inégalité <strong>linéaire</strong> en <code>x</code> : <code>2⟪x, w−v⟫ ≤ ‖w‖² − ‖v‖²</code>.</td><td>Le pivot technique : c'est ce qui fait d'une cellule de Voronoï autre chose qu'un lieu géométrique informel.</td></tr>
+<tr><td><code>cellule_convexe</code></td><td>La cellule de Voronoï d'un point du réseau pour le réseau <code>L</code> est <strong>convexe</strong> (intersection de demi-espaces fermés).</td><td>L'hypothèse « cellules convexes » est utilisée partout dans les notes — phases 5 à 8, certificat. Elle est maintenant un théorème.</td></tr>
+<tr><td><code>cellule_translate</code><br><code>dist_sub_left</code></td><td>La cellule de <code>v + t</code> est la translatée de celle de <code>v</code> dès que <code>t</code> est dans le réseau.</td><td>Le pas géométrique de l'invariance ; sans lui, le conflit ne pourrait pas être un graphe de Cayley.</td></tr>
+<tr><td><code>conflit_translation</code><br><code>conflit_symm</code><br><code>conflit_iff_zero</code></td><td><strong>Théorème central.</strong> « les cellules de <code>v</code> et <code>w</code> portent un segment de longueur 1 » ne dépend que de <code>w − v</code> ; la relation est symétrique ; pour <code>v</code> dans le réseau, conflit de <code>v</code> et <code>v+d</code> ⟺ conflit de <code>0</code> et <code>d</code>.</td><td>C'est <em>exactement</em> la condition de validité de T8 : chercher les cliques passant par 0 ne perd aucune clique. Dans la couche arithmétique, ce fait était <em>supposé</em> (une opération sur les coordonnées) ; ici il est prouvé avec les cellules réelles.</td></tr>
+<tr><td><code>isPreconnected_dist_set</code><br><code>existe_paire_distance_un</code></td><td>L'ensemble des distances réalisées entre deux convexes est un <strong>intervalle</strong> de ℝ. Donc : une paire à distance ≤ 1 et une paire à distance ≥ 1 ⇒ une paire à distance <strong>exactement</strong> 1.</td><td>Le pont entre la géométrie et <code>exact_tangence.py</code> : la tangence se décide par encadrement, sans aucun test flottant. C'est aussi ce qui sépare « seuil 1 » de « seuil strictement inférieur à 1 ».</td></tr>
+<tr><td><code>conflit_iff_encadrement</code></td><td>Pour deux cellules : conflit ⟺ (∃ paire ≤ 1) ∧ (∃ paire ≥ 1).</td><td>La forme utilisable : un calcul qui minore et majore la distance entre deux cellules donne un verdict <em>exact</em>, ni un seuil approché ni une fenêtre.</td></tr>
+<tr><td><code>centre_mem_cellule</code><br><code>conflit_vecteur_unitaire</code><br><code>cellule_Lint_le</code><br><code>cellule_Lint_ge</code><br><code>controle_negatif</code><br><code>controle_negatif_encadrement</code></td><td><strong>Contrôles sur ℤ ⊂ ℝ.</strong> Positif : le réseau contient un vecteur de longueur 1 ⇒ conflit entre <code>0</code> et <code>1</code> (exemple vérifié). Négatif : les cellules de <code>0</code> et de <code>3</code> sont à distance ≥ 2, donc <strong>aucun</strong> segment de longueur 1 ne les joint, et l'une des deux inégalités de l'encadrement doit échouer.</td><td>Un théorème de la forme « conflit ⟺ encadrement » ne vaut que s'il <em>discrimine</em>. Le contrôle négatif est sain : il n'utilise que deux des contraintes définissant chaque cellule, donc il minore les vraies cellules — la conclusion est plus forte que nécessaire.</td></tr>
+</table>
+<div class="ok"><strong>Base de confiance, vérifiée et non déclarée.</strong> <code>#print axioms</code> sur les 17 énoncés imprimés (16 théorèmes + l'exemple) ne rend que <code>propext</code>, <code>Classical.choice</code> et <code>Quot.sound</code>. Aucun <code>sorryAx</code>. Journal complet : <code>dossiers/geom/check.log</code> et <code>dossiers/geom/build.log</code>. Le fichier ne contient pas une seule occurrence de <code>sorry</code>, et <code>lake build</code> se termine par « Build completed successfully (4030 jobs) ».</div>
+
+<h2><span class="num">4</span>La frontière : ce que la couche géométrique rend formalisable, et ce qu'elle ne prouve pas</h2>
+<p>C'est la distinction qui compte, et il faut la tenir sans arrondi.</p>
+<h3>Ce qu'elle rend <em>formalisable</em> (pas « prouvé »)</h3>
+<ul>
+<li><strong>Le certificat T7.</strong> Avec <code>cellule_convexe</code> et <code>conflit_iff_encadrement</code>, l'énoncé « ces deux cellules ne portent aucun segment de longueur 1 » se ramène à deux inégalités rationnelles sur des sommets. Il manque encore, pour un vrai certificat : la géométrie explicite des cellules d'un réseau donné et une arithmétique d'intervalles formelle. C'est un travail de mois, mais il n'y a plus d'obstacle conceptuel — c'était « impossible à énoncer », c'est devenu « long à énoncer ».</li>
+<li><strong>Les valeurs de ω.</strong> La réduction « il suffit de regarder les cliques passant par 0 » est maintenant prouvée avec les vraies cellules, plus seulement au niveau des coordonnées. Formaliser l'énumération finie elle-même reste un travail de combinatorie.</li>
+</ul>
+<h3>Ce qu'elle ne prouve <em>pas</em></h3>
+<table>
+<tr><th style="width:36%">Toujours dehors</th><th style="width:40%">Statut réel</th><th style="width:24%">Ordre de grandeur</th></tr>
+<tr><td>la borne de densité δ* = 0,2267</td><td>valeur obtenue par balayage numérique (phases 7 et 8), <strong>hypothèse</strong> assumée comme telle ; la couche arithmétique formalise ce que cette hypothèse <em>implique</em>, jamais l'hypothèse elle-même</td><td>hors de portée ici</td></tr>
+<tr><td>que les familles de réseaux calculées couvrent toutes les configurations admissibles (« densité »)</td><td>le code énumère des familles paramétrées et un paysage fini ; aucun théorème ne dit que c'est tout</td><td>mois</td></tr>
+<tr><td>l'argument de <em>partition</em> qui passe d'une cellule au plan entier</td><td>aucun coloriage de ℝ² n'est formalisé ; le mot « partition » reste une hypothèse d'énoncé dans les théorèmes de densité</td><td>mois</td></tr>
+<tr><td>l'existence d'une densité pour une classe mesurable sans distance 1</td><td>théorie de la mesure, non commencée</td><td>mois</td></tr>
+<tr><td>les nombres : ω des réseaux, 0/55 6-coloriages, 26 423 boîtes</td><td>sorties de programmes, revérifiées par un second moteur indépendant — pas des preuves</td><td>mois</td></tr>
+<tr><td><strong>χ(ℝ²)</strong> — et donc l'encadrement 6 ≤ χ(ℝ²) ≤ 7</td><td><strong>aucun énoncé dans aucun des deux fichiers.</strong> 6 = revendication OpenAI du 23/09/2026, non référée ; 7 = Isbell. Notre travail ne fournit que des obstructions locales</td><td>hors sujet ici</td></tr>
+</table>
+<div class="ko"><strong>Conséquence, sans détour.</strong> Rien dans ces 25 théorèmes ne dit quoi que ce soit sur le nombre chromatique du plan. Ce qui est prouvé, c'est la <em>charpente</em> : la borne de clique, le plafond de densité, la convexité des cellules, l'invariance par translation du conflit, et le fait qu'une tangence se décide par encadrement. Les objets et les nombres restent du calcul vérifié par tests croisés, pas de la preuve formelle.</div>
+
+<h2><span class="num">5</span>Ce que la formalisation a appris (quatre énoncés corrigés)</h2>
+<ul>
+<li><strong>Le plafond « pour tout d ≥ 1/5 » était imprécis.</strong> Le contre-exemple à 5 classes n'existe que si 10000 − 4d ≤ d, c'est-à-dire d ≤ 1/4. Au-delà, le plafond est plus bas encore, donc l'énoncé reste vrai — mais avec une hypothèse qu'il fallait voir.</li>
+<li><strong>Le lemme de recentrage exige une clique non vide.</strong> « Toute clique se translate en une clique contenant 0 » est faux pour la clique vide ; la version correcte porte sur <code>c :: rest</code>.</li>
+<li><strong>L'invariance du conflit était un calcul, pas un théorème.</strong> Dans la couche arithmétique, on translate des coordonnées entières ; la couche géométrique montre que la relation définie par les <em>cellules réelles</em> est, elle aussi, invariante — c'était l'hypothèse tacite de tout T8.</li>
+<li><strong>« Distance = 1 » n'est pas « distance ≤ 1 ».</strong> L'énoncé exact est un encadrement, et c'est la convexité des cellules qui le justifie. Formuler la tangence comme un seuil aurait produit un énoncé faux au bord — exactement le piège que l'audit reprochait aux calculs flottants.</li>
+</ul>
+
+<h2><span class="num">6</span>Reproduire</h2>
+<pre class="mono">curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+
+# couche arithmétique — noyau pur, 1,3 s
+cd dossiers/lean && lake build
+lake env lean Plafond.lean     # → propext, Quot.sound, Classical.choice
+
+# couche géométrique — Mathlib
+cd dossiers/geom
+lake update                    # ~15 s
+lake exe cache get             # 9 112 fichiers, ~2 min 30 (nécessaire une fois)
+lake build                     # → Build completed successfully (4030 jobs), 44 s
+lake env lean Geometrie.lean   # → 17 × « depends on axioms: [propext, Classical.choice, Quot.sound] »</pre>
+<p class="small">Fichiers : <code>dossiers/lean/Plafond.lean</code> (borne de clique, plafond de densité), <code>dossiers/lean/T8.lean</code> (translation, recentrage, clique par 0), <code>dossiers/geom/Geometrie.lean</code> (réseaux, cellules de Voronoï, convexité, conflit, contrôles sur ℤ), plus les <code>lakefile.toml</code>, <code>lean-toolchain</code> (v4.35.0) et les journaux <code>setup.log</code>, <code>build.log</code>, <code>check.log</code>. La toolchain vit dans <code>~/.elan</code> et le cache Mathlib dans <code>dossiers/geom/.lake</code> : ni l'un ni l'autre n'est conservé avec le workspace, et les deux commandes ci-dessus les reconstituent en moins de trois minutes.</p>
+
+<div class="verdict"><strong>Bilan honnête.</strong> La faiblesse « aucune formalisation » est passée de <em>totale</em> à <em>partielle</em>, puis à <em>partielle, avec la géométrie couverte</em> : 25 théorèmes, dont les trois qui portent vraiment quelque chose — χ ≥ ω sur une clique, le plafond des arguments de densité, et l'invariance du conflit sur les cellules réelles. La ligne « réseaux, cellules de Voronoï, distances, convexité » du tableau des coûts est fermée. Elle n'a pas rapproché d'un pouce de χ(ℝ²) : aucun énoncé sur le plan n'existe dans ces fichiers, et il n'y en aura pas tant que la densité, la partition et les nombres resteront des hypothèses.</div>
+
+</div>
+</body>
+</html>

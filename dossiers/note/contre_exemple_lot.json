@@ -1,0 +1,58 @@
+{
+ "boites": 300,
+ "boites_violees": 300,
+ "paires": 90400,
+ "paires_violees": 7458,
+ "exemples": [
+  {
+   "boite": [
+    1.0,
+    1.01,
+    60.0,
+    60.3
+   ],
+   "n_violations": 26,
+   "n_temoins": 50
+  },
+  {
+   "boite": [
+    1.0,
+    1.01,
+    60.3,
+    60.6
+   ],
+   "n_violations": 26,
+   "n_temoins": 50
+  },
+  {
+   "boite": [
+    1.0,
+    1.01,
+    60.6,
+    60.9
+   ],
+   "n_violations": 26,
+   "n_temoins": 50
+  },
+  {
+   "boite": [
+    1.0,
+    1.01,
+    60.9,
+    61.2
+   ],
+   "n_violations": 26,
+   "n_temoins": 50
+  },
+  {
+   "boite": [
+    1.0,
+    1.01,
+    61.2,
+    61.5
+   ],
+   "n_violations": 26,
+   "n_temoins": 50
+  }
+ ]
+}
