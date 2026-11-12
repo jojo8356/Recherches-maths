@@ -24,6 +24,12 @@ name = "Boites"
 [[lean_lib]]
 name = "Boites_data"
 
+# Axiomes : fichier d'AUDIT généré par note/gen_axiomes.py. Il interroge les 55 théorèmes
+# de Geometrie, Pont, Queue et Boites (les #print axioms dispersés dans les preuves n'en
+# couvrent qu'une partie : Queue.lean en déclare 28 et n'en interroge que 5).
+[[lean_lib]]
+name = "Axiomes"
+
 # Note : `packagesDir` et `buildDir` étaient fixés à /var/tmp/... pour le bac à sable de
 # l'audit. Ces chemins n'existent pas ailleurs et faisaient échouer la création du dossier.
 # On revient aux emplacements par défaut de Lake (.lake/ dans le projet).

@@ -249,3 +249,62 @@ comptait les axiomes dans les journaux et, ne trouvant rien dans un journal d'é
 « aucun axiome supplémentaire ». **Un fichier illisible passait pour un fichier vérifié.** Le
 script détecte désormais les erreurs de compilation et les codes de sortie non nuls, et ne compte
 que les théorèmes réellement interrogés.
+
+---
+
+## Second passage réel (12/11/2026) : `cell_of_fini` est vérifié
+
+`lake build Boites Boites_data` a suffi (3 395 jobs). La cause identifiée était la bonne : le
+`lib/lean` de notre propre paquet est vide tant qu'on ne l'a pas construit, donc `lake env lean`
+ne trouvait pas `Queue.olean`.
+
+**Les quatre théorèmes du moteur par boîte compilent, axiomes propres :**
+
+```
+'Boites.clique_de_temoins'    depends on axioms: [propext, Classical.choice, Quot.sound]
+'Boites.contrainte_auto'      depends on axioms: [propext, Classical.choice, Quot.sound]
+'Boites.cell_iff_translate'   depends on axioms: [propext, Classical.choice, Quot.sound]
+'Boites.cell_of_fini'         depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+`cell_of_fini` — la réduction de la contrainte infinie à un calcul fini, dont dépend tout
+l'argument par boîte — est donc **vérifié par un compilateur**, ce qui n'était pas le cas au
+geste 41. `Boites_data.lean` reste à confirmer (il doit passer par le même chemin).
+
+Avertissements sans effet sur les preuves : `push_neg` déprécié (2 endroits), `Set.mem_setOf_eq`
+déprécié, variable `hr` non référencée, argument `simp` inutilisé. Aucun ne touche un énoncé.
+
+### Le compte n'est pas 66, mais 70 — et 19 n'étaient pas interrogés
+
+Décompte réel par fichier :
+
+| fichier | théorèmes | `#print axioms` présents |
+|---|---|---|
+| `geom/Geometrie.lean` | 17 | 17 |
+| `geom/Queue.lean` | **28** | **5** |
+| `geom/Pont.lean` | 6 | 6 |
+| `geom/Boites.lean` | 4 | 4 |
+| `lean/Plafond.lean` | 6 | 4 |
+| `lean/T8.lean` | 4 | 3 |
+| `lean/Pont.lean` | 5 | 5 (+1) |
+| **total** | **70** | 51 |
+
+Le dossier annonce « 66 théorèmes, 0 sorry » : le chiffre est faux, et surtout **19 théorèmes
+n'étaient interrogés par aucun `#print axioms`**. Un théorème qui compile sans qu'on connaisse ses
+axiomes n'est pas un résultat vérifié — c'est exactement le trou par lequel `sorryAx` passerait.
+
+### `Axiomes.lean` : le trou bouché
+
+`note/gen_axiomes.py` génère `dossiers/geom/Axiomes.lean` (55 théorèmes) et
+`dossiers/lean/Axiomes.lean` (15 théorèmes), **70 au total, un `#print axioms` chacun**,
+namespaces résolus automatiquement depuis les fichiers sources. Les deux fichiers sont déclarés
+comme `lean_lib` et `verifier.sh` les contrôle.
+
+```bash
+lake env lean Axiomes.lean          # dans dossiers/geom puis dans dossiers/lean
+```
+
+Attendu : 55 puis 15 lignes `depends on axioms`, toutes dans
+`[propext, Classical.choice, Quot.sound]` pour `geom`, dans `[propext, Quot.sound]` pour `lean`.
+C'est le contrôle qui manquait, et il ne dépend plus de la répartition des `#print axioms` dans
+les fichiers de preuve.

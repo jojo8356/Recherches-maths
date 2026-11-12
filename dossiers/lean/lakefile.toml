@@ -7,3 +7,9 @@ name = "Plafond"
 
 [[lean_lib]]
 name = "T8"
+
+# Axiomes : fichier d'AUDIT généré par note/gen_axiomes.py (Plafond, T8, Pont → 15 théorèmes).
+# Il comble deux trous : Plafond.lean n'interroge que 4 de ses 6 théorèmes, T8.lean 3 de ses 4,
+# et Pont.lean n'était pas une cible de build du tout.
+[[lean_lib]]
+name = "Axiomes"

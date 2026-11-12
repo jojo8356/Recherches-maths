@@ -151,8 +151,31 @@ for f in Plafond T8; do
   verifie_fichier "$RACINE/lean" "$f"
 done
 # Pont.lean n'est pas une lean_lib : il est vérifié par `lake env lean`, pas par `lake build`.
-info "dossiers/lean/Pont.lean n'est pas une cible de build ; vérification directe :"
-verifie_fichier "$RACINE/lean" "Pont" "noyau pur, hors cibles de build"
+info "vérification directe de dossiers/lean/Pont.lean :"
+verifie_fichier "$RACINE/lean" "Pont" "noyau pur"
+
+# ---------------------------------------------------------------- audit complet des axiomes
+titre "Audit complet : les 70 théorèmes, un #print axioms chacun"
+# Les #print axioms dispersés dans les preuves n'interrogent qu'une partie des théorèmes
+# (Queue.lean : 5 sur 28). Axiomes.lean, généré par note/gen_axiomes.py, les interroge TOUS.
+for dossier in geom lean; do
+  journal="/tmp/v_axiomes_$dossier.log"
+  ( cd "$RACINE/$dossier" && lake env lean Axiomes.lean ) > "$journal" 2>&1
+  nb=$(grep -c "depends on axioms" "$journal" || true)
+  mauvais=$(grep "depends on axioms" "$journal" | grep -vE "\[(propext, )?(Classical.choice, )?(Quot.sound)\]" | wc -l)
+  erreur=$(grep -cE "^[^ ]*:[0-9]+:[0-9]+: error:" "$journal" || true)
+  if [ "${erreur:-0}" -gt 0 ]; then
+    ko "  $dossier/Axiomes.lean ne compile pas :"; grep -E "error:" "$journal" | head -3 | sed 's/^/         /'
+  elif [ "$nb" -eq 0 ]; then
+    ko "  $dossier/Axiomes.lean : aucun axiome rendu (fichier non lu ?)"
+  elif [ "$mauvais" -eq 0 ]; then
+    ok "  $dossier : $nb théorème(s), tous aux axiomes habituels"
+    THEOREMES=$((THEOREMES + nb))
+  else
+    ko "  $dossier : $mauvais théorème(s) hors des axiomes habituels :"
+    grep "depends on axioms" "$journal" | grep -vE "\[(propext, )?(Classical.choice, )?(Quot.sound)\]" | sed 's/^/         /'
+  fi
+done
 
 # ---------------------------------------------------------------- bilan
 titre "Bilan"
