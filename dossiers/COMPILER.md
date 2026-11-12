@@ -399,3 +399,38 @@ lancer quoi que ce soit :
 
 Testé dans les deux sens (avec et sans la déclaration). Ce contrôle aurait attrapé les trois
 bugs du premier coup.
+
+---
+
+## Résultat du noyau pur : les 15 théorèmes, tous propres
+
+`lake build` → 7 jobs, `Pont` enfin construit. `lake env lean Axiomes.lean` rend 15 lignes :
+
+| théorème | axiomes |
+|---|---|
+| `Plafond.injectif_sur_clique` | `[propext, Classical.choice, Quot.sound]` |
+| `Plafond.somme_le`, `plafond_cinq`, `aucun_plafond_six`, `aucun_plafond_six_general` | `[propext, Quot.sound]` |
+| `Plafond.cinq_compatible` | **aucun axiome** |
+| `T8.P.ext` | **`[propext]`** seul |
+| `T8.P.voisin_translation`, `recentrage`, `existe_clique_par_zero` | `[propext, Quot.sound]` |
+| `Pont.lemmeB` | `[propext, Quot.sound]` |
+| `Pont.eps_force_D_lt_dmax`, `lemmeB_eps`, `lemmeA_geometrique`, `pas_meme_couleur` | `[propext, Classical.choice, Quot.sound]` |
+
+Aucun `sorryAx`. Aucun axiome hors de l'ensemble attendu. Le projet « noyau pur » tient sa
+promesse : rien de plus que `propext`, `Quot.sound`, et `Classical.choice` là où il le faut.
+
+### Deux lignes que mon script refusait à tort
+
+`Plafond.cinq_compatible` **ne dépend d'aucun axiome** — Lean écrit `does not depend on any
+axioms`, sans crochets. `T8.P.ext` ne dépend que de `[propext]`. Mon motif exigeait exactement
+les trois axiomes : il aurait déclaré ces deux théorèmes « hors des axiomes habituels », alors
+qu'ils sont *plus* solides que les autres. Un faux positif symétrique du faux négatif qui
+m'avait laissé passer `Boites.lean`.
+
+Le motif accepte maintenant tout **sous-ensemble** de `{propext, Classical.choice, Quot.sound}`,
+et compte aussi les théorèmes sans axiome. Testé sur les lignes réelles et sur cinq cas pièges
+(`[propext]`, sans axiome, ordre différent, `[propext, sorryAx, …]` → refusé, `[Classical.em]`
+→ refusé).
+
+**Leçon** : un contrôle d'axiomes doit accepter « moins », refuser « plus », et distinguer
+« aucun axiome » de « rien à contrôler ». Les trois erreurs sont arrivées.

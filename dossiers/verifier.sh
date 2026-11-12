@@ -156,20 +156,22 @@ verifie_fichier() {           # $1 = dossier, $2 = nom sans .lean
   fi
   # 3. axiomes
   local nb mauvais
-  nb=$(grep -c "depends on axioms" "$journal" || true)
+  nb=$(grep -cE "depends on axioms|does not depend on any axioms" "$journal" || true)
   if [ "$nb" -eq 0 ]; then
     # Un fichier sans #print axioms est normal (données) — mais on le DIT, sans le
     # compter comme vérifié.
     info "  compile, aucun théorème interrogé (pas de #print axioms)"
     return
   fi
-  mauvais=$(grep "depends on axioms" "$journal" | grep -v "\[propext, Classical.choice, Quot.sound\]" | wc -l)
+  mauvais=$(grep -E "depends on axioms" "$journal" | grep -vE "depends on axioms: \[(propext)?(, ?(Classical\\.choice|Quot\\.sound))*\]" | wc -l)
   if [ "$mauvais" -eq 0 ]; then
     ok "  $nb théorème(s), axiomes habituels"
     THEOREMES=$((THEOREMES + nb))
   else
     ko "  $mauvais théorème(s) avec des axiomes supplémentaires :"
-    grep "depends on axioms" "$journal" | grep -v "\[propext, Classical.choice, Quot.sound\]" | sed 's/^/         /'
+    grep -E "depends on axioms" "$journal" \
+      | grep -vE "depends on axioms: \[(propext)?(, ?(Classical\\.choice|Quot\\.sound))*\]" \
+      | sed 's/^/         /'
   fi
 }
 
@@ -181,7 +183,7 @@ vermifuge() {   # compte les `theorem` déclarés, pour dire ce qui n'est pas in
 for f in Geometrie Queue Pont Boites; do
   verifie_fichier "$RACINE/geom" "$f"
   declares=$(vermifuge "$RACINE/geom" "$f")
-  interroges=$(grep -c "depends on axioms" "/tmp/v_$f.log" || true)
+  interroges=$(grep -cE "depends on axioms|does not depend on any axioms" "/tmp/v_$f.log" || true)
   if [ "${declares:-0}" -gt "${interroges:-0}" ]; then
     info "  $f.lean : $declares théorèmes déclarés, $interroges interrogés par #print axioms"
   fi
@@ -205,8 +207,13 @@ for dossier in geom lean; do
   # même règle : construire la cible avant de la lire
   ( cd "$RACINE/$dossier" && lake build Axiomes ) > "/tmp/v_build_axiomes_$dossier.log" 2>&1
   ( cd "$RACINE/$dossier" && lake env lean Axiomes.lean ) > "$journal" 2>&1
-  nb=$(grep -c "depends on axioms" "$journal" || true)
-  mauvais=$(grep "depends on axioms" "$journal" | grep -vE "\[(propext, )?(Classical.choice, )?(Quot.sound)\]" | wc -l)
+  nb=$(grep -cE "depends on axioms|does not depend on any axioms" "$journal" || true)
+  # Motif = sous-ensemble de {propext, Classical.choice, Quot.sound}. Il accepte :
+  #   [propext, Classical.choice, Quot.sound]  (avec Mathlib)
+  #   [propext, Quot.sound]                     (noyau pur)
+  #   [propext]                                 (T8.P.ext, qui ne dépend que de propext)
+  # et refuse tout axiome hors de cet ensemble (sorryAx, Classical.em, …).
+  mauvais=$(grep -E "depends on axioms" "$journal" | grep -vE "depends on axioms: \[(propext)?(, ?(Classical\\.choice|Quot\\.sound))*\]" | wc -l)
   erreur=$(grep -cE "^[^ ]*:[0-9]+:[0-9]+: error:" "$journal" || true)
   if [ "${erreur:-0}" -gt 0 ]; then
     ko "  $dossier/Axiomes.lean ne compile pas :"; grep -E "error:" "$journal" | head -3 | sed 's/^/         /'
